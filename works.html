@@ -19,8 +19,6 @@
     <nav class="nav" aria-label="Primary navigation">
       <div class="nav-links">
         <a href="index.html">Home</a>
-        <a href="index.html#projects">Projects</a>
-        <a href="index.html#skills">Skills</a>
       </div>
     </nav>
   </header>
@@ -33,8 +31,7 @@
       </div>
       <div class="content-block">
         <p>
-          A more complete view of my academic research, applied AI systems, and
-          <span class="nowrap">experimental engineering work.</span>
+          <span class="nowrap">A preliminary view of my academic research, applied AI systems, and experimental engineering work.</span>
         </p>
       </div>
     </section>
@@ -130,6 +127,98 @@
             <span>Long-Horizon Planning</span>
             <span>Tool Use</span>
             <span>Memory</span>
+          </div>
+        </article>
+
+        <article class="work-detail">
+          <div class="card-header">
+            <h2>Style-Aware Humanoid Motion Generation</h2>
+            <span class="status">Robotics Project</span>
+          </div>
+          <p>
+            Built a project layer around MoConVQ for style-aware, language-conditioned
+            humanoid motion generation, with reproducible scripts and diagnostic reports.
+          </p>
+          <ul class="work-points">
+            <li>Prepared style lexicons, prompt lists, audit templates, and HumanML3D-derived style subsets.</li>
+            <li>Organized baseline generation, adapter training, evaluation, and report-compilation scripts.</li>
+            <li>Packaged midterm and final deliverables with logs, outputs, and reproducibility notes.</li>
+            <li>Documented missing runtime assets and avoided unsupported metric claims in the report.</li>
+          </ul>
+          <div class="keywords">
+            <span>MoConVQ</span>
+            <span>HumanML3D</span>
+            <span>Motion Generation</span>
+            <span>Reproducibility</span>
+          </div>
+        </article>
+
+        <article class="work-detail">
+          <div class="card-header">
+            <h2>SnapKV KV Cache Compression Reproduction</h2>
+            <span class="status">NLP Systems</span>
+          </div>
+          <p>
+            Reproduced the SnapKV training-free KV cache compression method and evaluated
+            its latency, memory, and perplexity behavior on small-scale LLM inference.
+          </p>
+          <ul class="work-points">
+            <li>Implemented post-prefill KV cache compression with observation-window scoring and pooling.</li>
+            <li>Compared baseline and compressed inference on WikiText and PG-19 workloads.</li>
+            <li>Recorded TTFT, TPOT, throughput, peak memory, FLOPs, and perplexity metrics.</li>
+            <li>Ran ablations over compression ratio, observation window size, and kernel size.</li>
+          </ul>
+          <div class="keywords">
+            <span>KV Cache</span>
+            <span>LLM Inference</span>
+            <span>SnapKV</span>
+            <span>PyTorch</span>
+          </div>
+        </article>
+
+        <article class="work-detail">
+          <div class="card-header">
+            <h2>PushT Reinforcement Learning and Imitation Learning</h2>
+            <span class="status">RL / IL</span>
+          </div>
+          <p>
+            Built a reproducible PushT experimentation pipeline comparing pure reinforcement
+            learning with behavior cloning from official low-dimensional demonstrations.
+          </p>
+          <ul class="work-points">
+            <li>Trained PPO-based policies with vectorized environments, normalization, checkpointing, and fixed-seed evaluation.</li>
+            <li>Implemented behavior cloning with action chunks, normalization, EMA, and model-size ablations.</li>
+            <li>Generated evaluation JSON files, plots, summary tables, videos, and a compiled report.</li>
+            <li>Documented observation mismatch between RL state inputs and official behavior-cloning fields.</li>
+          </ul>
+          <div class="keywords">
+            <span>PPO</span>
+            <span>Behavior Cloning</span>
+            <span>PushT</span>
+            <span>Ablation</span>
+          </div>
+        </article>
+
+        <article class="work-detail">
+          <div class="card-header">
+            <h2>NatDedProp Proof Agent and Tooling</h2>
+            <span class="status">Formal Methods</span>
+          </div>
+          <p>
+            Packaged a natural-deduction proof workflow with command-line checking,
+            VS Code tooling, reusable proof prompts, and verified answer generation.
+          </p>
+          <ul class="work-points">
+            <li>Prepared a self-contained NatDedProp environment with command-line checker and VS Code extension packages.</li>
+            <li>Designed a proof-agent workflow for diagnosing `.mmd` files and replacing proof placeholders.</li>
+            <li>Encoded connective-driven strategies for conjunction, disjunction, implication, equivalence, and classical tautologies.</li>
+            <li>Recorded diagnostics, generated proof attempts, checker results, and packaging events in JSONL logs.</li>
+          </ul>
+          <div class="keywords">
+            <span>Formal Proof</span>
+            <span>Natural Deduction</span>
+            <span>VS Code Extension</span>
+            <span>Agent Workflow</span>
           </div>
         </article>
       </div>

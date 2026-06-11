@@ -205,9 +205,7 @@ const setupCursorField = () => {
   let height = 0;
   let pixelRatio = 1;
   let animationFrame = null;
-  let lastPoint = null;
-  let particles = [];
-  let trail = [];
+  let ripples = [];
 
   const resizeCanvas = () => {
     pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
@@ -220,70 +218,34 @@ const setupCursorField = () => {
     context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
   };
 
-  const addParticle = (x, y) => {
-    particles.push({
-      x,
-      y,
-      vx: (Math.random() - 0.5) * 0.28,
-      vy: (Math.random() - 0.5) * 0.28 - 0.05,
-      size: 1.2 + Math.random() * 1.6,
-      life: 1,
-    });
+  const addRipple = (x, y) => {
+    ripples.push({ x, y, life: 1 });
 
-    if (particles.length > 90) {
-      particles = particles.slice(-90);
-    }
-  };
-
-  const addTrailPoint = (x, y) => {
-    trail.push({ x, y, life: 1 });
-
-    if (trail.length > 42) {
-      trail.shift();
+    if (ripples.length > 8) {
+      ripples.shift();
     }
   };
 
   const drawFrame = () => {
     context.clearRect(0, 0, width, height);
 
-    trail.forEach((point) => {
-      point.life -= 0.018;
-    });
+    ripples.forEach((ripple) => {
+      ripple.life -= 0.0225;
 
-    for (let index = 1; index < trail.length; index += 1) {
-      const previous = trail[index - 1];
-      const current = trail[index];
-      const opacity = Math.max(0, Math.min(previous.life, current.life)) * 0.1;
-
-      if (opacity <= 0) {
-        continue;
-      }
+      const eased = 1 - ripple.life;
+      const radius = 5 + eased * 15;
+      const opacity = Math.max(0, ripple.life) * 0.72;
 
       context.beginPath();
-      context.moveTo(previous.x, previous.y);
-      context.lineTo(current.x, current.y);
+      context.arc(ripple.x, ripple.y, radius, 0, Math.PI * 2);
       context.strokeStyle = `rgba(118, 185, 0, ${opacity})`;
-      context.lineWidth = 1;
+      context.lineWidth = 1.9;
       context.stroke();
-    }
-
-    particles.forEach((particle) => {
-      particle.x += particle.vx;
-      particle.y += particle.vy;
-      particle.life -= 0.015;
-
-      const opacity = Math.max(0, particle.life) * 0.18;
-
-      context.beginPath();
-      context.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-      context.fillStyle = `rgba(118, 185, 0, ${opacity})`;
-      context.fill();
     });
 
-    trail = trail.filter((point) => point.life > 0);
-    particles = particles.filter((particle) => particle.life > 0);
+    ripples = ripples.filter((ripple) => ripple.life > 0);
 
-    if (trail.length > 0 || particles.length > 0) {
+    if (ripples.length > 0) {
       animationFrame = window.requestAnimationFrame(drawFrame);
     } else {
       animationFrame = null;
@@ -296,34 +258,14 @@ const setupCursorField = () => {
     }
   };
 
-  const handlePointerMove = (event) => {
-    const x = event.clientX;
-    const y = event.clientY;
-
-    if (!lastPoint) {
-      lastPoint = { x, y };
-    }
-
-    const distance = Math.hypot(x - lastPoint.x, y - lastPoint.y);
-
-    if (distance < 5) {
-      return;
-    }
-
-    addTrailPoint(x, y);
-    addParticle(x, y);
-
-    if (distance > 18) {
-      addParticle((x + lastPoint.x) / 2, (y + lastPoint.y) / 2);
-    }
-
-    lastPoint = { x, y };
+  const handlePointerDown = (event) => {
+    addRipple(event.clientX, event.clientY);
     requestDraw();
   };
 
   resizeCanvas();
   window.addEventListener("resize", resizeCanvas);
-  window.addEventListener("pointermove", handlePointerMove, { passive: true });
+  window.addEventListener("pointerdown", handlePointerDown, { passive: true });
 };
 
 const setupHeroPolyhedron = () => {
@@ -447,9 +389,10 @@ const setupHeroPolyhedron = () => {
   let sphereBounds = null;
   let pulses = [];
   const interactionEase = 0.05;
-  const hitDistance = 15;
+  const hitDistance = 18;
+  const hitDepthLimit = -0.24;
   const pulseLifetime = 1000;
-  const opacityBuckets = [0.05, 0.08, 0.11, 0.14, 0.17, 0.2, 0.24, 0.28, 0.33, 0.38];
+  const opacityBuckets = [0.08, 0.09, 0.12, 0.14, 0.18, 0.25, 0.27, 0.3, 0.35, 0.4];
   const edgeData = edges.map(([first, second]) => {
     const a = vertices[first];
     const b = vertices[second];
@@ -695,6 +638,7 @@ const setupHeroPolyhedron = () => {
         first,
         second,
         depth,
+        frontDepth: Math.max(a.z, b.z),
         x1: a.x,
         y1: a.y,
         x2: b.x,
@@ -772,7 +716,7 @@ const setupHeroPolyhedron = () => {
       let nearest = null;
 
       currentSegments.forEach((segment) => {
-        if (segment.depth <= 0) {
+        if (segment.depth <= hitDepthLimit && segment.frontDepth <= 0) {
           return;
         }
 
