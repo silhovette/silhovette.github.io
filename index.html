@@ -1,92 +1,258 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AZ | Personal Website</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #0f1115;
-      color: #e8e8e8;
-      line-height: 1.7;
-    }
-    .container {
-      max-width: 880px;
-      margin: 0 auto;
-      padding: 80px 24px;
-    }
-    h1 {
-      font-size: 48px;
-      margin-bottom: 8px;
-    }
-    h2 {
-      margin-top: 48px;
-      border-bottom: 1px solid #333;
-      padding-bottom: 8px;
-    }
-    a {
-      color: #8ab4ff;
-      text-decoration: none;
-    }
-    .tag {
-      display: inline-block;
-      padding: 4px 10px;
-      margin: 4px;
-      border: 1px solid #444;
-      border-radius: 999px;
-      font-size: 14px;
-    }
-    .card {
-      background: #171a21;
-      border: 1px solid #2a2d35;
-      border-radius: 12px;
-      padding: 20px;
-      margin: 16px 0;
-    }
-  </style>
+  <meta
+    name="description"
+    content="Yuhua Luo, an AI undergraduate at Shanghai Jiao Tong University focusing on LLM agents, planning, tool use, and model collaboration."
+  />
+  <title>Yuhua Luo | Silhovette</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="script.js" defer></script>
 </head>
 <body>
-  <main class="container">
-    <h1>AZ</h1>
-    <p>Shanghai Jiao Tong University · Artificial Intelligence</p>
-    <p>
-      test-1
-    </p>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <canvas id="cursor-field" class="cursor-field" aria-hidden="true"></canvas>
 
-    <h2>About</h2>
-    <p>
-      test0
-    </p>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary navigation">
+      <a class="nav-brand" href="#hero" aria-label="Yuhua Luo home">YL</a>
+      <div class="nav-links">
+        <a href="#about">About</a>
+        <a href="#interests">Research</a>
+        <a href="#projects">Projects</a>
+        <a href="#publications">Publications</a>
+        <a href="#skills">Skills</a>
+      </div>
+    </nav>
+  </header>
 
-    <h2>Research Interests</h2>
-    <span class="tag">Large Language Models</span>
-    <span class="tag">Agent</span>
-    <span class="tag">RePlanning</span>
-    <span class="tag">Tool Use</span>
-    <span class="tag">Reinforcement Learning</span>
+  <main id="main">
+    <section id="hero" class="hero section">
+      <div class="hero-content">
+        <p class="eyebrow">AI Undergraduate Researcher</p>
+        <h1>Yuhua Luo <span>Silhovette</span></h1>
+        <p class="affiliation">Shanghai Jiao Tong University, School of Artificial Intelligence</p>
+        <p class="hero-summary">
+          AI undergraduate focusing on LLM agents, planning, tool use, and model collaboration.
+        </p>
+        <div class="hero-links" aria-label="Primary links">
+          <a href="https://github.com/silhovette" target="_blank" rel="noreferrer">https://github.com/silhovette</a>
+          <a href="mailto:silhovette@sjtu.edu.cn">silhovette@sjtu.edu.cn</a>
+        </div>
+      </div>
+    </section>
 
-    <h2>Projects</h2>
-    <div class="card">
-      <h3>H-RePlan / HeraBench</h3>
-      <p>
-        test1
-      </p>
-    </div>
+    <section id="about" class="section reveal">
+      <div class="section-heading">
+        <p class="eyebrow">About</p>
+        <h2>Academic Background</h2>
+      </div>
+      <div class="content-block">
+        <p>
+          I am an undergraduate student in Artificial Intelligence at Shanghai Jiao Tong University.
+          My current work sits around large language model agents, planning and replanning,
+          retrieval-augmented systems, and parameter-efficient adaptation.
+        </p>
+        <p>
+          I am interested in building AI systems that can use tools, coordinate across models or
+          devices, and improve through structured feedback. My recent experience includes applied
+          RAG systems, LLM fine-tuning, continual learning experiments, and agent-oriented research.
+        </p>
+      </div>
+    </section>
 
-    <div class="card">
-      <h3>Model Collaboration</h3>
-      <p>
-        test2
-      </p>
-    </div>
+    <section id="interests" class="section reveal">
+      <div class="section-heading">
+        <p class="eyebrow">Research Interests</p>
+        <h2>Directions I Care About</h2>
+      </div>
+      <div class="research-matrix" aria-label="Research interests">
+        <article
+          class="research-cell"
+          tabindex="0"
+          data-tooltip="I study training-aware and self-improving agents, with attention to planning loops, memory, tool use, and structured feedback for longer-horizon tasks."
+        >
+          <h3>LLM Agents</h3>
+          <p>Building agents that plan, use tools, and adapt through feedback.</p>
+        </article>
+        <article
+          class="research-cell"
+          tabindex="0"
+          data-tooltip="I track long-horizon planning, RePlan-style correction, and agentic reinforcement learning methods for robust task execution."
+        >
+          <h3>Planning &amp; RePlanning</h3>
+          <p>Studying long-horizon decision processes and correction-aware adaptive execution loops.</p>
+        </article>
+        <article
+          class="research-cell"
+          tabindex="0"
+          data-tooltip="My applied work connects LLMs with retrieval systems, structured knowledge, and external workflows such as source-grounded RAG pipelines."
+        >
+          <h3>Tool Use</h3>
+          <p>Connecting language models with retrieval, external tools, and structured workflows.</p>
+        </article>
+        <article
+          class="research-cell"
+          tabindex="0"
+          data-tooltip="I am interested in coordination across agents, models, and devices, especially where specialized components need shared context and reliable handoff."
+        >
+          <h3>Multi-agent / Multi-device Systems</h3>
+          <p>Exploring coordination across models, agents, and heterogeneous execution settings.</p>
+        </article>
+        <article
+          class="research-cell"
+          tabindex="0"
+          data-tooltip="My interests include collaboration among specialized models and parameter-efficient adaptation strategies that preserve useful task-specific behavior."
+        >
+          <h3>Model Collaboration</h3>
+          <p>Investigating how specialized models cooperate under shared task objectives.</p>
+        </article>
+        <article
+          class="research-cell"
+          tabindex="0"
+          data-tooltip="I follow agentic RL and reward-driven optimization as mechanisms for improving planning, tool selection, and adaptive behavior."
+        >
+          <h3>Reinforcement Learning</h3>
+          <p>Using reward-driven optimization for agent behavior and planning policies.</p>
+        </article>
+      </div>
+    </section>
 
-    <h2>Links</h2>
-    <p>
-      GitHub: <a href="https://github.com/silhovette">github.com/silhovette</a><br />
-      Email: <a href="mailto:silhovette@sjtu.edu.cn">silhovette@sjtu.edu.cn</a>
-    </p>
+    <section id="projects" class="section reveal">
+      <div class="section-heading">
+        <p class="eyebrow">Projects</p>
+        <h2>Selected Work</h2>
+      </div>
+      <div class="project-grid">
+        <article class="card">
+          <div class="card-header">
+            <h3>Telecom Customer Service Intent Recognition</h3>
+            <span class="status">Research Project</span>
+          </div>
+          <p>
+            Built an intent recognition and target-plan prediction pipeline for multi-turn customer
+            service dialogues, combining structured plan information, retrieval, few-shot reasoning,
+            and LoRA/SFT experiments on open-source 7B models.
+          </p>
+          <div class="keywords">
+            <span>RAG</span>
+            <span>Few-shot Reasoning</span>
+            <span>LoRA/SFT</span>
+            <span>Dialogue Understanding</span>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-header">
+            <h3>LLM Continual Learning Research</h3>
+            <span class="status">In preparation</span>
+          </div>
+          <p>
+            Explored parameter-efficient continual learning for language models, with an emphasis on
+            replay-free LoRA merging, task-vector geometry, shared components, and task-specific
+            residuals for balancing knowledge transfer and isolation.
+          </p>
+          <div class="keywords">
+            <span>Continual Learning</span>
+            <span>PEFT</span>
+            <span>Task Vectors</span>
+            <span>LoRA</span>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-header">
+            <h3>AI4MS Medical Knowledge Graph &amp; RAG System</h3>
+            <span class="status">Applied AI</span>
+          </div>
+          <p>
+            Organized multi-source medical materials for multiple sclerosis and built a local
+            retrieval-augmented QA prototype using ChromaDB and multilingual MiniLM embeddings, with
+            source-aware evidence retrieval to reduce hallucination risk.
+          </p>
+          <div class="keywords">
+            <span>Knowledge Graph</span>
+            <span>ChromaDB</span>
+            <span>MiniLM</span>
+            <span>Medical RAG</span>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-header">
+            <h3>Training-aware Agent Research</h3>
+            <span class="status">In progress</span>
+          </div>
+          <p>
+            Conducting early-stage research on training-aware and self-improving agents, following
+            directions such as agentic reinforcement learning, long-horizon planning, tool-augmented
+            agents, and memory-driven adaptation.
+          </p>
+          <div class="keywords">
+            <span>Agentic RL</span>
+            <span>Long-Horizon Planning</span>
+            <span>Tool Use</span>
+            <span>Memory</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="publications" class="section reveal">
+      <div class="section-heading">
+        <p class="eyebrow">Publications / Preprints</p>
+        <h2>Writing in Progress</h2>
+      </div>
+      <div class="content-block publication-note">
+        <p>Coming soon.</p>
+      </div>
+    </section>
+
+    <section id="skills" class="section reveal">
+      <div class="section-heading">
+        <p class="eyebrow">Skills</p>
+        <h2>Technical Stack</h2>
+      </div>
+      <div class="skills-grid">
+        <article class="skill-group">
+          <h3>Languages</h3>
+          <p>Python, C++; research scripting, data processing, model inference, engineering utilities.</p>
+        </article>
+        <article class="skill-group">
+          <h3>Deep Learning</h3>
+          <p>PyTorch, Transformers, PEFT; LoRA fine-tuning, inference evaluation, continual learning reproduction.</p>
+        </article>
+        <article class="skill-group">
+          <h3>LLM Systems</h3>
+          <p>RAG, LoRA/SFT, long-context KV Cache optimization, Agent Planning, Memory, Tool Use, RePlan.</p>
+        </article>
+        <article class="skill-group">
+          <h3>Tools / Systems</h3>
+          <p>Git, Linux, local AI application deployment, experiment environment management</p>
+        </article>
+        <article class="skill-group">
+          <h3>Retrieval / Knowledge</h3>
+          <p>ChromaDB, SentenceTransformers, multilingual MiniLM, FAISS, multi-source document parsing, knowledge graph construction and visualization.</p>
+        </article>
+        <article class="skill-group">
+          <h3>Data / Evaluation</h3>
+          <p>Pandas, NumPy, scikit-learn, experiment logging, metric analysis, ablation support.</p>
+        </article>
+        <article class="skill-group">
+          <h3>Academic English</h3>
+          <p>Reading AI papers, technical reports, and open-source documentation.</p>
+        </article>
+      </div>
+    </section>
+
   </main>
+
+  <div id="hover-tooltip" class="hover-tooltip" aria-hidden="true"></div>
+
+  <footer class="footer">
+    <p>&copy; <span id="year"></span> Yuhua Luo. Built with plain HTML, CSS, and JavaScript.</p>
+  </footer>
 </body>
 </html>
