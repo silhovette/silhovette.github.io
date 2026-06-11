@@ -411,7 +411,7 @@ h3 {
   min-height: 260px;
   align-items: center;
   justify-content: flex-end;
-  pointer-events: auto;
+  pointer-events: none;
 }
 
 .sjtu-line-mark {
@@ -462,29 +462,6 @@ h3 {
 .sjtu-line-mark__year path,
 .sjtu-line-mark__year rect {
   stroke-width: 4.2;
-}
-
-.sjtu-line-mark--traced .mark-line {
-  cursor: pointer;
-  pointer-events: visiblePainted;
-}
-
-.sjtu-mark-click-pulse {
-  fill: none;
-  stroke: #e8ffd0;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  pointer-events: none;
-  vector-effect: non-scaling-stroke;
-}
-
-.sjtu-mark-click-pulse--glow {
-  stroke: #76b900;
-  stroke-width: 22;
-}
-
-.sjtu-mark-click-pulse--core {
-  stroke-width: 9;
 }
 
 .works-page main {

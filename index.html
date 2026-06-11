@@ -80,68 +80,108 @@
             role="img"
           >
             <defs>
-              <filter id="sjtu-line-glow" x="-30%" y="-30%" width="160%" height="160%">
-                <feGaussianBlur stdDeviation="10" result="blur" />
+              <filter id="sjtu-line-glow" x="-34%" y="-34%" width="168%" height="168%" color-interpolation-filters="sRGB">
+                <feGaussianBlur stdDeviation="8" result="soft-blur" />
+                <feGaussianBlur stdDeviation="18" result="wide-blur" />
                 <feMerge>
-                  <feMergeNode in="blur" />
+                  <feMergeNode in="wide-blur" />
+                  <feMergeNode in="soft-blur" />
                   <feMergeNode in="SourceGraphic" />
                 </feMerge>
+              </filter>
+              <filter id="sjtu-line-hot-glow" x="-18%" y="-18%" width="136%" height="136%" color-interpolation-filters="sRGB">
+                <feGaussianBlur stdDeviation="3.2" result="hot-blur" />
+                <feMerge>
+                  <feMergeNode in="hot-blur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+              <filter id="sjtu-line-thin" x="-5%" y="-5%" width="110%" height="110%" color-interpolation-filters="sRGB">
+                <feMorphology in="SourceGraphic" operator="erode" radius="1.15" />
               </filter>
             </defs>
 
             <style>
               .sjtu-line-mark--traced {
                 --line-color: #76b900;
-                --line-hot: #e8ffd0;
+                --line-hot: #f1ffd8;
 
                 width: 100%;
                 height: auto;
                 display: block;
                 overflow: visible;
                 color: var(--line-color);
+                opacity: 1;
+                filter: drop-shadow(0 0 10px rgba(118, 185, 0, 0.12));
               }
 
               .sjtu-line-mark--traced .mark-line {
                 fill: currentColor;
                 fill-rule: evenodd;
                 clip-rule: evenodd;
+                opacity: 0.26;
+                filter: url(#sjtu-line-thin);
                 vector-effect: non-scaling-stroke;
+                animation: sjtuLineBreath 6.8s ease-in-out infinite;
               }
 
-              .sjtu-line-mark--traced .mark-glow,
-              .sjtu-line-mark--traced .mark-runner {
-                opacity: 0;
-                pointer-events: none;
-              }
-
-              .about-visual.is-animated .sjtu-line-mark--traced .mark-glow,
-              .sjtu-line-mark--traced.is-animated .mark-glow {
-                opacity: 0.42;
+              .sjtu-line-mark--traced .mark-glow {
                 fill: var(--line-color);
+                fill-rule: evenodd;
+                clip-rule: evenodd;
                 filter: url(#sjtu-line-glow);
-                animation: sjtuLineBreathe 3s ease-in-out infinite;
+                opacity: 0.04;
+                pointer-events: none;
+                animation: sjtuNeonBreath 6.8s ease-in-out infinite;
               }
 
-              .about-visual.is-animated .sjtu-line-mark--traced .mark-runner,
-              .sjtu-line-mark--traced.is-animated .mark-runner {
-                opacity: 0.55;
+              .sjtu-line-mark--traced .mark-runner {
                 fill: var(--line-hot);
-                filter: url(#sjtu-line-glow);
-                animation: sjtuLinePulse 2.6s ease-in-out infinite;
+                fill-rule: evenodd;
+                clip-rule: evenodd;
+                filter: url(#sjtu-line-hot-glow);
+                mix-blend-mode: screen;
+                opacity: 0.04;
+                pointer-events: none;
+                animation: sjtuHotBreath 6.8s ease-in-out infinite;
               }
 
-              @keyframes sjtuLineBreathe {
-                0%, 100% { opacity: 0.06; transform: scale(1); }
-                50% { opacity: 0.0006; transform: scale(1.006); }
+              @keyframes sjtuNeonBreath {
+                0%,
+                100% {
+                  opacity: 0.04;
+                }
+
+                50% {
+                  opacity: 0.12;
+                }
               }
 
-              @keyframes sjtuLinePulse {
-                0%, 100% { opacity: 0.08; }
-                50% { opacity: 0.38; }
+              @keyframes sjtuLineBreath {
+                0%,
+                100% {
+                  opacity: 0.24;
+                }
+
+                50% {
+                  opacity: 0.38;
+                }
+              }
+
+              @keyframes sjtuHotBreath {
+                0%,
+                100% {
+                  opacity: 0.04;
+                }
+
+                50% {
+                  opacity: 0.5;
+                }
               }
 
               @media (prefers-reduced-motion: reduce) {
                 .sjtu-line-mark--traced .mark-glow,
+                .sjtu-line-mark--traced .mark-line,
                 .sjtu-line-mark--traced .mark-runner {
                   animation: none !important;
                 }
