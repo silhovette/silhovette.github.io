@@ -75,6 +75,8 @@ const setupHoverTooltip = () => {
   let activeTrigger = null;
   let pointer = { x: 0, y: 0 };
   let frame = null;
+  let idleTimer = null;
+  const idleDelay = 150;
 
   const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
 
@@ -99,16 +101,39 @@ const setupHoverTooltip = () => {
     }
   };
 
-  const showTooltip = (trigger, x, y) => {
+  const showTooltip = (trigger) => {
     activeTrigger = trigger;
-    pointer = { x, y };
     tooltip.textContent = trigger.dataset.tooltip;
     tooltip.setAttribute("aria-hidden", "false");
     tooltip.classList.add("is-visible");
     requestPlacement();
   };
 
+  const clearIdleTimer = () => {
+    if (idleTimer !== null) {
+      window.clearTimeout(idleTimer);
+      idleTimer = null;
+    }
+  };
+
+  const scheduleTooltip = (trigger, x, y) => {
+    activeTrigger = trigger;
+    pointer = { x, y };
+    tooltip.textContent = trigger.dataset.tooltip;
+    tooltip.classList.remove("is-visible");
+    tooltip.setAttribute("aria-hidden", "true");
+    requestPlacement();
+    clearIdleTimer();
+
+    idleTimer = window.setTimeout(() => {
+      if (activeTrigger === trigger) {
+        showTooltip(trigger);
+      }
+    }, idleDelay);
+  };
+
   const hideTooltip = () => {
+    clearIdleTimer();
     activeTrigger = null;
     tooltip.classList.remove("is-visible");
     tooltip.setAttribute("aria-hidden", "true");
@@ -119,17 +144,17 @@ const setupHoverTooltip = () => {
       return;
     }
 
-    pointer = { x: event.clientX, y: event.clientY };
-    requestPlacement();
+    scheduleTooltip(activeTrigger, event.clientX, event.clientY);
   };
 
   triggers.forEach((trigger) => {
-    trigger.addEventListener("pointerenter", (event) => showTooltip(trigger, event.clientX, event.clientY));
+    trigger.addEventListener("pointerenter", (event) => scheduleTooltip(trigger, event.clientX, event.clientY));
     trigger.addEventListener("pointermove", moveTooltip, { passive: true });
     trigger.addEventListener("pointerleave", hideTooltip);
     trigger.addEventListener("focus", () => {
       const rect = trigger.getBoundingClientRect();
-      showTooltip(trigger, rect.left + rect.width / 2, rect.top + rect.height / 2);
+      pointer = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+      showTooltip(trigger);
     });
     trigger.addEventListener("blur", hideTooltip);
   });
