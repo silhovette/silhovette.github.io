@@ -302,9 +302,10 @@ h1 {
   max-width: 900px;
   margin-bottom: 10px;
   font-family: var(--font-display);
-  font-size: 6rem;
+  font-size: 5rem;
   line-height: 0.98;
   letter-spacing: 0;
+  color: #f1ffdf;
 }
 
 h2 {
@@ -324,7 +325,7 @@ h3 {
 
 .affiliation {
   max-width: 720px;
-  margin-bottom: 14px;
+  margin-bottom: 10px;
   color: var(--text-muted);
   font-size: 1.28rem;
 }
@@ -332,7 +333,7 @@ h3 {
 .hero-summary {
   max-width: none;
   color: var(--text);
-  font-size: 1.58rem;
+  font-size: 1.28rem;
   white-space: nowrap;
 }
 
@@ -396,6 +397,94 @@ h3 {
 
 .content-block p + p {
   margin-top: 18px;
+}
+
+.about-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 840px) minmax(240px, 1fr);
+  align-items: center;
+  gap: 64px;
+}
+
+.about-visual {
+  display: flex;
+  min-height: 260px;
+  align-items: center;
+  justify-content: flex-end;
+  pointer-events: auto;
+}
+
+.sjtu-line-mark {
+  width: min(410px, 100%);
+  fill: none;
+  opacity: 0.26;
+  overflow: visible;
+}
+
+.sjtu-line-mark path,
+.sjtu-line-mark rect,
+.sjtu-line-mark line {
+  vector-effect: non-scaling-stroke;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.sjtu-line-mark__main path,
+.sjtu-line-mark__main rect,
+.sjtu-line-mark__main line {
+  stroke-width: 5.6;
+}
+
+.sjtu-line-mark__detail path,
+.sjtu-line-mark__detail rect,
+.sjtu-line-mark__detail line {
+  stroke-width: 3.6;
+  opacity: 0.86;
+}
+
+.sjtu-line-mark__glow path,
+.sjtu-line-mark__glow rect {
+  stroke-width: 11;
+  opacity: 0.16;
+  animation: sjtuGlowBreath 6.8s ease-in-out infinite;
+}
+
+.sjtu-line-mark__runner path,
+.sjtu-line-mark__runner rect {
+  stroke: #d9ffd0;
+  stroke-width: 4;
+  stroke-dasharray: 12 88;
+  stroke-dashoffset: 0;
+  opacity: 0.72;
+  animation: sjtuRunnerFlow 9.5s linear infinite;
+}
+
+.sjtu-line-mark__year path,
+.sjtu-line-mark__year rect {
+  stroke-width: 4.2;
+}
+
+.sjtu-line-mark--traced .mark-line {
+  cursor: pointer;
+  pointer-events: visiblePainted;
+}
+
+.sjtu-mark-click-pulse {
+  fill: none;
+  stroke: #e8ffd0;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  pointer-events: none;
+  vector-effect: non-scaling-stroke;
+}
+
+.sjtu-mark-click-pulse--glow {
+  stroke: #76b900;
+  stroke-width: 22;
+}
+
+.sjtu-mark-click-pulse--core {
+  stroke-width: 9;
 }
 
 .works-page main {
@@ -744,6 +833,29 @@ h3 {
   }
 }
 
+@keyframes sjtuGlowBreath {
+  0%,
+  100% {
+    opacity: 0.09;
+    stroke-width: 8;
+  }
+
+  50% {
+    opacity: 0.22;
+    stroke-width: 11;
+  }
+}
+
+@keyframes sjtuRunnerFlow {
+  from {
+    stroke-dashoffset: 0;
+  }
+
+  to {
+    stroke-dashoffset: -100;
+  }
+}
+
 @media (max-width: 860px) {
   h1 {
     font-size: 4rem;
@@ -777,6 +889,21 @@ h3 {
   .section-heading {
     align-items: start;
     gap: 10px;
+  }
+
+  .about-layout {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .about-visual {
+    min-height: 180px;
+    justify-content: flex-start;
+  }
+
+  .sjtu-line-mark {
+    width: min(280px, 72vw);
+    opacity: 0.02;
   }
 
   .hero-summary {
@@ -846,6 +973,10 @@ h3 {
   .research-matrix {
     grid-template-columns: 1fr;
   }
+
+  .about-visual {
+    display: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -891,4 +1022,5 @@ h3 {
   .hover-tooltip {
     transition: opacity 0.001ms !important;
   }
+
 }

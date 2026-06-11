@@ -414,7 +414,7 @@ const setupHeroPolyhedron = () => {
     const rect = canvas.getBoundingClientRect();
     width = rect.width;
     height = rect.height;
-    pixelRatio = Math.min(window.devicePixelRatio || 1, 1.15, 1400 / Math.max(width, height));
+    pixelRatio = Math.min(window.devicePixelRatio || 1, 1.1, 2160 / Math.max(width, height));
     canvas.width = Math.floor(width * pixelRatio);
     canvas.height = Math.floor(height * pixelRatio);
     context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
@@ -617,7 +617,7 @@ const setupHeroPolyhedron = () => {
     currentSegments = [];
     sphereBounds = { x: centerX, y: centerY, radius: radius * 1.14 };
 
-    context.lineWidth = 1.15;
+    context.lineWidth = 1.25;
     context.lineCap = "round";
     context.lineJoin = "round";
 
