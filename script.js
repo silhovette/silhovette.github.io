@@ -1,22 +1,36 @@
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const navLinks = Array.from(document.querySelectorAll(".nav-links a"));
+const getLocalTarget = (href) => (href && href.startsWith("#") ? document.querySelector(href) : null);
 const sections = navLinks
-  .map((link) => document.querySelector(link.getAttribute("href")))
+  .map((link) => getLocalTarget(link.getAttribute("href")))
   .filter(Boolean);
+const activeLockDuration = 700;
+let activeLockUntil = 0;
 
 document.getElementById("year").textContent = new Date().getFullYear();
 
 navLinks.forEach((link) => {
   link.addEventListener("click", (event) => {
-    const target = document.querySelector(link.getAttribute("href"));
+    const hash = link.getAttribute("href");
+    const target = getLocalTarget(hash);
 
     if (!target) {
       return;
     }
 
     event.preventDefault();
-    target.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
-    history.pushState(null, "", link.getAttribute("href"));
+    activeLockUntil = reduceMotion ? 0 : performance.now() + activeLockDuration;
+
+    if (hash === "#about") {
+      setActiveLink("about");
+      window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
+    } else {
+      setActiveLink(target.id);
+      target.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+    }
+
+    history.pushState(null, "", hash);
+    window.setTimeout(updateActiveLink, activeLockDuration + 80);
   });
 });
 
@@ -26,25 +40,35 @@ const setActiveLink = (id) => {
   });
 };
 
-if ("IntersectionObserver" in window) {
-  const activeObserver = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          setActiveLink(entry.target.id);
-        }
-      });
-    },
-    {
-      rootMargin: "-36% 0px -52% 0px",
-      threshold: 0,
-    }
-  );
+const updateActiveLink = () => {
+  if (sections.length === 0) {
+    return;
+  }
 
-  sections.forEach((section) => activeObserver.observe(section));
-} else if (sections.length > 0) {
+  if (performance.now() < activeLockUntil) {
+    return;
+  }
+
+  const headerOffset = 104;
+  const currentPosition = window.scrollY + headerOffset;
+  let activeSection = sections[0];
+
+  sections.forEach((section) => {
+    if (section.offsetTop <= currentPosition) {
+      activeSection = section;
+    }
+  });
+
+  setActiveLink(activeSection.id);
+};
+
+if (sections.length > 0) {
   setActiveLink(sections[0].id);
+  updateActiveLink();
 }
+
+window.addEventListener("scroll", updateActiveLink, { passive: true });
+window.addEventListener("resize", updateActiveLink);
 
 if (!reduceMotion && "IntersectionObserver" in window) {
   const revealObserver = new IntersectionObserver(
@@ -302,5 +326,265 @@ const setupCursorField = () => {
   window.addEventListener("pointermove", handlePointerMove, { passive: true });
 };
 
+const setupHeroPolyhedron = () => {
+  const canvas = document.getElementById("hero-polyhedron");
+
+  if (!canvas) {
+    return;
+  }
+
+  const context = canvas.getContext("2d");
+
+  if (!context) {
+    return;
+  }
+
+  const normalize = ([x, y, z]) => {
+    const length = Math.hypot(x, y, z);
+    return [x / length, y / length, z / length];
+  };
+
+  const createIcosphere = (subdivisions) => {
+    const t = (1 + Math.sqrt(5)) / 2;
+    let vertices = [
+      [-1, t, 0],
+      [1, t, 0],
+      [-1, -t, 0],
+      [1, -t, 0],
+      [0, -1, t],
+      [0, 1, t],
+      [0, -1, -t],
+      [0, 1, -t],
+      [t, 0, -1],
+      [t, 0, 1],
+      [-t, 0, -1],
+      [-t, 0, 1],
+    ].map(normalize);
+
+    let faces = [
+      [0, 11, 5],
+      [0, 5, 1],
+      [0, 1, 7],
+      [0, 7, 10],
+      [0, 10, 11],
+      [1, 5, 9],
+      [5, 11, 4],
+      [11, 10, 2],
+      [10, 7, 6],
+      [7, 1, 8],
+      [3, 9, 4],
+      [3, 4, 2],
+      [3, 2, 6],
+      [3, 6, 8],
+      [3, 8, 9],
+      [4, 9, 5],
+      [2, 4, 11],
+      [6, 2, 10],
+      [8, 6, 7],
+      [9, 8, 1],
+    ];
+
+    const getMidpoint = (cache, first, second) => {
+      const key = first < second ? `${first}:${second}` : `${second}:${first}`;
+
+      if (cache.has(key)) {
+        return cache.get(key);
+      }
+
+      const midpoint = normalize([
+        (vertices[first][0] + vertices[second][0]) / 2,
+        (vertices[first][1] + vertices[second][1]) / 2,
+        (vertices[first][2] + vertices[second][2]) / 2,
+      ]);
+      const index = vertices.push(midpoint) - 1;
+      cache.set(key, index);
+      return index;
+    };
+
+    for (let step = 0; step < subdivisions; step += 1) {
+      const cache = new Map();
+      const nextFaces = [];
+
+      faces.forEach(([a, b, c]) => {
+        const ab = getMidpoint(cache, a, b);
+        const bc = getMidpoint(cache, b, c);
+        const ca = getMidpoint(cache, c, a);
+        nextFaces.push([a, ab, ca], [b, bc, ab], [c, ca, bc], [ab, bc, ca]);
+      });
+
+      faces = nextFaces;
+    }
+
+    const edgeMap = new Map();
+    faces.forEach(([a, b, c]) => {
+      [
+        [a, b],
+        [b, c],
+        [c, a],
+      ].forEach(([first, second]) => {
+        const key = first < second ? `${first}:${second}` : `${second}:${first}`;
+        edgeMap.set(key, [first, second]);
+      });
+    });
+
+    return { edges: Array.from(edgeMap.values()), vertices };
+  };
+
+  const { edges, vertices } = createIcosphere(2);
+  let width = 0;
+  let height = 0;
+  let pixelRatio = 1;
+  let animationFrame = null;
+  let isVisible = true;
+  let rotationTime = 0;
+  let lastFrameTime = null;
+  const maxFrameDelta = 34;
+  const opacityBuckets = [0.1, 0.16, 0.22, 0.28];
+
+  const resizeCanvas = () => {
+    const rect = canvas.getBoundingClientRect();
+    width = rect.width;
+    height = rect.height;
+    pixelRatio = Math.min(window.devicePixelRatio || 1, 1.15, 1400 / Math.max(width, height));
+    canvas.width = Math.floor(width * pixelRatio);
+    canvas.height = Math.floor(height * pixelRatio);
+    context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+  };
+
+  const rotatePoint = ([x, y, z], time) => {
+    const yAngle = time * 0.00005;
+    const xAngle = time * 0.00005;
+    const zAngle = time * 0.0000;
+    const cosY = Math.cos(yAngle);
+    const sinY = Math.sin(yAngle);
+    const cosX = Math.cos(xAngle);
+    const sinX = Math.sin(xAngle);
+    const cosZ = Math.cos(zAngle);
+    const sinZ = Math.sin(zAngle);
+    const yRotatedX = x * cosY + z * sinY;
+    const yRotatedZ = -x * sinY + z * cosY;
+    const xRotatedY = y * cosX - yRotatedZ * sinX;
+    const xRotatedZ = y * sinX + yRotatedZ * cosX;
+
+    return [
+      yRotatedX * cosZ - xRotatedY * sinZ,
+      yRotatedX * sinZ + xRotatedY * cosZ,
+      xRotatedZ,
+    ];
+  };
+
+  const draw = (timestamp = null) => {
+    if (timestamp !== null) {
+      if (lastFrameTime !== null) {
+        rotationTime += Math.min(timestamp - lastFrameTime, maxFrameDelta);
+      }
+
+      lastFrameTime = timestamp;
+    }
+
+    context.clearRect(0, 0, width, height);
+
+    const radius = Math.min(width, height) * 0.46;
+    const centerX = width * 0.76;
+    const centerY = height * 0.26;
+    const projected = vertices.map((vertex) => {
+      const [x, y, z] = rotatePoint(vertex, rotationTime);
+      const perspective = 1.55 / (2.35 - z);
+
+      return {
+        x: centerX + x * radius * perspective,
+        y: centerY + y * radius * perspective,
+        z,
+      };
+    });
+
+    context.lineWidth = 1.15;
+    context.lineCap = "round";
+    context.lineJoin = "round";
+
+    opacityBuckets.forEach((opacity) => {
+      context.beginPath();
+      context.strokeStyle = `rgba(118, 185, 0, ${opacity})`;
+
+      edges.forEach(([first, second]) => {
+        const a = projected[first];
+        const b = projected[second];
+        const depth = (a.z + b.z) / 2;
+        const edgeOpacity = 0.08 + ((depth + 1) / 2) * 0.24;
+        const bucketIndex = Math.min(opacityBuckets.length - 1, Math.floor(edgeOpacity / 0.08));
+
+        if (opacityBuckets[bucketIndex] !== opacity) {
+          return;
+        }
+
+        context.moveTo(a.x, a.y);
+        context.lineTo(b.x, b.y);
+      });
+
+      context.stroke();
+    });
+
+    if (!reduceMotion && isVisible) {
+      animationFrame = window.requestAnimationFrame(draw);
+    } else {
+      animationFrame = null;
+    }
+  };
+
+  const startAnimation = () => {
+    if (!reduceMotion && animationFrame === null) {
+      lastFrameTime = null;
+      animationFrame = window.requestAnimationFrame(draw);
+    }
+  };
+
+  const stopAnimation = () => {
+    if (animationFrame !== null) {
+      window.cancelAnimationFrame(animationFrame);
+      animationFrame = null;
+    }
+
+    lastFrameTime = null;
+  };
+
+  resizeCanvas();
+  window.addEventListener("resize", () => {
+    stopAnimation();
+    resizeCanvas();
+    draw();
+    startAnimation();
+  });
+
+  if ("IntersectionObserver" in window) {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.isIntersecting;
+
+        if (isVisible) {
+          startAnimation();
+        } else {
+          stopAnimation();
+        }
+      },
+      { rootMargin: "180px" }
+    );
+
+    observer.observe(canvas);
+  }
+
+  document.addEventListener("visibilitychange", () => {
+    isVisible = !document.hidden;
+
+    if (isVisible) {
+      startAnimation();
+    } else {
+      stopAnimation();
+    }
+  });
+
+  draw();
+};
+
+setupHeroPolyhedron();
 setupHoverTooltip();
 setupCursorField();

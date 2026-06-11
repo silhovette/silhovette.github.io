@@ -17,7 +17,6 @@
 
   <header class="site-header">
     <nav class="nav" aria-label="Primary navigation">
-      <a class="nav-brand" href="#hero" aria-label="Yuhua Luo home">YL</a>
       <div class="nav-links">
         <a href="#about">About</a>
         <a href="#interests">Research</a>
@@ -30,9 +29,10 @@
 
   <main id="main">
     <section id="hero" class="hero section">
+      <canvas id="hero-polyhedron" class="hero-polyhedron" aria-hidden="true"></canvas>
       <div class="hero-content">
         <p class="eyebrow">AI Undergraduate Researcher</p>
-        <h1>Yuhua Luo <span>Silhovette</span></h1>
+        <h1>Yuhua Luo</h1>
         <p class="affiliation">Shanghai Jiao Tong University, School of Artificial Intelligence</p>
         <p class="hero-summary">
           AI undergraduate focusing on LLM agents, planning, tool use, and model collaboration.
@@ -60,6 +60,14 @@
           devices, and improve through structured feedback. My recent experience includes applied
           RAG systems, LLM fine-tuning, continual learning experiments, and agent-oriented research.
         </p>
+        <div class="honors-block">
+          <h3>Selected Honors</h3>
+          <ul>
+            <li>Outstanding League Member, Shanghai Jiao Tong University</li>
+            <li>Merit Student, Shanghai Jiao Tong University, 2024-2025</li>
+            <li>Zhiyuan Honor Scholarship, Zhiyuan College, Shanghai Jiao Tong University</li>
+          </ul>
+        </div>
       </div>
     </section>
 
@@ -129,7 +137,7 @@
         <article class="card">
           <div class="card-header">
             <h3>Telecom Customer Service Intent Recognition</h3>
-            <span class="status">Research Project</span>
+            <span class="status">Industry Collab.</span>
           </div>
           <p>
             Built an intent recognition and target-plan prediction pipeline for multi-turn customer
@@ -147,7 +155,7 @@
         <article class="card">
           <div class="card-header">
             <h3>LLM Continual Learning Research</h3>
-            <span class="status">In preparation</span>
+            <span class="status">In progress</span>
           </div>
           <p>
             Explored parameter-efficient continual learning for language models, with an emphasis on
@@ -198,6 +206,9 @@
           </div>
         </article>
       </div>
+      <div class="section-link">
+        <a href="works.html">View more</a>
+      </div>
     </section>
 
     <section id="publications" class="section reveal">
@@ -206,7 +217,7 @@
         <h2>Writing in Progress</h2>
       </div>
       <div class="content-block publication-note">
-        <p>Coming soon.</p>
+        <p>Coming soon:)</p>
       </div>
     </section>
 
@@ -240,10 +251,6 @@
           <h3>Data / Evaluation</h3>
           <p>Pandas, NumPy, scikit-learn, experiment logging, metric analysis, ablation support.</p>
         </article>
-        <article class="skill-group">
-          <h3>Academic English</h3>
-          <p>Reading AI papers, technical reports, and open-source documentation.</p>
-        </article>
       </div>
     </section>
 
@@ -252,7 +259,7 @@
   <div id="hover-tooltip" class="hover-tooltip" aria-hidden="true"></div>
 
   <footer class="footer">
-    <p>&copy; <span id="year"></span> Yuhua Luo. Built with plain HTML, CSS, and JavaScript.</p>
+    <p>&copy; <span id="year"></span> Yuhua Luo. </p>
   </footer>
 </body>
 </html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta
+    name="description"
+    content="Selected academic and applied AI work by Yuhua Luo."
+  />
+  <title>Selected Work | Yuhua Luo</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="script.js" defer></script>
+</head>
+<body class="works-page">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <canvas id="cursor-field" class="cursor-field" aria-hidden="true"></canvas>
+
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="index.html#projects">Projects</a>
+        <a href="index.html#skills">Skills</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="section works-hero">
+      <div class="section-heading">
+        <p class="eyebrow">Selected Work</p>
+        <h1>Projects and Research</h1>
+      </div>
+      <div class="content-block">
+        <p>
+          A more complete view of my academic research, applied AI systems, and experimental engineering work.
+        </p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="works-list">
+        <article class="work-detail">
+          <div class="card-header">
+            <h2>Telecom Customer Service Intent Recognition</h2>
+            <span class="status">Industry Collab.</span>
+          </div>
+          <p>
+            Built an intent recognition and target-plan prediction pipeline for long multi-turn
+            customer service dialogues in a real telecom service setting.
+          </p>
+          <ul class="work-points">
+            <li>Cleaned, aggregated, and labeled 1,405 multi-turn customer service sessions.</li>
+            <li>Structured telecom plan information and built retrieval support for candidate plans.</li>
+            <li>Designed a RAG plus few-shot reasoning workflow over user plans, candidates, and dialogue context.</li>
+            <li>Ran LoRA/SFT experiments on open-source 7B models and compared against baseline settings.</li>
+          </ul>
+          <div class="keywords">
+            <span>RAG</span>
+            <span>Few-shot Reasoning</span>
+            <span>LoRA/SFT</span>
+            <span>Dialogue Understanding</span>
+          </div>
+        </article>
+
+        <article class="work-detail">
+          <div class="card-header">
+            <h2>LLM Continual Learning Research</h2>
+            <span class="status">In progress</span>
+          </div>
+          <p>
+            Explored parameter-efficient continual learning for language models, focusing on
+            replay-free LoRA merging, task-vector geometry, and task-specific residual components.
+          </p>
+          <ul class="work-points">
+            <li>Studied LoRA updates as task vectors in parameter space.</li>
+            <li>Worked with geometry-aware decomposition between shared and private task components.</li>
+            <li>Built continual learning experiment workflows over multiple text classification sequences.</li>
+            <li>Supported training logs, metric aggregation, and ablation analysis.</li>
+          </ul>
+          <div class="keywords">
+            <span>Continual Learning</span>
+            <span>PEFT</span>
+            <span>Task Vectors</span>
+            <span>LoRA</span>
+          </div>
+        </article>
+
+        <article class="work-detail">
+          <div class="card-header">
+            <h2>AI4MS Medical Knowledge Graph &amp; RAG System</h2>
+            <span class="status">Applied AI</span>
+          </div>
+          <p>
+            Built a local retrieval-augmented QA prototype for multiple sclerosis knowledge
+            organization and evidence-grounded medical question answering.
+          </p>
+          <ul class="work-points">
+            <li>Parsed and organized multi-source medical materials into searchable knowledge assets.</li>
+            <li>Used ChromaDB and multilingual MiniLM embeddings to index medical evidence chunks.</li>
+            <li>Mapped user questions to relevant evidence passages with source-aware retrieval.</li>
+            <li>Focused on reducing hallucination risk by preserving citations in generated answers.</li>
+          </ul>
+          <div class="keywords">
+            <span>Knowledge Graph</span>
+            <span>ChromaDB</span>
+            <span>MiniLM</span>
+            <span>Medical RAG</span>
+          </div>
+        </article>
+
+        <article class="work-detail">
+          <div class="card-header">
+            <h2>Training-aware Agent Research</h2>
+            <span class="status">In progress</span>
+          </div>
+          <p>
+            Conducting early-stage research on training-aware and self-improving agents, with
+            attention to planning, memory, tool use, and adaptive behavior.
+          </p>
+          <ul class="work-points">
+            <li>Tracked self-improving agents, agentic reinforcement learning, and tool-augmented agents.</li>
+            <li>Studied long-horizon planning and replanning as core agent capabilities.</li>
+            <li>Prepared technical research notes for future system design and experiments.</li>
+            <li>Focused on how training signals can shape agent execution and self-improvement.</li>
+          </ul>
+          <div class="keywords">
+            <span>Agentic RL</span>
+            <span>Long-Horizon Planning</span>
+            <span>Tool Use</span>
+            <span>Memory</span>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; <span id="year"></span> Yuhua Luo. </p>
+  </footer>
+</body>
+</html>
