@@ -439,7 +439,33 @@ const setupHeroPolyhedron = () => {
   let rotationTime = 0;
   let lastFrameTime = null;
   const maxFrameDelta = 34;
-  const opacityBuckets = [0.1, 0.16, 0.22, 0.28];
+  let speedMultiplier = 1;
+  let opacityMultiplier = 1;
+  let targetSpeedMultiplier = 1;
+  let targetOpacityMultiplier = 1;
+  let currentSegments = [];
+  let sphereBounds = null;
+  let pulses = [];
+  const interactionEase = 0.05;
+  const hitDistance = 15;
+  const pulseLifetime = 1000;
+  const opacityBuckets = [0.05, 0.08, 0.11, 0.14, 0.17, 0.2, 0.24, 0.28, 0.33, 0.38];
+  const edgeData = edges.map(([first, second]) => {
+    const a = vertices[first];
+    const b = vertices[second];
+
+    return {
+      first,
+      second,
+      length: Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]),
+    };
+  });
+  const graph = vertices.map(() => []);
+
+  edgeData.forEach(({ first, second, length }) => {
+    graph[first].push({ index: second, length });
+    graph[second].push({ index: first, length });
+  });
 
   const resizeCanvas = () => {
     const rect = canvas.getBoundingClientRect();
@@ -453,7 +479,7 @@ const setupHeroPolyhedron = () => {
 
   const rotatePoint = ([x, y, z], time) => {
     const yAngle = time * 0.00005;
-    const xAngle = time * 0.00005;
+    const xAngle = time * 0.00008;
     const zAngle = time * 0.0000;
     const cosY = Math.cos(yAngle);
     const sinY = Math.sin(yAngle);
@@ -473,10 +499,157 @@ const setupHeroPolyhedron = () => {
     ];
   };
 
+  const getOpacityBucket = (opacity) => {
+    let bucket = opacityBuckets[0];
+
+    for (let index = 1; index < opacityBuckets.length; index += 1) {
+      if (Math.abs(opacityBuckets[index] - opacity) < Math.abs(bucket - opacity)) {
+        bucket = opacityBuckets[index];
+      }
+    }
+
+    return bucket;
+  };
+
+  const getCanvasPoint = (event) => {
+    const rect = canvas.getBoundingClientRect();
+
+    return {
+      x: event.clientX - rect.left,
+      y: event.clientY - rect.top,
+    };
+  };
+
+  const setInteractionActive = (isActive) => {
+    if (reduceMotion) {
+      return;
+    }
+
+    targetSpeedMultiplier = isActive ? 0.6 : 1;
+    targetOpacityMultiplier = isActive ? 1.5 : 1;
+    startAnimation();
+  };
+
+  const distanceToSegment = (point, segment) => {
+    const dx = segment.x2 - segment.x1;
+    const dy = segment.y2 - segment.y1;
+    const lengthSquared = dx * dx + dy * dy;
+    const rawT =
+      lengthSquared === 0
+        ? 0
+        : ((point.x - segment.x1) * dx + (point.y - segment.y1) * dy) / lengthSquared;
+    const t = Math.max(0, Math.min(1, rawT));
+    const x = segment.x1 + dx * t;
+    const y = segment.y1 + dy * t;
+
+    return {
+      distance: Math.hypot(point.x - x, point.y - y),
+      t,
+    };
+  };
+
+  const getPulseDistances = (seeds) => {
+    const distances = new Array(vertices.length).fill(Infinity);
+    const visited = new Array(vertices.length).fill(false);
+
+    seeds.forEach(({ index, distance }) => {
+      distances[index] = Math.min(distances[index], distance);
+    });
+
+    for (let step = 0; step < vertices.length; step += 1) {
+      let current = -1;
+      let bestDistance = Infinity;
+
+      distances.forEach((distance, index) => {
+        if (!visited[index] && distance < bestDistance) {
+          current = index;
+          bestDistance = distance;
+        }
+      });
+
+      if (current === -1) {
+        break;
+      }
+
+      visited[current] = true;
+
+      graph[current].forEach(({ index, length }) => {
+        const nextDistance = bestDistance + length;
+
+        if (nextDistance < distances[index]) {
+          distances[index] = nextDistance;
+        }
+      });
+    }
+
+    return distances;
+  };
+
+  const drawPulseLayer = (timestamp, projected) => {
+    if (pulses.length === 0) {
+      return;
+    }
+
+    pulses = pulses.filter((pulse) => timestamp - pulse.startedAt < pulseLifetime);
+
+    if (pulses.length === 0) {
+      return;
+    }
+
+    context.lineWidth = 1.7;
+
+    edgeData.forEach(({ first, second, length }) => {
+      const a = projected[first];
+      const b = projected[second];
+      const depth = (a.z + b.z) / 2;
+      const depthFactor = depth >= 0 ? 1 : 0.42;
+      const segments = 8;
+
+      for (let segment = 0; segment < segments; segment += 1) {
+        const t0 = segment / segments;
+        const t1 = (segment + 1) / segments;
+        const midpoint = (t0 + t1) / 2;
+        let pulseOpacity = 0;
+
+        pulses.forEach((pulse) => {
+          const elapsed = timestamp - pulse.startedAt;
+          const front = elapsed * 0.00225;
+          const distanceFromFirst = pulse.distances[first] + length * midpoint;
+          const distanceFromSecond = pulse.distances[second] + length * (1 - midpoint);
+          const distance = Math.min(distanceFromFirst, distanceFromSecond);
+          const band = 0.25;
+          const frontDelta = Math.abs(distance - front);
+
+          if (frontDelta > band) {
+            return;
+          }
+
+          const frontStrength = 1 - frontDelta / band;
+          const timeFade = Math.max(0, 1 - elapsed / pulseLifetime);
+          const distanceFade = 1 / (1 + distance * 0.9);
+          pulseOpacity = Math.max(pulseOpacity, frontStrength * timeFade * distanceFade * depthFactor * 1);
+        });
+
+        if (pulseOpacity <= 0.01) {
+          continue;
+        }
+
+        context.beginPath();
+        context.moveTo(a.x + (b.x - a.x) * t0, a.y + (b.y - a.y) * t0);
+        context.lineTo(a.x + (b.x - a.x) * t1, a.y + (b.y - a.y) * t1);
+        context.strokeStyle = `rgba(180, 255, 84, ${pulseOpacity})`;
+        context.stroke();
+      }
+    });
+  };
+
   const draw = (timestamp = null) => {
     if (timestamp !== null) {
       if (lastFrameTime !== null) {
-        rotationTime += Math.min(timestamp - lastFrameTime, maxFrameDelta);
+        const frameDelta = Math.min(timestamp - lastFrameTime, maxFrameDelta);
+        speedMultiplier += (targetSpeedMultiplier - speedMultiplier) * interactionEase;
+        opacityMultiplier += (targetOpacityMultiplier - opacityMultiplier) * interactionEase;
+        rotationTime += frameDelta * speedMultiplier;
       }
 
       lastFrameTime = timestamp;
@@ -487,6 +660,7 @@ const setupHeroPolyhedron = () => {
     const radius = Math.min(width, height) * 0.46;
     const centerX = width * 0.76;
     const centerY = height * 0.26;
+    const baseBuckets = new Map(opacityBuckets.map((opacity) => [opacity, []]));
     const projected = vertices.map((vertex) => {
       const [x, y, z] = rotatePoint(vertex, rotationTime);
       const perspective = 1.55 / (2.35 - z);
@@ -497,26 +671,46 @@ const setupHeroPolyhedron = () => {
         z,
       };
     });
+    currentSegments = [];
+    sphereBounds = { x: centerX, y: centerY, radius: radius * 1.14 };
 
     context.lineWidth = 1.15;
     context.lineCap = "round";
     context.lineJoin = "round";
 
-    opacityBuckets.forEach((opacity) => {
+    edgeData.forEach(({ first, second }, index) => {
+      const a = projected[first];
+      const b = projected[second];
+      const depth = (a.z + b.z) / 2;
+      const backFaceFactor = depth < 0 ? 0.7 : 1;
+      const edgeOpacity = Math.min(
+        opacityBuckets[opacityBuckets.length - 1],
+        (0.08 + ((depth + 1) / 2) * 0.24) * backFaceFactor * opacityMultiplier
+      );
+      const bucket = getOpacityBucket(edgeOpacity);
+
+      baseBuckets.get(bucket).push({ a, b });
+      currentSegments.push({
+        index,
+        first,
+        second,
+        depth,
+        x1: a.x,
+        y1: a.y,
+        x2: b.x,
+        y2: b.y,
+      });
+    });
+
+    baseBuckets.forEach((segments, opacity) => {
+      if (segments.length === 0) {
+        return;
+      }
+
       context.beginPath();
       context.strokeStyle = `rgba(118, 185, 0, ${opacity})`;
 
-      edges.forEach(([first, second]) => {
-        const a = projected[first];
-        const b = projected[second];
-        const depth = (a.z + b.z) / 2;
-        const edgeOpacity = 0.08 + ((depth + 1) / 2) * 0.24;
-        const bucketIndex = Math.min(opacityBuckets.length - 1, Math.floor(edgeOpacity / 0.08));
-
-        if (opacityBuckets[bucketIndex] !== opacity) {
-          return;
-        }
-
+      segments.forEach(({ a, b }) => {
         context.moveTo(a.x, a.y);
         context.lineTo(b.x, b.y);
       });
@@ -524,7 +718,11 @@ const setupHeroPolyhedron = () => {
       context.stroke();
     });
 
-    if (!reduceMotion && isVisible) {
+    drawPulseLayer(timestamp || performance.now(), projected);
+
+    if (!reduceMotion && isVisible && (targetSpeedMultiplier !== 1 || targetOpacityMultiplier !== 1 || pulses.length > 0)) {
+      animationFrame = window.requestAnimationFrame(draw);
+    } else if (!reduceMotion && isVisible) {
       animationFrame = window.requestAnimationFrame(draw);
     } else {
       animationFrame = null;
@@ -554,6 +752,52 @@ const setupHeroPolyhedron = () => {
     draw();
     startAnimation();
   });
+
+  if (!reduceMotion) {
+    canvas.addEventListener(
+      "pointermove",
+      (event) => {
+        const point = getCanvasPoint(event);
+        const isInsideSphere =
+          sphereBounds !== null && Math.hypot(point.x - sphereBounds.x, point.y - sphereBounds.y) <= sphereBounds.radius;
+        setInteractionActive(isInsideSphere);
+      },
+      { passive: true }
+    );
+
+    canvas.addEventListener("pointerleave", () => setInteractionActive(false));
+
+    canvas.addEventListener("click", (event) => {
+      const point = getCanvasPoint(event);
+      let nearest = null;
+
+      currentSegments.forEach((segment) => {
+        if (segment.depth <= 0) {
+          return;
+        }
+
+        const hit = distanceToSegment(point, segment);
+
+        if (!nearest || hit.distance < nearest.distance) {
+          nearest = { ...segment, ...hit };
+        }
+      });
+
+      if (!nearest || nearest.distance > hitDistance) {
+        return;
+      }
+
+      const edge = edgeData[nearest.index];
+      const distances = getPulseDistances([
+        { index: edge.first, distance: edge.length * nearest.t },
+        { index: edge.second, distance: edge.length * (1 - nearest.t) },
+      ]);
+
+      pulses.push({ startedAt: performance.now(), distances });
+      pulses = pulses.slice(-4);
+      startAnimation();
+    });
+  }
 
   if ("IntersectionObserver" in window) {
     const observer = new IntersectionObserver(
