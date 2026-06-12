@@ -757,6 +757,121 @@ const setupHeroPolyhedron = () => {
   draw();
 };
 
+const setupIndexCodePreview = () => {
+  const showcase = document.querySelector(".code-showcase");
+  const preview = document.getElementById("index-code-preview");
+  const modal = document.getElementById("code-modal");
+  const modalCode = document.getElementById("index-code-modal");
+  const modalSource = modal?.querySelector(".code-modal__source");
+  const closeButton = modal?.querySelector(".code-modal__close");
+
+  if (!showcase || !preview || !modal || !modalCode || !modalSource || !closeButton) {
+    return;
+  }
+
+  let previewFrame = null;
+  let previewStartedAt = null;
+  let lastActiveElement = null;
+
+  const blockCopy = (element) => {
+    ["copy", "cut", "contextmenu", "dragstart", "selectstart"].forEach((eventName) => {
+      element.addEventListener(eventName, (event) => event.preventDefault());
+    });
+
+    element.addEventListener("keydown", (event) => {
+      if ((event.ctrlKey || event.metaKey) && ["a", "c", "x"].includes(event.key.toLowerCase())) {
+        event.preventDefault();
+      }
+    });
+  };
+
+  const getLiveIndexSource = async () => {
+    try {
+      const response = await fetch(new URL("index.html", window.location.href), { cache: "no-store" });
+
+      if (!response.ok) {
+        throw new Error("Unable to load index.html");
+      }
+
+      return response.text();
+    } catch {
+      return `<!DOCTYPE html>\n${document.documentElement.outerHTML}`;
+    }
+  };
+
+  const compactSourceForDisplay = (source) => source.replace(/^\s*[\r\n]/gm, "");
+
+  const scrollPreview = (timestamp) => {
+    const viewport = preview.parentElement;
+    const maxScroll = viewport.scrollHeight - viewport.clientHeight;
+
+    if (maxScroll <= 0 || reduceMotion) {
+      previewFrame = null;
+      return;
+    }
+
+    if (previewStartedAt === null) {
+      previewStartedAt = timestamp;
+    }
+
+    const duration = Math.max(52000, preview.textContent.length * 16);
+    const progress = ((timestamp - previewStartedAt) % duration) / duration;
+    viewport.scrollTop = progress * maxScroll;
+    previewFrame = window.requestAnimationFrame(scrollPreview);
+  };
+
+  const startPreviewScroll = () => {
+    if (previewFrame === null && !reduceMotion) {
+      previewStartedAt = null;
+      previewFrame = window.requestAnimationFrame(scrollPreview);
+    }
+  };
+
+  const openModal = () => {
+    lastActiveElement = document.activeElement;
+    modal.classList.add("is-open");
+    modal.setAttribute("aria-hidden", "false");
+    modalSource.scrollTop = 0;
+    document.body.style.overflow = "hidden";
+    closeButton.focus();
+  };
+
+  const closeModal = () => {
+    modal.classList.remove("is-open");
+    modal.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+
+    if (lastActiveElement instanceof HTMLElement) {
+      lastActiveElement.focus();
+    }
+  };
+
+  blockCopy(showcase);
+  blockCopy(modalSource);
+
+  showcase.addEventListener("click", openModal);
+  showcase.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      openModal();
+    }
+  });
+  modal.querySelectorAll("[data-code-close]").forEach((control) => control.addEventListener("click", closeModal));
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && modal.classList.contains("is-open")) {
+      closeModal();
+    }
+  });
+
+  getLiveIndexSource().then((source) => {
+    const displaySource = compactSourceForDisplay(source);
+    preview.textContent = displaySource;
+    modalCode.textContent = displaySource;
+    startPreviewScroll();
+  });
+};
+
+setupIndexCodePreview();
 setupHeroPolyhedron();
 setupHoverTooltip();
 setupCursorField();
