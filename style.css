@@ -149,7 +149,7 @@ body::after {
 .cursor-field {
   position: fixed;
   inset: 0;
-  z-index: 40;
+  z-index: 60;
   width: 100vw;
   height: 100vh;
   pointer-events: none;
@@ -540,7 +540,7 @@ h3 {
   color: var(--accent);
   border-color: rgba(118, 185, 0, 0.34);
   background: var(--accent-soft);
-  transition: color 180ms ease, border-color 180ms ease, background 180ms ease, transform 180ms ease;
+  transition: color 180ms ease, border-color 180ms ease, background 180ms ease;
 }
 
 .keywords a:hover,
@@ -548,7 +548,6 @@ h3 {
   color: var(--text);
   border-color: var(--border-strong);
   background: rgba(118, 185, 0, 0.16);
-  transform: translateY(-1px);
 }
 
 .project-grid,
@@ -685,16 +684,126 @@ h3 {
   transition: transform 220ms ease;
 }
 
+.game-gate__close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  font-size: 1.1rem;
+  line-height: 1;
+  border: 1px solid rgba(118, 185, 0, 0.28);
+  background: rgba(0, 0, 0, 0.28);
+  transition: color 180ms ease, border-color 180ms ease, background 180ms ease, transform 180ms ease;
+}
+
+.game-gate__close:hover,
+.game-gate__close:focus-visible {
+  color: var(--text);
+  background: rgba(118, 185, 0, 0.12);
+  transform: translateY(-1px);
+}
+
 .game-gate.is-open .game-gate__panel {
   transform: translateY(0) scale(1);
 }
 
+.game-gate__title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0 0 14px;
+}
+
 .game-gate__panel h2 {
+  flex: 1 1 auto;
   max-width: 14ch;
-  margin: 8px 0 14px;
+  margin: 0;
   color: var(--accent);
   font-size: clamp(1.55rem, 3vw, 2.1rem);
   line-height: 1.08;
+}
+
+.game-gate__mark {
+  --line-color: rgba(118, 185, 0, 0.78);
+  --line-glow: rgba(157, 255, 58, 0.58);
+  --line-runner: rgba(126, 243, 0, 0.88);
+  --gate-mark-shift-x: -20px;
+
+  width: clamp(72px, 18vw, 112px);
+  flex: 0 0 auto;
+  color: var(--line-color);
+  transform: translateX(var(--gate-mark-shift-x));
+}
+
+.thinking-line-mark {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.thinking-line-mark__main,
+.thinking-line-mark__glow {
+  fill-rule: evenodd;
+}
+
+.thinking-line-mark__main {
+  fill: currentColor;
+}
+
+.thinking-line-mark__glow {
+  fill: var(--line-glow);
+}
+
+.thinking-line-mark__glow,
+.thinking-line-mark__runner {
+  opacity: 0;
+  filter: url("#game-gate-green-glow");
+  pointer-events: none;
+  transform-origin: center;
+}
+
+.thinking-line-mark__runner {
+  fill: none;
+  stroke: var(--line-runner);
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 6 94;
+  stroke-dashoffset: 0;
+}
+
+.thinking-visual.is-animated .thinking-line-mark__glow {
+  opacity: 0.28;
+  animation: thinkingGlowBreathe 3.2s ease-in-out infinite;
+}
+
+.thinking-visual.is-animated .thinking-line-mark__runner {
+  opacity: 0.72;
+  animation: thinkingRunnerMove 2.8s linear infinite;
+}
+
+@keyframes thinkingGlowBreathe {
+  0%,
+  100% {
+    opacity: 0.12;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.42;
+    transform: scale(1.006);
+  }
+}
+
+@keyframes thinkingRunnerMove {
+  to {
+    stroke-dashoffset: -100;
+  }
 }
 
 .game-gate__panel p:not(.eyebrow) {
@@ -852,20 +961,30 @@ h3 {
 .code-modal__close {
   width: 34px;
   height: 34px;
-  color: var(--accent);
   border: 1px solid rgba(118, 185, 0, 0.3);
-  border-radius: var(--radius);
   background: transparent;
   font: inherit;
-  cursor: pointer;
   transition: background 180ms ease, border-color 180ms ease;
+}
+
+.game-gate__close,
+.code-modal__close {
+  color: var(--accent);
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+.game-gate__close:hover,
+.game-gate__close:focus-visible,
+.code-modal__close:hover,
+.code-modal__close:focus-visible {
+  border-color: var(--border-strong);
+  outline: 0;
 }
 
 .code-modal__close:hover,
 .code-modal__close:focus-visible {
-  border-color: var(--border-strong);
   background: rgba(118, 185, 0, 0.08);
-  outline: 0;
 }
 
 .code-modal__source {
@@ -1142,6 +1261,15 @@ h3 {
 
   .card-header {
     flex-direction: column;
+  }
+
+  .game-gate__title-row {
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .game-gate__mark {
+    width: 72px;
   }
 
   .research-matrix {

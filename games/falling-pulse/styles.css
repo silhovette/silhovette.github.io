@@ -59,6 +59,35 @@ input {
   font: inherit;
 }
 
+.site-return {
+  position: fixed;
+  top: 18px;
+  left: 18px;
+  z-index: 110;
+  display: grid;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  color: rgba(238, 242, 246, 0.82);
+  font-size: 1.35rem;
+  line-height: 1;
+  text-decoration: none;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  background: rgba(22, 26, 22, 0.78);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.24);
+  backdrop-filter: blur(10px);
+  transition: color 160ms ease, border-color 160ms ease, background 160ms ease;
+}
+
+.site-return:hover,
+.site-return:focus-visible {
+  color: #fff;
+  border-color: rgba(69, 208, 181, 0.42);
+  background: rgba(34, 40, 34, 0.86);
+  outline: 0;
+}
+
 .loading-screen {
   position: fixed;
   inset: 0;
@@ -281,16 +310,6 @@ body.is-loaded .loading-screen {
   align-items: center;
   gap: 18px;
   z-index: 3;
-}
-
-.brand-mark {
-  width: 58px;
-  height: 58px;
-  border-radius: 8px;
-  background:
-    linear-gradient(90deg, transparent 18%, rgba(255, 255, 255, 0.8) 18% 24%, transparent 24% 40%, rgba(255, 255, 255, 0.64) 40% 46%, transparent 46% 62%, rgba(255, 255, 255, 0.8) 62% 68%, transparent 68%),
-    linear-gradient(135deg, var(--accent), var(--accent-2));
-  box-shadow: 0 12px 34px rgba(69, 208, 181, 0.22);
 }
 
 h1,
@@ -1428,11 +1447,6 @@ h1 {
 
   .setup-grid {
     grid-column: 1;
-  }
-
-  .brand-mark {
-    width: 46px;
-    height: 46px;
   }
 
   .game-panel {

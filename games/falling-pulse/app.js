@@ -165,7 +165,7 @@ function normalizeProfile(stored = {}) {
 
 function saveProfile() {
   userProfile = normalizeProfile(userProfile);
-  queueFileSave(350);
+  refreshSaveData();
 }
 
 function renderProfile() {
@@ -279,7 +279,7 @@ function normalizeBindings(stored = {}) {
 
 function saveBindings() {
   bindings = normalizeBindings(bindings);
-  queueFileSave(350);
+  refreshSaveData();
 }
 
 function createSaveData(stored = {}) {
@@ -303,21 +303,7 @@ function refreshSaveData() {
   return saveData;
 }
 
-function applyFileSave(stored) {
-  saveData = createSaveData(stored);
-  userProfile = saveData.profile;
-  bindings = saveData.bindings;
-  renderProfile();
-  if (checkRatingAchievements()) saveProfile();
-  updateAchievements();
-  renderBindList();
-}
-
-function queueFileSave() {
-  refreshSaveData();
-}
-
-async function initFileSave() {
+function initFileSave() {
   userProfile = normalizeProfile(DEFAULT_PROFILE);
   bindings = normalizeBindings();
   saveData = createSaveData({ profile: userProfile, bindings, results: [] });
@@ -1284,7 +1270,7 @@ function saveGameResult() {
     counts: { ...state.counts },
     ratingGain: state.ratingGain,
   });
-  queueFileSave(0);
+  refreshSaveData();
 }
 
 function showResults() {
