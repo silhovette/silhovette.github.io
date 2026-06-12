@@ -386,13 +386,13 @@ const setupHeroPolyhedron = () => {
   let targetSpeedMultiplier = 1;
   let targetOpacityMultiplier = 1;
   let currentSegments = [];
-  let sphereBounds = null;
   let pulses = [];
-  const interactionEase = 0.05;
+  const interactionEase = 0.075;
+  const hoverDistance = 16;
   const hitDistance = 18;
   const hitDepthLimit = -0.24;
   const pulseLifetime = 1000;
-  const opacityBuckets = [0.08, 0.09, 0.12, 0.14, 0.18, 0.25, 0.27, 0.3, 0.35, 0.4];
+  const maxEdgeOpacity = 0.9;
   const edgeData = edges.map(([first, second]) => {
     const a = vertices[first];
     const b = vertices[second];
@@ -442,16 +442,10 @@ const setupHeroPolyhedron = () => {
     ];
   };
 
-  const getOpacityBucket = (opacity) => {
-    let bucket = opacityBuckets[0];
+  const smoothstep = (edge0, edge1, value) => {
+    const x = Math.max(0, Math.min(1, (value - edge0) / (edge1 - edge0)));
 
-    for (let index = 1; index < opacityBuckets.length; index += 1) {
-      if (Math.abs(opacityBuckets[index] - opacity) < Math.abs(bucket - opacity)) {
-        bucket = opacityBuckets[index];
-      }
-    }
-
-    return bucket;
+    return x * x * (3 - 2 * x);
   };
 
   const getCanvasPoint = (event) => {
@@ -472,6 +466,15 @@ const setupHeroPolyhedron = () => {
     targetOpacityMultiplier = isActive ? 1.5 : 1;
     startAnimation();
   };
+
+  const isPointNearPolyhedron = (point) =>
+    currentSegments.some((segment) => {
+      if (segment.depth <= hitDepthLimit && segment.frontDepth <= 0) {
+        return false;
+      }
+
+      return distanceToSegment(point, segment).distance <= hoverDistance;
+    });
 
   const distanceToSegment = (point, segment) => {
     const dx = segment.x2 - segment.x1;
@@ -570,7 +573,7 @@ const setupHeroPolyhedron = () => {
           const frontStrength = 1 - frontDelta / band;
           const timeFade = Math.max(0, 1 - elapsed / pulseLifetime);
           const distanceFade = 1 / (1 + distance * 0.9);
-          pulseOpacity = Math.max(pulseOpacity, frontStrength * timeFade * distanceFade * depthFactor * 1);
+          pulseOpacity = Math.max(pulseOpacity, frontStrength * timeFade * distanceFade * depthFactor * 2);
         });
 
         if (pulseOpacity <= 0.01) {
@@ -603,7 +606,6 @@ const setupHeroPolyhedron = () => {
     const radius = Math.min(width, height) * 0.46;
     const centerX = width * 0.76;
     const centerY = height * 0.26;
-    const baseBuckets = new Map(opacityBuckets.map((opacity) => [opacity, []]));
     const projected = vertices.map((vertex) => {
       const [x, y, z] = rotatePoint(vertex, rotationTime);
       const perspective = 1.55 / (2.35 - z);
@@ -615,7 +617,6 @@ const setupHeroPolyhedron = () => {
       };
     });
     currentSegments = [];
-    sphereBounds = { x: centerX, y: centerY, radius: radius * 1.14 };
 
     context.lineWidth = 1.25;
     context.lineCap = "round";
@@ -625,14 +626,17 @@ const setupHeroPolyhedron = () => {
       const a = projected[first];
       const b = projected[second];
       const depth = (a.z + b.z) / 2;
-      const backFaceFactor = depth < 0 ? 0.7 : 1;
+      const backFaceFactor = 0.7 + smoothstep(-0.16, 0.2, depth) * 0.3;
       const edgeOpacity = Math.min(
-        opacityBuckets[opacityBuckets.length - 1],
-        (0.08 + ((depth + 1) / 2) * 0.24) * backFaceFactor * opacityMultiplier
+        maxEdgeOpacity,
+        (0.12 + ((depth + 1) / 2) * 0.64) * backFaceFactor * opacityMultiplier
       );
-      const bucket = getOpacityBucket(edgeOpacity);
 
-      baseBuckets.get(bucket).push({ a, b });
+      context.beginPath();
+      context.strokeStyle = `rgba(118, 185, 0, ${edgeOpacity})`;
+      context.moveTo(a.x, a.y);
+      context.lineTo(b.x, b.y);
+      context.stroke();
       currentSegments.push({
         index,
         first,
@@ -644,22 +648,6 @@ const setupHeroPolyhedron = () => {
         x2: b.x,
         y2: b.y,
       });
-    });
-
-    baseBuckets.forEach((segments, opacity) => {
-      if (segments.length === 0) {
-        return;
-      }
-
-      context.beginPath();
-      context.strokeStyle = `rgba(118, 185, 0, ${opacity})`;
-
-      segments.forEach(({ a, b }) => {
-        context.moveTo(a.x, a.y);
-        context.lineTo(b.x, b.y);
-      });
-
-      context.stroke();
     });
 
     drawPulseLayer(timestamp || performance.now(), projected);
@@ -702,9 +690,7 @@ const setupHeroPolyhedron = () => {
       "pointermove",
       (event) => {
         const point = getCanvasPoint(event);
-        const isInsideSphere =
-          sphereBounds !== null && Math.hypot(point.x - sphereBounds.x, point.y - sphereBounds.y) <= sphereBounds.radius;
-        setInteractionActive(isInsideSphere);
+        setInteractionActive(isPointNearPolyhedron(point));
       },
       { passive: true }
     );
