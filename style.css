@@ -423,55 +423,14 @@ h3 {
   overflow: visible;
 }
 
-.sjtu-line-mark path,
-.sjtu-line-mark rect,
-.sjtu-line-mark line {
+.sjtu-line-mark path {
   vector-effect: non-scaling-stroke;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 
-.sjtu-line-mark__main path,
-.sjtu-line-mark__main rect,
-.sjtu-line-mark__main line {
-  stroke-width: 5.6;
-}
-
-.sjtu-line-mark__detail path,
-.sjtu-line-mark__detail rect,
-.sjtu-line-mark__detail line {
-  stroke-width: 3.6;
-  opacity: 0.86;
-}
-
-.sjtu-line-mark__glow path,
-.sjtu-line-mark__glow rect {
-  stroke-width: 11;
-  opacity: 0.16;
-  animation: sjtuGlowBreath 6.8s ease-in-out infinite;
-}
-
-.sjtu-line-mark__runner path,
-.sjtu-line-mark__runner rect {
-  stroke: #d9ffd0;
-  stroke-width: 4;
-  stroke-dasharray: 12 88;
-  stroke-dashoffset: 0;
-  opacity: 0.72;
-  animation: sjtuRunnerFlow 9.5s linear infinite;
-}
-
-.sjtu-line-mark__year path,
-.sjtu-line-mark__year rect {
-  stroke-width: 4.2;
-}
-
 .works-page main {
   animation: pageFadeIn 520ms ease both;
-}
-
-.nowrap {
-  white-space: nowrap;
 }
 
 .honors-block {
@@ -597,10 +556,11 @@ h3 {
   flex-direction: column;
   justify-content: space-between;
   gap: 24px;
-  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
 }
 
-.card:hover {
+.card:hover,
+.skill-group:hover,
+.skill-group:focus-visible {
   border-color: var(--border-strong);
   background: var(--surface-strong);
   transform: translateY(-4px);
@@ -670,13 +630,6 @@ h3 {
 
 .skill-group {
   padding: 22px;
-}
-
-.skill-group:hover,
-.skill-group:focus-visible {
-  border-color: var(--border-strong);
-  background: var(--surface-strong);
-  transform: translateY(-4px);
 }
 
 .skill-group h3 {
@@ -817,29 +770,6 @@ h3 {
 
   50% {
     text-shadow: 0 0 9px rgba(118, 185, 0, 0.28);
-  }
-}
-
-@keyframes sjtuGlowBreath {
-  0%,
-  100% {
-    opacity: 0.09;
-    stroke-width: 8;
-  }
-
-  50% {
-    opacity: 0.22;
-    stroke-width: 11;
-  }
-}
-
-@keyframes sjtuRunnerFlow {
-  from {
-    stroke-dashoffset: 0;
-  }
-
-  to {
-    stroke-dashoffset: -100;
   }
 }
 
@@ -993,19 +923,10 @@ h3 {
     animation: none;
   }
 
-  .card:hover {
-    transform: none;
-  }
-
+  .card:hover,
   .skill-group:hover,
-  .skill-group:focus-visible {
-    transform: none;
-  }
-
-  .work-detail:hover {
-    transform: none;
-  }
-
+  .skill-group:focus-visible,
+  .work-detail:hover,
   .research-cell:hover,
   .research-cell:focus-visible {
     transform: none;

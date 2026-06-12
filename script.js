@@ -652,9 +652,7 @@ const setupHeroPolyhedron = () => {
 
     drawPulseLayer(timestamp || performance.now(), projected);
 
-    if (!reduceMotion && isVisible && (targetSpeedMultiplier !== 1 || targetOpacityMultiplier !== 1 || pulses.length > 0)) {
-      animationFrame = window.requestAnimationFrame(draw);
-    } else if (!reduceMotion && isVisible) {
+    if (!reduceMotion && isVisible) {
       animationFrame = window.requestAnimationFrame(draw);
     } else {
       animationFrame = null;
