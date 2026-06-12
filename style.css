@@ -587,6 +587,7 @@ h3 {
   border-radius: var(--radius);
   background: var(--surface);
   box-shadow: var(--shadow);
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
 }
 
 .card {
@@ -669,6 +670,13 @@ h3 {
 
 .skill-group {
   padding: 22px;
+}
+
+.skill-group:hover,
+.skill-group:focus-visible {
+  border-color: var(--border-strong);
+  background: var(--surface-strong);
+  transform: translateY(-4px);
 }
 
 .skill-group h3 {
@@ -986,6 +994,11 @@ h3 {
   }
 
   .card:hover {
+    transform: none;
+  }
+
+  .skill-group:hover,
+  .skill-group:focus-visible {
     transform: none;
   }
 
