@@ -80,6 +80,7 @@
   --surface-strong: rgba(22, 28, 20, 0.92);
   --border: rgba(141, 160, 132, 0.18);
   --border-strong: rgba(118, 185, 0, 0.46);
+  --title: #f1ffdf;
   --text: #edf3e8;
   --text-muted: #aeb8a8;
   --text-soft: #7f8a78;
@@ -295,7 +296,7 @@ main,
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  animation: accentBreath 5.8s ease-in-out infinite;
+  animation: accentBreath 6.8s ease-in-out 1s infinite backwards;
 }
 
 h1 {
@@ -305,7 +306,7 @@ h1 {
   font-size: 5rem;
   line-height: 0.98;
   letter-spacing: 0;
-  color: #f1ffdf;
+  color: var(--title);
 }
 
 h2 {
@@ -314,6 +315,7 @@ h2 {
   font-size: 3rem;
   line-height: 1.08;
   letter-spacing: 0;
+  color: var(--title);
 }
 
 h3 {
@@ -619,7 +621,7 @@ h3 {
   color: var(--accent);
   border-color: rgba(118, 185, 0, 0.3);
   background: var(--accent-soft);
-  animation: accentBreath 6.4s ease-in-out infinite;
+  animation: accentBreath 6.8s ease-in-out 1s infinite backwards;
 }
 
 .keywords {
@@ -769,7 +771,9 @@ h3 {
   }
 
   50% {
-    text-shadow: 0 0 9px rgba(118, 185, 0, 0.28);
+    text-shadow:
+      0 0 4px rgba(118, 185, 0, 0.16),
+      0 0 8px rgba(118, 185, 0, 0.08);
   }
 }
 
