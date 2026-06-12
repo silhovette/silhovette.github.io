@@ -871,6 +871,52 @@ const setupIndexCodePreview = () => {
   });
 };
 
+const setupFallingPulseGate = () => {
+  const trigger = document.querySelector("[data-falling-pulse-trigger]");
+  const gate = document.getElementById("falling-pulse-gate");
+  const confirmButton = gate?.querySelector("[data-game-gate-confirm]");
+  const closeControls = gate ? Array.from(gate.querySelectorAll("[data-game-gate-close]")) : [];
+
+  if (!trigger || !gate || !confirmButton) {
+    return;
+  }
+
+  let targetHref = trigger.getAttribute("href") || "";
+  let lastActiveElement = null;
+
+  const openGate = (event) => {
+    event.preventDefault();
+    targetHref = trigger.getAttribute("href") || targetHref;
+    lastActiveElement = document.activeElement;
+    gate.classList.add("is-open");
+    gate.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+    confirmButton.focus();
+  };
+
+  const closeGate = () => {
+    gate.classList.remove("is-open");
+    gate.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+
+    if (lastActiveElement instanceof HTMLElement) {
+      lastActiveElement.focus();
+    }
+  };
+
+  trigger.addEventListener("click", openGate);
+  closeControls.forEach((control) => control.addEventListener("click", closeGate));
+  confirmButton.addEventListener("click", () => {
+    window.location.href = targetHref;
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && gate.classList.contains("is-open")) {
+      closeGate();
+    }
+  });
+};
+
+setupFallingPulseGate();
 setupIndexCodePreview();
 setupHeroPolyhedron();
 setupHoverTooltip();

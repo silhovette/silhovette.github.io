@@ -522,6 +522,7 @@ h3 {
 }
 
 .keywords span,
+.keywords a,
 .status {
   display: inline-flex;
   align-items: center;
@@ -533,6 +534,21 @@ h3 {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   background: rgba(255, 255, 255, 0.025);
+}
+
+.keywords a {
+  color: var(--accent);
+  border-color: rgba(118, 185, 0, 0.34);
+  background: var(--accent-soft);
+  transition: color 180ms ease, border-color 180ms ease, background 180ms ease, transform 180ms ease;
+}
+
+.keywords a:hover,
+.keywords a:focus-visible {
+  color: var(--text);
+  border-color: var(--border-strong);
+  background: rgba(118, 185, 0, 0.16);
+  transform: translateY(-1px);
 }
 
 .project-grid,
@@ -629,6 +645,96 @@ h3 {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+}
+
+.game-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 45;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 220ms ease;
+}
+
+.game-gate.is-open {
+  pointer-events: auto;
+  opacity: 1;
+}
+
+.game-gate__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(10px);
+}
+
+.game-gate__panel {
+  position: relative;
+  width: min(100%, 520px);
+  padding: 28px;
+  border: 1px solid rgba(118, 185, 0, 0.28);
+  border-radius: var(--radius);
+  background:
+    linear-gradient(135deg, rgba(118, 185, 0, 0.09), rgba(255, 255, 255, 0.025)),
+    rgba(3, 6, 4, 0.94);
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.54), 0 0 34px rgba(118, 185, 0, 0.08);
+  transform: translateY(14px) scale(0.98);
+  transition: transform 220ms ease;
+}
+
+.game-gate.is-open .game-gate__panel {
+  transform: translateY(0) scale(1);
+}
+
+.game-gate__panel h2 {
+  max-width: 14ch;
+  margin: 8px 0 14px;
+  color: var(--accent);
+  font-size: clamp(1.55rem, 3vw, 2.1rem);
+  line-height: 1.08;
+}
+
+.game-gate__panel p:not(.eyebrow) {
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+.game-gate__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.game-gate__button {
+  min-height: 36px;
+  padding: 8px 14px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.84rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.025);
+  cursor: pointer;
+  transition: color 180ms ease, border-color 180ms ease, background 180ms ease, transform 180ms ease;
+}
+
+.game-gate__button--primary {
+  color: var(--accent);
+  border-color: rgba(118, 185, 0, 0.38);
+  background: var(--accent-soft);
+}
+
+.game-gate__button:hover,
+.game-gate__button:focus-visible {
+  color: var(--text);
+  border-color: var(--border-strong);
+  background: rgba(118, 185, 0, 0.14);
+  outline: 0;
+  transform: translateY(-1px);
 }
 
 .skill-group {

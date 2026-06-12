@@ -1,0 +1,218 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Falling Pulse</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="loading-screen" id="loadingScreen" aria-label="Loading">
+      <div class="loading-version">0.1.0 Pre-alpha</div>
+      <div class="loading-center">
+        <div class="loading-progress" aria-hidden="true">
+          <div class="loading-progress-bar" id="loadingProgress"></div>
+        </div>
+        <div class="loading-credit">Conceptualized and developed by AZX777</div>
+      </div>
+    </div>
+
+    <main class="app">
+      <canvas class="setup-particles" id="setupParticleCanvas" width="1200" height="900" aria-hidden="true"></canvas>
+
+      <section class="setup-panel" id="setupPanel" aria-label="开始设置">
+        <div class="user-card" id="userCard">
+          <div class="user-fields">
+            <input id="nicknameInput" type="text" maxlength="16" value="Player" aria-label="昵称" />
+            <strong class="rating-line" id="ratingText">0.00</strong>
+          </div>
+          <div class="avatar-stack">
+          <label class="avatar-picker" aria-label="选择头像">
+            <input id="avatarInput" type="file" accept="image/*" />
+            <img id="avatarImage" alt="" />
+            <span id="avatarFallback">U</span>
+          </label>
+          </div>
+        </div>
+
+        <div class="brand">
+          <div>
+            <h1>Falling Pulse</h1>
+          </div>
+        </div>
+
+        <form class="setup-grid" id="setupForm">
+          <div class="setup-fields">
+            <label class="field">
+              <span>BPM</span>
+              <input id="bpmInput" type="number" min="60" max="500" step="1" value="180" required />
+            </label>
+
+            <label class="field">
+              <span>流速</span>
+              <input id="speedInput" type="number" min="0" max="20" step="0.1" value="10.0" required />
+            </label>
+
+            <label class="field">
+              <span>难度</span>
+              <input id="densityInput" type="number" min="0" max="40" step="0.1" value="15.0" required />
+            </label>
+
+            <label class="field">
+              <span>物量</span>
+              <input id="totalNotesInput" type="number" min="20" max="5000" step="1" value="50" required />
+            </label>
+          </div>
+
+          <div class="field timing-field">
+            <span>生成音符节拍</span>
+            <div class="timing-options" id="timingOptions" aria-label="生成音符节拍">
+              <label><input type="checkbox" name="beatDivision" value="4" checked /><span>4分</span></label>
+              <label><input type="checkbox" name="beatDivision" value="8" /><span>8分</span></label>
+              <label><input type="checkbox" name="beatDivision" value="16" /><span>16分</span></label>
+              <label><input type="checkbox" name="beatDivision" value="24" /><span>24分</span></label>
+              <label><input type="checkbox" name="beatDivision" value="32" /><span>32分</span></label>
+            </div>
+          </div>
+
+          <div class="field">
+            <span>轨道数量</span>
+            <div class="segmented" role="radiogroup" aria-label="轨道数量">
+              <label><input type="radio" name="lanes" value="4" checked /><span>4</span></label>
+              <label><input type="radio" name="lanes" value="5" /><span>5</span></label>
+              <label><input type="radio" name="lanes" value="6" /><span>6</span></label>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="button primary" type="submit">开始</button>
+            <button class="button ghost" id="appSettingsButton" type="button">设置</button>
+            <button class="button ghost reserved-button" id="settingsButton" type="button" aria-label="预留"></button>
+            <button class="button ghost" id="achievementsButton" type="button">成就</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="game-panel hidden" id="gamePanel" aria-label="游戏区域">
+        <header class="hud">
+          <button class="icon-button" id="backButton" type="button" aria-label="返回">←</button>
+          <div class="hud-stat">
+            <span>Score</span>
+            <strong id="scoreText">0</strong>
+          </div>
+          <div class="hud-stat">
+            <span>Combo</span>
+            <strong id="comboText">0</strong>
+          </div>
+          <div class="hud-stat">
+            <span>Acc</span>
+            <strong id="accuracyText">100.00%</strong>
+          </div>
+          <button class="icon-button" id="pauseButton" type="button" aria-label="暂停">II</button>
+        </header>
+
+        <div class="stage-wrap">
+          <canvas id="gameCanvas" width="900" height="720" aria-label="下落式音游画面"></canvas>
+          <div class="judgement" id="judgementText"></div>
+          <div class="countdown" id="countdownText"></div>
+        </div>
+
+        <div class="visual-panel" aria-hidden="true">
+          <div class="beat-indicator" id="beatIndicator"></div>
+          <canvas id="particleCanvas" width="900" height="900"></canvas>
+        </div>
+
+        <div class="result-panel" id="resultPanel" aria-label="结算界面">
+          <div class="result-card">
+            <div class="result-autoplay" id="resultAutoplay">AUTOPLAY</div>
+            <canvas id="resultCanvas" width="900" height="360" aria-label="按键时间偏移分布"></canvas>
+            <div class="result-stats">
+              <div><span>Perfect</span><strong id="perfectCount">0</strong></div>
+              <div><span>Great</span><strong id="greatCount">0</strong></div>
+              <div><span>Good</span><strong id="goodCount">0</strong></div>
+              <div><span>Miss</span><strong id="missCount">0</strong></div>
+              <div><span>ACC</span><strong id="resultAcc">100.00%</strong></div>
+              <div><span>Max Combo</span><strong id="resultCombo">0</strong></div>
+              <div><span>Rating +</span><strong id="resultRatingGain">0.00</strong></div>
+            </div>
+            <div class="result-actions">
+              <button class="button primary" id="retryButton" type="button">Retry</button>
+              <button class="button ghost" id="titleButton" type="button">Title</button>
+            </div>
+          </div>
+          <div class="achievement-toast" id="achievementToast" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <dialog class="settings-dialog app-settings-dialog" id="appSettingsDialog">
+        <form method="dialog">
+          <div class="dialog-head">
+            <h2>设置</h2>
+            <button class="icon-button" value="cancel" aria-label="关闭">×</button>
+          </div>
+          <div class="settings-options">
+            <button class="setting-toggle" id="autoplayToggle" type="button" aria-pressed="false">
+              <span>
+                <strong>Autoplay</strong>
+                <small>自动演奏谱面，不计入 rating。</small>
+              </span>
+              <span class="toggle-indicator" aria-hidden="true"></span>
+            </button>
+            <button class="setting-toggle active" id="metronomeToggle" type="button" aria-pressed="true">
+              <span>
+                <strong>节拍器</strong>
+                <small>按 BPM 在每个拍点播放提示音。</small>
+              </span>
+              <span class="toggle-indicator" aria-hidden="true"></span>
+            </button>
+            <div class="offset-control hidden" id="offsetControl">
+              <div class="offset-label">
+                <strong>偏移值调整</strong>
+                <small>调整谱面下落时机</small>
+              </div>
+              <div class="offset-slider-row">
+                <input type="range" id="offsetSlider" min="-1000" max="1000" value="0" step="1">
+                <input type="number" id="offsetInput" class="offset-input" min="-1000" max="1000" value="0" step="1">
+                <span class="offset-unit">ms</span>
+              </div>
+            </div>
+            <div class="settings-group">
+              <div class="settings-group-title">按键绑定</div>
+              <div class="settings-lane-options" aria-label="按键绑定轨道数量">
+                <button class="button ghost bind-lane-option" type="button" data-bind-lanes="4">4K</button>
+                <button class="button ghost bind-lane-option" type="button" data-bind-lanes="5">5K</button>
+                <button class="button ghost bind-lane-option" type="button" data-bind-lanes="6">6K</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </dialog>
+
+      <dialog class="settings-dialog bind-settings-dialog" id="settingsDialog">
+        <form method="dialog">
+          <div class="dialog-head">
+            <h2>按键绑定</h2>
+            <button class="icon-button" value="cancel" aria-label="关闭">×</button>
+          </div>
+          <div class="bind-list" id="bindList"></div>
+          <div class="dialog-actions">
+            <button class="button ghost" id="resetBindsButton" type="button">恢复默认</button>
+            <button class="button primary" value="confirm">完成</button>
+          </div>
+        </form>
+      </dialog>
+
+      <dialog class="settings-dialog achievements-dialog" id="achievementsDialog">
+        <form method="dialog">
+          <div class="dialog-head">
+            <h2>成就</h2>
+            <button class="icon-button" value="cancel" aria-label="关闭">×</button>
+          </div>
+          <div class="achievement-list" id="achievementList"></div>
+        </form>
+      </dialog>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

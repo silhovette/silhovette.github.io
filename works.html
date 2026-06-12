@@ -196,9 +196,50 @@
             <span>Agent Workflow</span>
           </div>
         </article>
+
+        <article class="work-detail">
+          <div class="card-header">
+            <h2>Falling Pulse Rhythm Game Prototype</h2>
+            <span class="status">Interactive Game</span>
+          </div>
+          <p>
+            Built a configurable browser-based rhythm game prototype with Canvas rendering,
+            timing-based note judgement, player profile state, and desktop packaging support.
+          </p>
+          <ul class="work-points">
+            <li>Implemented adjustable BPM, scroll speed, difficulty, note count, beat divisions, and 4K/5K/6K lane modes.</li>
+            <li>Designed real-time scoring, combo, accuracy, judgement windows, result statistics, and timing-offset visualization.</li>
+            <li>Added profile customization, rating progression, achievements, key-binding settings, autoplay, and metronome controls.</li>
+            <li>Organized the prototype with Canvas visual effects, audio feedback, save-state handling, and a WebView desktop build path.</li>
+          </ul>
+          <div class="keywords">
+            <span>Canvas</span>
+            <span>Rhythm Game</span>
+            <span>Input Timing</span>
+            <span>WebView</span>
+            <a href="games/falling-pulse/index.html" data-falling-pulse-trigger>try here</a>
+          </div>
+        </article>
       </div>
     </section>
   </main>
+
+  <div id="falling-pulse-gate" class="game-gate" aria-hidden="true">
+    <div class="game-gate__backdrop" data-game-gate-close></div>
+    <section class="game-gate__panel" role="dialog" aria-modal="true" aria-labelledby="falling-pulse-gate-title">
+      <p class="eyebrow">Before Playing</p>
+      <h2 id="falling-pulse-gate-title">Fixed-Lane Rhythm Game Experience?</h2>
+      <p>
+        Are you a fixed-lane rhythm game player, or do you have experience with fixed-lane rhythm games?
+        If not, you may not know how this prototype is played or how its settings work, which could lead
+        to a poor experience.
+      </p>
+      <div class="game-gate__actions">
+        <button class="game-gate__button game-gate__button--primary" type="button" data-game-gate-confirm>Yes</button>
+        <button class="game-gate__button" type="button" data-game-gate-close>No</button>
+      </div>
+    </section>
+  </div>
 
   <footer class="footer">
     <p>&copy; <span id="year"></span> Yuhua Luo. </p>
