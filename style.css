@@ -115,6 +115,11 @@ body {
   overflow-x: hidden;
 }
 
+::selection {
+  color: #102300;
+  background: rgba(183, 255, 108, 0.82);
+}
+
 body::before {
   position: fixed;
   inset: 0;
