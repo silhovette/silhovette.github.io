@@ -1034,6 +1034,22 @@ function judgeLane(lane, inputTime = performance.now()) {
   commitHit(candidate, lane, judgement, now - candidate.time);
 }
 
+function laneFromClientX(clientX) {
+  const rect = canvas.getBoundingClientRect();
+  const laneCount = state?.lanes || activeLaneCount;
+  const lane = Math.floor(((clientX - rect.left) / rect.width) * laneCount);
+  return clamp(lane, 0, laneCount - 1);
+}
+
+function handleLanePointerDown(event) {
+  if (event.pointerType !== "touch" && event.pointerType !== "pen") return;
+  if (!state || state.finished || state.autoplay) return;
+  event.preventDefault();
+  const lane = laneFromClientX(event.clientX);
+  triggerParticlePulse(lane);
+  judgeLane(lane, eventPerformanceTime(event));
+}
+
 function registerMiss(note) {
   note.judged = true;
   note.missed = true;
@@ -1609,6 +1625,7 @@ retryButton.addEventListener("click", () => {
   if (lastConfig) startGame(lastConfig);
 });
 titleButton.addEventListener("click", returnToSetup);
+canvas.addEventListener("pointerdown", handleLanePointerDown, { passive: false });
 
 window.addEventListener("keydown", (event) => {
   if (listeningLane !== null) {
