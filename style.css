@@ -1252,11 +1252,12 @@ h3 {
   }
 
   .hero-polyhedron {
-    top: -260px;
-    right: -520px;
-    width: 760px;
-    height: 760px;
-    opacity: 0.16;
+    display: none;
+  }
+
+  .eyebrow,
+  .status {
+    animation: none;
   }
 
   .nav-links {
@@ -1297,6 +1298,33 @@ h3 {
 
   .about-visual {
     display: none;
+  }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  body::after {
+    filter: none;
+    opacity: 0.28;
+    animation: none;
+    will-change: auto;
+  }
+
+  .site-header,
+  .game-gate__panel,
+  .code-modal__panel {
+    backdrop-filter: none;
+  }
+
+  .hero-polyhedron,
+  .about-visual {
+    display: none;
+  }
+
+  .eyebrow,
+  .status,
+  .thinking-line-mark__glow,
+  .thinking-line-mark__runner {
+    animation: none;
   }
 }
 

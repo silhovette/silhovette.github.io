@@ -1,92 +1,100 @@
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-const navLinks = Array.from(document.querySelectorAll(".nav-links a"));
-const getLocalTarget = (href) => (href && href.startsWith("#") ? document.querySelector(href) : null);
-const sections = navLinks
-  .map((link) => getLocalTarget(link.getAttribute("href")))
-  .filter(Boolean);
-const activeLockDuration = 700;
-let activeLockUntil = 0;
+const touchDevice = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
 
 document.getElementById("year").textContent = new Date().getFullYear();
 
-navLinks.forEach((link) => {
-  link.addEventListener("click", (event) => {
-    const hash = link.getAttribute("href");
-    const target = getLocalTarget(hash);
+// Navigation
+const setupNavigation = () => {
+  const navLinks = Array.from(document.querySelectorAll(".nav-links a"));
+  const getLocalTarget = (href) => (href && href.startsWith("#") ? document.querySelector(href) : null);
+  const sections = navLinks
+    .map((link) => getLocalTarget(link.getAttribute("href")))
+    .filter(Boolean);
+  const activeLockDuration = 700;
+  let activeLockUntil = 0;
 
-    if (!target) {
+  const setActiveLink = (id) => {
+    navLinks.forEach((link) => {
+      link.classList.toggle("is-active", link.getAttribute("href") === `#${id}`);
+    });
+  };
+
+  const updateActiveLink = () => {
+    if (sections.length === 0) {
       return;
     }
 
-    event.preventDefault();
-    activeLockUntil = reduceMotion ? 0 : performance.now() + activeLockDuration;
-
-    if (hash === "#about") {
-      setActiveLink("about");
-      window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
-    } else {
-      setActiveLink(target.id);
-      target.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+    if (performance.now() < activeLockUntil) {
+      return;
     }
 
-    history.pushState(null, "", hash);
-    window.setTimeout(updateActiveLink, activeLockDuration + 80);
-  });
-});
+    const headerOffset = 104;
+    const currentPosition = window.scrollY + headerOffset;
+    let activeSection = sections[0];
 
-const setActiveLink = (id) => {
+    sections.forEach((section) => {
+      if (section.offsetTop <= currentPosition) {
+        activeSection = section;
+      }
+    });
+
+    setActiveLink(activeSection.id);
+  };
+
   navLinks.forEach((link) => {
-    link.classList.toggle("is-active", link.getAttribute("href") === `#${id}`);
-  });
-};
+    link.addEventListener("click", (event) => {
+      const hash = link.getAttribute("href");
+      const target = getLocalTarget(hash);
 
-const updateActiveLink = () => {
-  if (sections.length === 0) {
-    return;
+      if (!target) {
+        return;
+      }
+
+      event.preventDefault();
+      activeLockUntil = reduceMotion ? 0 : performance.now() + activeLockDuration;
+
+      if (hash === "#about") {
+        setActiveLink("about");
+        window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
+      } else {
+        setActiveLink(target.id);
+        target.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+      }
+
+      history.pushState(null, "", hash);
+      window.setTimeout(updateActiveLink, activeLockDuration + 80);
+    });
+  });
+
+  if (sections.length > 0) {
+    setActiveLink(sections[0].id);
+    updateActiveLink();
   }
 
-  if (performance.now() < activeLockUntil) {
-    return;
-  }
-
-  const headerOffset = 104;
-  const currentPosition = window.scrollY + headerOffset;
-  let activeSection = sections[0];
-
-  sections.forEach((section) => {
-    if (section.offsetTop <= currentPosition) {
-      activeSection = section;
-    }
-  });
-
-  setActiveLink(activeSection.id);
+  window.addEventListener("scroll", updateActiveLink, { passive: true });
+  window.addEventListener("resize", updateActiveLink);
 };
 
-if (sections.length > 0) {
-  setActiveLink(sections[0].id);
-  updateActiveLink();
-}
+// Reveal animation
+const setupReveal = () => {
+  if (!reduceMotion && "IntersectionObserver" in window) {
+    const revealObserver = new IntersectionObserver(
+      (entries, observer) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.14 }
+    );
 
-window.addEventListener("scroll", updateActiveLink, { passive: true });
-window.addEventListener("resize", updateActiveLink);
-
-if (!reduceMotion && "IntersectionObserver" in window) {
-  const revealObserver = new IntersectionObserver(
-    (entries, observer) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("is-visible");
-          observer.unobserve(entry.target);
-        }
-      });
-    },
-    { threshold: 0.14 }
-  );
-
-  document.querySelectorAll(".reveal").forEach((element) => revealObserver.observe(element));
-} else {
-  document.querySelectorAll(".reveal").forEach((element) => element.classList.add("is-visible"));
-}
+    document.querySelectorAll(".reveal").forEach((element) => revealObserver.observe(element));
+  } else {
+    document.querySelectorAll(".reveal").forEach((element) => element.classList.add("is-visible"));
+  }
+};
 
 const setupHoverTooltip = () => {
   const tooltip = document.getElementById("hover-tooltip");
@@ -271,7 +279,7 @@ const setupCursorField = () => {
 const setupHeroPolyhedron = () => {
   const canvas = document.getElementById("hero-polyhedron");
 
-  if (!canvas) {
+  if (!canvas || touchDevice) {
     return;
   }
 
@@ -916,6 +924,9 @@ const setupFallingPulseGate = () => {
   });
 };
 
+// Initialization
+setupNavigation();
+setupReveal();
 setupFallingPulseGate();
 setupIndexCodePreview();
 setupHeroPolyhedron();
