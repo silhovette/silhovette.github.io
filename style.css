@@ -1083,10 +1083,18 @@ h3 {
 }
 
 .footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
   padding: 34px 0 48px;
   color: var(--text-soft);
   font-size: 0.9rem;
   border-top: 1px solid var(--border);
+}
+
+.footer p {
+  margin: 0;
 }
 
 .reveal {
@@ -1262,6 +1270,12 @@ h3 {
 
   .hero-links a {
     width: 100%;
+  }
+
+  .footer {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 6px;
   }
 
   .card-header {
