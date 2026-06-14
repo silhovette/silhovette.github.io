@@ -22,6 +22,7 @@
 html,
 body {
   height: 100%;
+  overscroll-behavior: none;
 }
 
 body {
@@ -31,6 +32,16 @@ body {
     linear-gradient(145deg, #08090b 0%, #10151b 54%, #090b0f 100%);
   color: var(--text);
   overflow: hidden;
+}
+
+body.game-active {
+  overflow: hidden;
+  touch-action: none;
+}
+
+body.game-active .site-return {
+  opacity: 0;
+  pointer-events: none;
 }
 
 body:not(.is-loaded) .app {
@@ -1467,6 +1478,7 @@ h1 {
   .stage-wrap {
     grid-column: 1;
     grid-row: 2;
+    touch-action: none;
   }
 
   .visual-panel {

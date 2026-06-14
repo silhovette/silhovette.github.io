@@ -336,8 +336,9 @@ function runLoadingSequence() {
   }
 
   const start = performance.now();
-  const duration = 1800;
-  const loadedHoldMs = 200;
+  const isMobile = window.matchMedia("(max-width: 760px), (hover: none) and (pointer: coarse)").matches;
+  const duration = isMobile ? 360 : 900;
+  const loadedHoldMs = isMobile ? 80 : 140;
 
   function tick(now) {
     const progress = clamp((now - start) / duration, 0, 1);
@@ -809,6 +810,7 @@ function startGame(config) {
   lastConfig = { ...config };
   setupPanel.classList.add("hidden");
   gamePanel.classList.remove("hidden");
+  document.body.classList.add("game-active");
   resultPanel.classList.remove("show");
   achievementToast.classList.remove("show");
   resizeCanvas();
@@ -1486,6 +1488,7 @@ function returnToSetup() {
   cancelAnimationFrame(rafId);
   stopBeatPromptSounds();
   state = null;
+  document.body.classList.remove("game-active");
   resultPanel.classList.remove("show");
   gamePanel.classList.add("hidden");
   setupPanel.classList.remove("hidden");
@@ -1626,6 +1629,15 @@ retryButton.addEventListener("click", () => {
 });
 titleButton.addEventListener("click", returnToSetup);
 canvas.addEventListener("pointerdown", handleLanePointerDown, { passive: false });
+canvas.addEventListener("pointermove", (event) => {
+  if (event.pointerType === "touch" || event.pointerType === "pen") event.preventDefault();
+}, { passive: false });
+canvas.addEventListener("contextmenu", (event) => event.preventDefault());
+gamePanel.addEventListener("touchmove", (event) => {
+  if (document.body.classList.contains("game-active")) event.preventDefault();
+}, { passive: false });
+window.addEventListener("gesturestart", (event) => event.preventDefault());
+window.addEventListener("gesturechange", (event) => event.preventDefault());
 
 window.addEventListener("keydown", (event) => {
   if (listeningLane !== null) {
