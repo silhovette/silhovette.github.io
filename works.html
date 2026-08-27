@@ -35,25 +35,27 @@
       <div class="works-list">
         <article class="work-detail">
           <div class="card-header">
-            <h2>Telecom Customer Service Intent Recognition</h2>
-            <span class="status">Applied AI Systems</span>
+            <h2>Beyond Global Replanning: Hierarchical Recovery for Cross-Device Agent Systems</h2>
+            <span class="status">Multi-device Agent Systems</span>
           </div>
           <p>
-            Developed a dialogue-understanding pipeline for long, multi-turn telecom service
-            sessions, combining intent recognition, target-plan prediction, structured plan
-            knowledge, retrieval, and LoRA/SFT experimentation.
+            Designed and implemented H-RePlan, a hierarchical replanning framework for
+            cross-device agents that separates device-local strategy recovery from
+            orchestrator-level task and device reassignment.
           </p>
           <ul class="work-points">
-            <li>Cleaned, aggregated, and labeled 1,405 multi-turn customer service sessions for intent and plan-related analysis.</li>
-            <li>Converted telecom plan information into retrievable candidate knowledge for downstream reasoning.</li>
-            <li>Designed a RAG plus few-shot workflow that conditions on user plans, candidate plans, and dialogue context.</li>
-            <li>Ran LoRA/SFT experiments on open-source 7B models and compared them with baseline settings.</li>
+            <li>Added an LLM-based strategy planner that selects and retries API, CLI, and GUI execution strategies within each device context.</li>
+            <li>Introduced Cross-Layer Failure Events (CLFEs) to compress local execution evidence into structured signals for orchestration-level replanning.</li>
+            <li>Integrated capability-aware strategy bindings, retry budgets, chain history, and partial DAG-result reuse into the MDC/UFO³ execution flow.</li>
+            <li>Built HeraBench fault-injection workflows over Linux and Android devices, covering local, global, and mixed failures across 174 task variants.</li>
           </ul>
           <div class="keywords">
-            <span>RAG</span>
-            <span>Few-shot Reasoning</span>
-            <span>LoRA/SFT</span>
-            <span>Dialogue Understanding</span>
+            <span>H-RePlan</span>
+            <span>Cross-Device Agents</span>
+            <span>API / CLI / GUI</span>
+            <span>CLFE</span>
+            <span>HeraBench</span>
+            <a href="https://www.alphaxiv.org/abs/2606.20487v1" target="_blank" rel="noreferrer">Paper</a>
           </div>
         </article>
 
@@ -78,6 +80,79 @@
             <span>PEFT</span>
             <span>Task Vectors</span>
             <span>LoRA</span>
+          </div>
+        </article>
+
+        <article class="work-detail">
+          <div class="card-header">
+            <h2>Dynamic Network Widening for Continual Reinforcement Learning</h2>
+            <span class="status">RL Research</span>
+          </div>
+          <p>
+            Conducted a reproducible continual-control study on network capacity and mid-training
+            model expansion under hidden environment drift. Designed matched PPO experiments across
+            multiple network widths, implemented controlled dynamic widening, and evaluated learning
+            efficiency and held-out robustness under equal interaction budgets.
+          </p>
+          <ul class="work-points">
+            <li>Constructed a continually changing CartPole environment with hidden gravity, mass, pole length, force, and friction perturbations.</li>
+            <li>Matched PPO configurations and interaction budgets across network widths, using multiple training seeds and held-out evaluation panels.</li>
+            <li>Compared fixed-width policies with 64→128 mid-training widening under default and literal all-zero initialization.</li>
+            <li>Built a reproducibility pipeline that preserved configurations, checkpoints, RNG and environment states, selection records, plots, and evaluation tables.</li>
+          </ul>
+          <div class="keywords">
+            <span>Continual Reinforcement Learning</span>
+            <span>PPO</span>
+            <span>Dynamic Network Growth</span>
+            <span>Reproducible Evaluation</span>
+          </div>
+        </article>
+
+        <article class="work-detail">
+          <div class="card-header">
+            <h2>Multi-Device Agent Orchestration &amp; Verified Execution</h2>
+            <span class="status">Agent Systems</span>
+          </div>
+          <p>
+            Developed a multi-device agent system for capability-aware task orchestration and
+            reliable execution across heterogeneous devices, combining interface abstraction,
+            execution evidence, and explicit verification of real-world task outcomes.
+          </p>
+          <ul class="work-points">
+            <li>Designed capability-aware orchestration for assigning tasks to devices and execution interfaces suited to each environment.</li>
+            <li>Unified API, CLI, and GUI operations behind structured execution interfaces with device-adaptive tool selection.</li>
+            <li>Defined execution contracts that connect expected outputs, collected evidence, and postconditions instead of treating raw tool success as task completion.</li>
+            <li>Built system-evaluation workflows for cross-device execution, tracking interface behavior, completion evidence, and end-state correctness.</li>
+          </ul>
+          <div class="keywords">
+            <span>Multi-Device Orchestration</span>
+            <span>Multi-Interface Execution</span>
+            <span>Postcondition Verification</span>
+            <span>Device Adaptation</span>
+          </div>
+        </article>
+
+        <article class="work-detail">
+          <div class="card-header">
+            <h2>Telecom Customer Service Intent Recognition</h2>
+            <span class="status">Applied AI Systems</span>
+          </div>
+          <p>
+            Developed a dialogue-understanding pipeline for long, multi-turn telecom service
+            sessions, combining intent recognition, target-plan prediction, structured plan
+            knowledge, retrieval, and LoRA/SFT experimentation.
+          </p>
+          <ul class="work-points">
+            <li>Cleaned, aggregated, and labeled 1,405 multi-turn customer service sessions for intent and plan-related analysis.</li>
+            <li>Converted telecom plan information into retrievable candidate knowledge for downstream reasoning.</li>
+            <li>Designed a RAG plus few-shot workflow that conditions on user plans, candidate plans, and dialogue context.</li>
+            <li>Ran LoRA/SFT experiments on open-source 7B models and compared them with baseline settings.</li>
+          </ul>
+          <div class="keywords">
+            <span>RAG</span>
+            <span>Few-shot Reasoning</span>
+            <span>LoRA/SFT</span>
+            <span>Dialogue Understanding</span>
           </div>
         </article>
 

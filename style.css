@@ -99,8 +99,10 @@
 }
 
 html {
+  background: #080a08;
   scroll-behavior: smooth;
   scroll-padding-top: 88px;
+  overscroll-behavior-y: none;
 }
 
 body {
@@ -113,6 +115,7 @@ body {
     linear-gradient(180deg, #080a08 0%, #10140f 50%, #080a08 100%);
   line-height: 1.65;
   overflow-x: hidden;
+  overscroll-behavior-y: none;
 }
 
 ::selection {
@@ -195,8 +198,10 @@ p {
 }
 
 .site-header {
-  position: sticky;
+  position: fixed;
   top: 0;
+  right: 0;
+  left: 0;
   z-index: 12;
   border-bottom: 1px solid rgba(141, 160, 132, 0.1);
   background: rgba(11, 13, 16, 0.3);
@@ -256,6 +261,10 @@ main,
 .footer {
   width: min(100% - (var(--space-page) * 2), var(--max-width));
   margin: 0 auto;
+}
+
+main {
+  padding-top: 62px;
 }
 
 .section {
@@ -564,7 +573,8 @@ h3 {
 
 .card,
 .skill-group,
-.publication-note {
+.publication-note,
+.publication-item {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   background: var(--surface);
@@ -583,10 +593,43 @@ h3 {
 
 .card:hover,
 .skill-group:hover,
-.skill-group:focus-visible {
+.skill-group:focus-visible,
+.publication-item:hover {
   border-color: var(--border-strong);
   background: var(--surface-strong);
   transform: translateY(-4px);
+}
+
+.publication-item--blurred {
+  position: relative;
+  overflow: hidden;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.018)),
+    rgba(18, 22, 17, 0.62);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    var(--shadow);
+}
+
+.publication-item--blurred::after {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  content: "";
+  pointer-events: none;
+  background: rgba(2, 5, 2, 0.34);
+  -webkit-backdrop-filter: blur(3px) saturate(0.82);
+  backdrop-filter: blur(3px) saturate(0.82);
+}
+
+.publication-item--blurred .publication-year,
+.publication-item--blurred .publication-content {
+  filter: blur(5px);
+  opacity: 0.72;
+}
+
+.publication-item--report .publication-summary {
+  white-space: normal;
 }
 
 .section-link {
@@ -635,6 +678,97 @@ h3 {
 
 .card p {
   color: var(--text-muted);
+}
+
+.publication-list {
+  display: grid;
+  gap: 14px;
+}
+
+.publication-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  padding: 22px 24px;
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.publication-year-heading {
+  margin: 0 0 12px;
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  letter-spacing: 0.04em;
+}
+
+.publication-year {
+  padding-top: 3px;
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+}
+
+.publication-content h3 {
+  margin: 0 0 8px;
+  color: var(--title);
+  font-size: 1.08rem;
+  line-height: 1.35;
+}
+
+.publication-item:first-child .publication-content h3 {
+  font-size: 1.24rem;
+}
+
+.publication-venue,
+.publication-summary {
+  margin: 0;
+}
+
+.publication-venue {
+  margin-top: 3px;
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+}
+
+.publication-summary {
+  margin-top: 10px;
+  color: var(--text-muted);
+  font-size: 0.94rem;
+  line-height: 1.55;
+  white-space: nowrap;
+}
+
+.publication-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.publication-links a,
+.publication-links span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 4px 9px;
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  border: 1px solid rgba(118, 185, 0, 0.3);
+  border-radius: var(--radius);
+  background: var(--accent-soft);
+}
+
+.publication-links a {
+  transition: color 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.publication-links a:hover,
+.publication-links a:focus-visible {
+  color: var(--text);
+  border-color: var(--border-strong);
+  background: rgba(118, 185, 0, 0.16);
 }
 
 .status {
@@ -1281,6 +1415,20 @@ h3 {
 
   .card-header {
     flex-direction: column;
+  }
+
+  .publication-item {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 20px;
+  }
+
+  .publication-summary {
+    white-space: normal;
+  }
+
+  .publication-year {
+    padding-top: 0;
   }
 
   .game-gate__title-row {
