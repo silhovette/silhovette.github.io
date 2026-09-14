@@ -1233,14 +1233,34 @@ h3 {
 
 .playground-summary {
   display: list-item;
-  list-style-position: inside;
+  list-style: none;
+  position: relative;
+  padding-left: 20px;
   margin-bottom: 0;
   cursor: pointer;
 }
 
 .playground-summary::marker {
-  color: var(--accent);
-  font-size: 1.1rem;
+  content: "";
+}
+
+.playground-summary::before {
+  position: absolute;
+  top: 0.78em;
+  left: 0;
+  width: 0;
+  height: 0;
+  content: "";
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-left: 8px solid var(--accent);
+  transform: translateY(-50%) rotate(0deg);
+  transform-origin: 38% 50%;
+  transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.playground-disclosure[open] > .playground-summary::before {
+  transform: translateY(-50%) rotate(90deg);
 }
 
 .playground-summary h2 {
