@@ -880,7 +880,7 @@ const setupIndexCodePreview = () => {
 
   const getLiveIndexSource = async () => {
     try {
-      const response = await fetch(new URL("index.html", window.location.href), { cache: "no-store" });
+      const response = await fetch(new URL("index.html", window.location.href));
 
       if (!response.ok) {
         throw new Error("Unable to load index.html");
@@ -1015,6 +1015,15 @@ setupSiteSearch();
 setupReveal();
 setupFallingPulseGate();
 setupIndexCodePreview();
-setupHeroPolyhedron();
 setupHoverTooltip();
-setupCursorField();
+
+const startAmbientEffects = () => {
+  setupHeroPolyhedron();
+  setupCursorField();
+};
+
+if ("requestIdleCallback" in window) {
+  window.requestIdleCallback(startAmbientEffects, { timeout: 1200 });
+} else {
+  window.setTimeout(startAmbientEffects, 120);
+}
