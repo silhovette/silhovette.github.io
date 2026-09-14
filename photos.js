@@ -77,6 +77,8 @@
   let continuousSpeed = 180;
   let scrollPosition = 0;
   let loopWidth = 0;
+  let wheelRemaining = 0;
+  let wheelSpeed = 0;
   let lastFocus = null;
   let previousOverflow = "";
   let closeAnimation = null;
@@ -84,11 +86,14 @@
   let loadRequest = 0;
 
   function updatePlayback() {
-    if (!playing || !visible || touching || dialog.open || document.hidden ||
-        strip.contains(document.activeElement) || !loopWidth) {
+    const autoplay = playing && !strip.contains(document.activeElement);
+    if (!visible || touching || dialog.open || document.hidden || !loopWidth ||
+        (!autoplay && !wheelRemaining)) {
       window.cancelAnimationFrame(animationFrame);
       animationFrame = null;
       lastFrame = null;
+      wheelRemaining = 0;
+      wheelSpeed = 0;
       return;
     }
     if (animationFrame !== null) return;
@@ -97,13 +102,31 @@
       if (lastFrame === null) lastFrame = timestamp;
       const delta = Math.min(50, timestamp - lastFrame);
       lastFrame = timestamp;
-      const targetSpeed = hovered ? 90 : 180;
+      const autoplay = playing && !strip.contains(document.activeElement);
+      const targetSpeed = autoplay ? (hovered ? 60 : 180) : 0;
       // Integrate an exponential easing curve so speed is independent of frame rate.
       const easing = Math.exp(-delta / 220);
-      const distance = targetSpeed * delta / 1000 +
-        (continuousSpeed - targetSpeed) * 0.22 * (1 - easing);
+      const distance = autoplay ? targetSpeed * delta / 1000 +
+        (continuousSpeed - targetSpeed) * 0.22 * (1 - easing) : 0;
       continuousSpeed = targetSpeed + (continuousSpeed - targetSpeed) * easing;
-      advanceStrip(distance);
+      // A critically damped glide adds wheel travel without jumping position or
+      // velocity, including when more wheel events arrive before it settles.
+      const seconds = delta / 1000;
+      const decay = Math.exp(-10 * seconds);
+      const remaining = (wheelRemaining + (10 * wheelRemaining - wheelSpeed) * seconds) * decay;
+      wheelSpeed = (wheelSpeed + 10 * (10 * wheelRemaining - wheelSpeed) * seconds) * decay;
+      const wheelDistance = wheelRemaining - remaining;
+      wheelRemaining = remaining;
+      if (wheelRemaining < 0.1 && wheelSpeed < 1) {
+        wheelRemaining = 0;
+        wheelSpeed = 0;
+      }
+      advanceStrip(distance + wheelDistance);
+      if (!autoplay && !wheelRemaining) {
+        animationFrame = null;
+        lastFrame = null;
+        return;
+      }
       animationFrame = requestAnimationFrame(tick);
     };
     animationFrame = requestAnimationFrame(tick);
@@ -317,7 +340,14 @@
     event.preventDefault();
     const sign = event.deltaY || event.deltaX;
     if (Math.abs(sign) < 1) return;
-    advanceStrip(Math.max(1, Math.round(strip.clientWidth * 0.7)));
+    const unit = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? strip.clientWidth : 1;
+    const distance = Math.min(Math.abs(sign) * unit * 2, strip.clientWidth * 0.3);
+    if (reducedMotion) {
+      advanceStrip(distance);
+      return;
+    }
+    wheelRemaining = Math.min(wheelRemaining + distance, strip.clientWidth * 0.6);
+    updatePlayback();
   }, { passive: false });
   strip.addEventListener("scroll", updateStripButtons, { passive: true });
   strip.addEventListener("pointerenter", event => { if (event.pointerType !== "touch") { hovered = true; updatePlayback(); } });

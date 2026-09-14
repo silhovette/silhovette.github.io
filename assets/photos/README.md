@@ -41,8 +41,10 @@ are invented. Prefer descriptive filenames and web-sized images (about 1600-2400
 pixels on the long edge). HEIC/RAW files should be converted before adding them.
 
 The expanded section loops from right to left while visible at 180 pixels per
-second. Hovering smoothly slows it to 90 pixels per second; leaving smoothly
-restores 180. Scrolling the mouse wheel advances in the same direction.
+second. Hovering smoothly slows it to 60 pixels per second; leaving smoothly
+restores 180. The mouse wheel adds a short, fast glide in the same direction,
+then smoothly returns to the normal scrolling speed. Repeated wheel input blends
+into the ongoing glide instead of jumping between positions.
 It pauses on keyboard focus in the strip, during touch interaction, while the
 viewer is open, or when the tab is hidden.
 Reduced-motion preferences disable autoplay and transition animations by default.
