@@ -431,8 +431,37 @@ h3 {
 .about-layout {
   display: grid;
   grid-template-columns: minmax(0, 840px) minmax(240px, 1fr);
-  align-items: center;
+  align-items: start;
   gap: 44px;
+}
+
+.about-portrait {
+  width: min(280px, 100%);
+  justify-self: end;
+}
+
+.about-portrait img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+}
+
+.about-portrait__image {
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.24);
+}
+
+.about-portrait__reflection {
+  margin-top: 8px;
+  aspect-ratio: 4 / 1;
+  overflow: hidden;
+  opacity: 0.25;
+  mask-image: linear-gradient(to bottom, #000, transparent 95%);
+  -webkit-mask-image: linear-gradient(to bottom, #000, transparent 95%);
+}
+
+.about-portrait__reflection img {
+  transform: scaleY(-1);
 }
 
 .about-visual {
@@ -1706,6 +1735,12 @@ h3 {
   .about-layout {
     grid-template-columns: 1fr;
     gap: 28px;
+  }
+
+  .about-portrait {
+    order: -1;
+    justify-self: center;
+    width: min(240px, 70vw);
   }
 
   .about-visual {
