@@ -8,21 +8,27 @@
     content="Yuhua Luo, an AI undergraduate at Shanghai Jiao Tong University focusing on LLM agents, multi-agent systems and model collaboration."
   />
   <title>Yuhua Luo</title>
-  <link rel="stylesheet" href="style.css?v=6" />
+  <link rel="stylesheet" href="style.css?v=7" />
   <link rel="preload" href="assets/fonts/IBMPlexSans-Regular.woff2" as="font" type="font/woff2" crossorigin />
-  <script src="script.js" defer></script>
+  <script src="languages.js?v=1" defer></script>
+  <script src="script.js?v=2" defer></script>
   <script src="photos.js?v=4" defer></script>
 </head>
-<body>
+<body class="home-page">
   <a class="skip-link" href="#main">Skip to content</a>
   <canvas id="cursor-field" class="cursor-field" aria-hidden="true"></canvas>
 
   <header class="site-header">
-    <nav class="nav" aria-label="Primary navigation">
+    <nav class="nav nav--languages" aria-label="Primary navigation">
       <div class="site-search" data-site-search role="search">
         <label class="sr-only" for="site-search-input">Search this page</label>
         <input id="site-search-input" type="search" placeholder="Search" autocomplete="off" />
         <div class="site-search__results" role="listbox" aria-label="Search results"></div>
+      </div>
+      <div class="language-switcher" data-language-switcher role="group" aria-label="Language">
+        <button type="button" data-language="en" lang="en" aria-label="English" aria-pressed="true">EN</button>
+        <button type="button" data-language="zh-Hans" lang="zh-Hans" aria-label="简体中文" aria-pressed="false">简</button>
+        <button type="button" data-language="zh-Hant" lang="zh-Hant" aria-label="繁體中文" aria-pressed="false">繁</button>
       </div>
       <div class="nav-links">
         <a href="#about">About</a>
@@ -41,8 +47,8 @@
       <div class="hero-content">
         <p class="eyebrow">Welcome to the homepage of</p>
         <h1>Yuhua Luo</h1>
-        <p class="affiliation">Shanghai Jiao Tong University, School of Artificial Intelligence</p>
-        <p class="hero-summary">
+        <p class="affiliation" data-i18n="affiliation">Shanghai Jiao Tong University, School of Artificial Intelligence</p>
+        <p class="hero-summary" data-i18n="summary">
           AI undergraduate focusing on LLM agents, multi-agent systems and model collaboration.
         </p>
         <div class="hero-links" aria-label="Primary links">
@@ -56,27 +62,27 @@
     <section id="about" class="section reveal">
       <div class="section-heading">
         <p class="eyebrow">About</p>
-        <h2>Academic Background</h2>
+        <h2 data-i18n="academic">Academic Background</h2>
       </div>
       <div class="about-layout">
         <div class="content-block">
-          <p>
+          <p data-i18n="introduction">
             I am an undergraduate student in Artificial Intelligence at Shanghai Jiao Tong University, 
             working on language-model systems with a primary focus on LLM agents, multi-agent systems, 
             and model collaboration.
           </p>
-          <p>
+          <p data-i18n="research">
             My research interests center on building capable and adaptive agent systems that can reason,
             coordinate, and act in complex environments. Recent work spans autonomous agent systems, 
             hierarchical planning and recovery, cross-device interaction, continual learning, and efficient
             adaptation of large language models.
           </p>
           <div class="honors-block">
-            <h3>Selected Honors</h3>
+            <h3 data-i18n="honors">Selected Honors</h3>
             <ul>
-              <li>Outstanding League Member, Shanghai Jiao Tong University</li>
-              <li>Merit Student, Shanghai Jiao Tong University, 2024-2025</li>
-              <li>Zhiyuan Honor Scholarship, Zhiyuan College, Shanghai Jiao Tong University</li>
+              <li data-i18n="league">Outstanding League Member, Shanghai Jiao Tong University</li>
+              <li data-i18n="merit">Merit Student, Shanghai Jiao Tong University, 2024-2025</li>
+              <li data-i18n="scholarship">Zhiyuan Honor Scholarship, Zhiyuan College, Shanghai Jiao Tong University</li>
             </ul>
           </div>
         </div>
@@ -661,7 +667,7 @@
     <section id="interests" class="section reveal">
       <div class="section-heading">
         <p class="eyebrow">Research Interests</p>
-        <h2>Topics I Explore</h2>
+        <h2 data-i18n="topics">Topics I Explore</h2>
       </div>
       <div class="research-matrix" aria-label="Research interests">
         <article
@@ -670,7 +676,7 @@
           data-tooltip="Autonomous language-model agents can reason, act, recover from failures, and improve through interaction and feedback."
         >
           <h3>LLM Agents</h3>
-          <p>Building autonomous language-model agents that reason, act, recover from failures, and improve through interaction and feedback.</p>
+          <p data-i18n="agents">Building autonomous language-model agents that reason, act, recover from failures, and improve through interaction and feedback.</p>
         </article>
         <article
           class="research-cell"
@@ -678,7 +684,7 @@
           data-tooltip="Planning and recovery must adapt as intermediate states change during long-horizon execution."
         >
           <h3>Planning, Recovery &amp; Adaptation</h3>
-          <p>Studying long-horizon planning, execution-time recovery, and adaptive decision-making under changing intermediate states.</p>
+          <p data-i18n="planning">Studying long-horizon planning, execution-time recovery, and adaptive decision-making under changing intermediate states.</p>
         </article>
         <article
           class="research-cell"
@@ -686,7 +692,7 @@
           data-tooltip="Language-model reasoning becomes more useful when connected to heterogeneous tools and verifiable execution in real-world environments."
         >
           <h3>Tool-Augmented Reasoning &amp; Execution</h3>
-          <p>Connecting language-model reasoning with external tools, heterogeneous interfaces, and verifiable execution in real-world environments.</p>
+          <p data-i18n="tools">Connecting language-model reasoning with external tools, heterogeneous interfaces, and verifiable execution in real-world environments.</p>
         </article>
         <article
           class="research-cell"
@@ -694,7 +700,7 @@
           data-tooltip="Cross-device agent systems depend on coordination, delegation, and shared context across heterogeneous devices and models."
         >
           <h3>Multi-Agent &amp; Cross-Device Systems</h3>
-          <p>Exploring coordination, delegation, and shared context across agents, models, and heterogeneous devices.</p>
+          <p data-i18n="coordination">Exploring coordination, delegation, and shared context across agents, models, and heterogeneous devices.</p>
         </article>
         <article
           class="research-cell"
@@ -702,7 +708,7 @@
           data-tooltip="Parameter-efficient adaptation and model merging can add new capabilities while preserving previously acquired knowledge."
         >
           <h3>Continual Learning &amp; Model Adaptation</h3>
-          <p>Studying how models acquire new capabilities while preserving prior knowledge through parameter-efficient adaptation and model merging.</p>
+          <p data-i18n="adaptation">Studying how models acquire new capabilities while preserving prior knowledge through parameter-efficient adaptation and model merging.</p>
         </article>
         <article
           class="research-cell"
@@ -710,7 +716,7 @@
           data-tooltip="Continual and non-stationary environments provide a setting for studying how agents learn, adapt, and retain useful behavior through interaction."
         >
           <h3>Reinforcement Learning</h3>
-          <p>Studying how agents learn, adapt, and retain useful behavior through interaction in continual and non-stationary environments.</p>
+          <p data-i18n="reinforcement">Studying how agents learn, adapt, and retain useful behavior through interaction in continual and non-stationary environments.</p>
         </article>
       </div>
     </section>
@@ -718,7 +724,7 @@
     <section id="projects" class="section reveal">
       <div class="section-heading">
         <p class="eyebrow">Highlights</p>
-        <h2>Featured Work &amp; Experience</h2>
+        <h2 data-i18n="featured">Featured Work &amp; Experience</h2>
       </div>
       <div class="project-grid">
         <article class="card">
@@ -801,7 +807,7 @@
     <section id="publications" class="section reveal">
       <div class="section-heading">
         <p class="eyebrow">Publications</p>
-        <h2>Preprints &amp; Manuscripts</h2>
+        <h2 data-i18n="manuscripts">Preprints &amp; Manuscripts</h2>
       </div>
       <div class="publication-year-heading">2026</div>
       <div class="publication-list">
@@ -851,32 +857,32 @@
     <section id="skills" class="section reveal">
       <div class="section-heading">
         <p class="eyebrow">Skills</p>
-        <h2>Technical Stack</h2>
+        <h2 data-i18n="stack">Technical Stack</h2>
       </div>
       <div class="skills-grid">
         <article class="skill-group">
           <h3>Languages</h3>
-          <p>Python and C++ for research prototyping, LLM and RL experimentation, data pipelines, and systems-oriented engineering.</p>
+          <p data-i18n="languages">Python and C++ for research prototyping, LLM and RL experimentation, data pipelines, and systems-oriented engineering.</p>
         </article>
         <article class="skill-group">
           <h3>Deep Learning &amp; Adaptation</h3>
-          <p>PyTorch, Transformers, PEFT, and PPO for LLM fine-tuning, continual adaptation, model merging, reinforcement learning, and controlled ablation studies.</p>
+          <p data-i18n="learning">PyTorch, Transformers, PEFT, and PPO for LLM fine-tuning, continual adaptation, model merging, reinforcement learning, and controlled ablation studies.</p>
         </article>
         <article class="skill-group">
           <h3>Agent Systems</h3>
-          <p>LLM agents for long-horizon planning, hierarchical recovery, multi-device orchestration, and reliable execution across API, CLI, and GUI interfaces.</p>
+          <p data-i18n="systems">LLM agents for long-horizon planning, hierarchical recovery, multi-device orchestration, and reliable execution across API, CLI, and GUI interfaces.</p>
         </article>
         <article class="skill-group">
           <h3>Retrieval &amp; Knowledge Systems</h3>
-          <p>ChromaDB, FAISS, SentenceTransformers, and multilingual embedding models for evidence-grounded retrieval, knowledge-base construction, document pipelines, and source-traceable RAG.</p>
+          <p data-i18n="retrieval">ChromaDB, FAISS, SentenceTransformers, and multilingual embedding models for evidence-grounded retrieval, knowledge-base construction, document pipelines, and source-traceable RAG.</p>
         </article>
         <article class="skill-group">
           <h3>Systems &amp; Research Engineering</h3>
-          <p>Linux, Git, CUDA, and GPU-based workflows for reproducible experimentation, environment isolation, checkpoint management, parallel execution, and experiment orchestration.</p>
+          <p data-i18n="engineering">Linux, Git, CUDA, and GPU-based workflows for reproducible experimentation, environment isolation, checkpoint management, parallel execution, and experiment orchestration.</p>
         </article>
         <article class="skill-group">
           <h3>Evaluation &amp; Experimental Design</h3>
-          <p>Controlled experiments, ablations, held-out evaluation, multi-seed analysis, failure injection, and postcondition-based verification, supported by Pandas, NumPy, and scikit-learn.</p>
+          <p data-i18n="evaluation">Controlled experiments, ablations, held-out evaluation, multi-seed analysis, failure injection, and postcondition-based verification, supported by Pandas, NumPy, and scikit-learn.</p>
         </article>
       </div>
     </section>
@@ -884,14 +890,14 @@
     <section id="playground" class="section reveal">
       <div class="section-heading">
         <p class="eyebrow">playground</p>
-        <h2>Beyond Research</h2>
+        <h2 data-i18n="beyond">Beyond Research</h2>
       </div>
       <div class="publication-list playground-list">
         <article id="photo-collection" class="publication-item playground-item">
           <div class="publication-content">
             <h3>Photo Collection</h3>
             <p class="publication-venue">Photography</p>
-            <p class="publication-summary">Photographs of everyday moments, places, and details that caught my eye.</p>
+            <p class="publication-summary" data-i18n="photographs">Photographs of everyday moments, places, and details that caught my eye.</p>
             <div class="publication-links">
               <a href="playground.html#photography">View Photos</a>
             </div>
@@ -902,7 +908,7 @@
           <div class="publication-content">
             <h3><button class="playground-title-button" type="button" data-mods-open aria-haspopup="dialog" aria-controls="mods-dialog">Night Runners Mods</button></h3>
             <p class="publication-venue">Mods &middot; AZX777</p>
-            <p class="publication-summary">Custom liveries, vehicle unlocks and a new rival crew for Night Runners.</p>
+            <p class="publication-summary" data-i18n="mods">Custom liveries, vehicle unlocks and a new rival crew for Night Runners.</p>
             <div class="publication-links">
               <button type="button" data-mods-open aria-haspopup="dialog" aria-controls="mods-dialog">View Mods</button>
               <a href="https://www.nexusmods.com/profile/AZX777" target="_blank" rel="noreferrer">Nexus Mods Profile</a>
@@ -914,7 +920,7 @@
           <div class="publication-content">
             <h3>Falling Pulse Rhythm Game</h3>
             <p class="publication-venue">Interactive Game</p>
-            <p class="publication-summary">
+            <p class="publication-summary" data-i18n="game">
               Built a configurable browser-based rhythm game prototype focused on Canvas rendering,
               timing-sensitive input judgement, player state, and lightweight desktop packaging.
             </p>

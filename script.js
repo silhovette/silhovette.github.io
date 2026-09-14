@@ -164,6 +164,10 @@ const setupSiteSearch = () => {
   };
 
   input.addEventListener("input", render);
+  document.addEventListener("site-language-change", () => {
+    clearHighlight();
+    render();
+  });
   input.addEventListener("keydown", (event) => {
     if (event.key === "Escape") {
       input.value = "";
