@@ -9,8 +9,10 @@
   />
   <title>Playground | Yuhua Luo</title>
   <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="photos.css" />
   <link rel="preload" href="assets/fonts/IBMPlexSans-Regular.woff2" as="font" type="font/woff2" crossorigin />
   <script src="script.js" defer></script>
+  <script src="photos.js" defer></script>
 </head>
 <body class="playground-page">
   <a class="skip-link" href="#main">Skip to content</a>
@@ -33,15 +35,41 @@
     <section id="playground-intro" class="section works-hero">
       <div class="section-heading">
         <p class="eyebrow">playground</p>
-        <h1>Things I Build for Fun</h1>
+        <h1>Beyond Research</h1>
       </div>
     </section>
 
+    <section id="photography" class="section">
+      <details class="playground-disclosure" open>
+        <summary class="section-heading playground-summary">
+          <h2><span class="eyebrow">Photography</span><span>Photo Collection</span></h2>
+        </summary>
+        <div class="playground-disclosure__content">
+          <div class="photo-gallery" data-photo-gallery data-photo-repository="silhovette/silhovette.github.io">
+            <div class="photo-toolbar" data-photo-toolbar hidden>
+              <span class="photo-count" data-photo-count></span>
+              <div class="photo-toolbar__actions">
+                <button class="photo-icon-button" type="button" data-strip-prev title="Previous photos" aria-label="Previous photos"><svg aria-hidden="true"><use href="assets/icons/gallery.svg#chevron-left"></use></svg></button>
+                <button class="photo-icon-button" type="button" data-photo-autoplay title="Pause slideshow" aria-label="Pause slideshow" aria-pressed="true"><svg aria-hidden="true"><use href="assets/icons/gallery.svg#pause"></use></svg></button>
+                <button class="photo-icon-button" type="button" data-strip-next title="Next photos" aria-label="Next photos"><svg aria-hidden="true"><use href="assets/icons/gallery.svg#chevron-right"></use></svg></button>
+                <button class="photo-view-all" type="button" data-photo-all>View all</button>
+              </div>
+            </div>
+            <div class="photo-empty" data-photo-empty>
+              <p data-photo-status role="status">Loading photos...</p>
+              <button class="photo-icon-button" type="button" data-photo-retry title="Reload photos" aria-label="Reload photos" hidden><svg aria-hidden="true"><use href="assets/icons/gallery.svg#refresh-cw"></use></svg></button>
+            </div>
+            <div class="photo-strip" data-photo-strip role="region" aria-label="Photo slideshow" hidden></div>
+          </div>
+        </div>
+      </details>
+    </section>
+
     <section id="mods" class="section">
-      <details class="playground-disclosure">
+      <details class="playground-disclosure" open>
         <summary class="section-heading playground-summary">
           <h2>
-            <span class="eyebrow">Game Mods</span>
+            <span class="eyebrow">Mods</span>
             <span>Mods for <em>Night Runners</em></span>
           </h2>
         </summary>
@@ -110,11 +138,11 @@
     </section>
 
     <section id="games-and-more" class="section">
-      <details class="playground-disclosure">
+      <details class="playground-disclosure" open>
         <summary class="section-heading playground-summary">
           <h2>
-            <span class="eyebrow">Games &amp; More</span>
-            <span>Made to Play</span>
+            <span class="eyebrow">Games</span>
+            <span>For Fun</span>
           </h2>
         </summary>
         <div class="playground-disclosure__content">
@@ -152,6 +180,26 @@
       </div>
     </section>
   </main>
+
+  <dialog id="photo-dialog" class="photo-dialog" aria-labelledby="photo-dialog-title">
+    <header class="photo-dialog__header">
+      <h2 id="photo-dialog-title">Photo Collection</h2>
+      <span data-photo-position></span>
+      <button class="photo-icon-button" type="button" data-photo-grid title="All photos" aria-label="All photos"><svg aria-hidden="true"><use href="assets/icons/gallery.svg#grid-2x2"></use></svg></button>
+      <a class="photo-icon-button" data-photo-original target="_blank" rel="noreferrer" title="Open original" aria-label="Open original photo" hidden><svg aria-hidden="true"><use href="assets/icons/gallery.svg#external-link"></use></svg></a>
+      <button class="photo-icon-button" type="button" data-photo-close title="Close" aria-label="Close photo viewer" autofocus><svg aria-hidden="true"><use href="assets/icons/gallery.svg#x"></use></svg></button>
+    </header>
+    <div class="photo-library" data-photo-library hidden></div>
+    <div class="photo-viewer" data-photo-viewer hidden>
+      <button class="photo-icon-button photo-viewer__prev" type="button" data-photo-prev title="Previous photo" aria-label="Previous photo"><svg aria-hidden="true"><use href="assets/icons/gallery.svg#chevron-left"></use></svg></button>
+      <div class="photo-stage">
+        <img data-photo-full alt="" hidden />
+        <p data-photo-viewer-status role="status"></p>
+      </div>
+      <button class="photo-icon-button photo-viewer__next" type="button" data-photo-next title="Next photo" aria-label="Next photo"><svg aria-hidden="true"><use href="assets/icons/gallery.svg#chevron-right"></use></svg></button>
+      <p class="photo-caption" data-photo-caption></p>
+    </div>
+  </dialog>
 
   <div id="falling-pulse-gate" class="game-gate" aria-hidden="true">
     <div class="game-gate__backdrop" data-game-gate-close></div>

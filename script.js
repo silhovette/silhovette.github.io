@@ -28,6 +28,11 @@ const setupNavigation = () => {
       return;
     }
 
+    if (window.scrollY > 0 && Math.ceil(window.scrollY + window.innerHeight) >= document.documentElement.scrollHeight - 2) {
+      setActiveLink(sections[sections.length - 1].id);
+      return;
+    }
+
     const headerOffset = 104;
     const currentPosition = window.scrollY + headerOffset;
     let activeSection = sections[0];
