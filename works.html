@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta
+    name="description"
+    content="Selected academic and applied AI work by Yuhua Luo."
+  />
+  <title>Featured Work | Yuhua Luo</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="script.js" defer></script>
+</head>
+<body class="works-page">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <canvas id="cursor-field" class="cursor-field" aria-hidden="true"></canvas>
+
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary navigation">
+      <div class="site-search" data-site-search role="search">
+        <label class="sr-only" for="site-search-input">Search this page</label>
+        <input id="site-search-input" type="search" placeholder="Search" autocomplete="off" />
+        <div class="site-search__results" role="listbox" aria-label="Search results"></div>
+      </div>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="section works-hero">
+      <div class="section-heading">
+        <p class="eyebrow">Featured Work</p>
+        <h1>Projects and Research</h1>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="works-list">
+        <article class="work-detail">
+          <div class="card-header">
+            <h2>Beyond Global Replanning: Hierarchical Recovery for Cross-Device Agent Systems</h2>
+            <span class="status">Agent Systems</span>
+          </div>
+          <p>
+            Designed and implemented H-RePlan, a hierarchical replanning framework for
+            cross-device agents that separates device-local strategy recovery from
+            orchestrator-level task and device reassignment.
+          </p>
+          <ul class="work-points">
+            <li>Added an LLM-based strategy planner that selects and retries API, CLI, and GUI execution strategies within each device context.</li>
+            <li>Introduced Cross-Layer Failure Events (CLFEs) to compress local execution evidence into structured signals for orchestration-level replanning.</li>
+            <li>Integrated capability-aware strategy bindings, retry budgets, chain history, and partial DAG-result reuse into the MDC/UFO³ execution flow.</li>
+            <li>Built HeraBench fault-injection workflows over Linux and Android devices, covering local, global, and mixed failures across 174 task variants.</li>
+          </ul>
+          <div class="keywords">
+            <span>Agent Systems</span>
+            <span>Cross-Device</span>
+            <span>API / CLI / GUI</span>
+            <span>Long-Horizon</span>
+            <span>Recovery</span>
+            <a href="https://www.alphaxiv.org/abs/2606.20487v1" target="_blank" rel="noreferrer">Paper</a>
+          </div>
+        </article>
+
+        <article class="work-detail">
+          <div class="card-header">
+            <h2>LLM Continual Learning Research</h2>
+            <span class="status">LLM Adaptation</span>
+          </div>
+          <p>
+            Investigated parameter-efficient continual learning for language models, focusing on
+            replay-free LoRA composition, task-vector structure, and shared/private parameter
+            decomposition.
+          </p>
+          <ul class="work-points">
+            <li>Analyzed LoRA updates as task vectors and studied how task-specific changes appear in parameter space.</li>
+            <li>Explored geometry-aware decomposition between transferable shared components and task-private residuals.</li>
+            <li>Built continual-learning experiment workflows across multiple text-classification task sequences.</li>
+            <li>Organized training logs, metric aggregation, and ablation records for reproducible comparison.</li>
+          </ul>
+          <div class="keywords">
+            <span>Continual Learning</span>
+            <span>PEFT</span>
+            <span>Task Vectors</span>
+            <span>LoRA</span>
+          </div>
+        </article>
+
+        <article class="work-detail">
+          <div class="card-header">
+            <h2>Dynamic Network Widening for Continual Reinforcement Learning</h2>
+            <span class="status">RL Research</span>
+          </div>
+          <p>
+            Conducted a reproducible continual-control study on network capacity and mid-training
+            model expansion under hidden environment drift. Designed matched PPO experiments across
+            multiple network widths, implemented controlled dynamic widening, and evaluated learning
+            efficiency and held-out robustness under equal interaction budgets.
+          </p>
+          <ul class="work-points">
+            <li>Constructed a continually changing CartPole environment with hidden gravity, mass, pole length, force, and friction perturbations.</li>
+            <li>Matched PPO configurations and interaction budgets across network widths, using multiple training seeds and held-out evaluation panels.</li>
+            <li>Compared fixed-width policies with 64→128 mid-training widening under default and literal all-zero initialization.</li>
+            <li>Built a reproducibility pipeline that preserved configurations, checkpoints, RNG and environment states, selection records, plots, and evaluation tables.</li>
+          </ul>
+          <div class="keywords">
+            <span>Continual Learning</span>
+            <span>PPO</span>
+            <span>Dynamic Network Growth</span>
+            <span>Robustness Evaluation</span>
+          </div>
+        </article>
+
+        <article class="work-detail">
+          <div class="card-header">
+            <h2>Multi-Device Agent Orchestration &amp; Verified Execution</h2>
+            <span class="status">Agent Systems</span>
+          </div>
+          <p>
+            Developed a multi-device agent system for capability-aware task orchestration and
+            reliable execution across heterogeneous devices, combining interface abstraction,
+            execution evidence, and explicit verification of real-world task outcomes.
+          </p>
+          <ul class="work-points">
+            <li>Designed capability-aware orchestration for assigning tasks to devices and execution interfaces suited to each environment.</li>
+            <li>Unified API, CLI, and GUI operations behind structured execution interfaces with device-adaptive tool selection.</li>
+            <li>Defined execution contracts that connect expected outputs, collected evidence, and postconditions instead of treating raw tool success as task completion.</li>
+            <li>Built system-evaluation workflows for cross-device execution, tracking interface behavior, completion evidence, and end-state correctness.</li>
+          </ul>
+          <div class="keywords">
+            <span>Multi-Agent Systems</span>
+            <span>Agent Orchestration</span>
+            <span>Tool Use</span>
+            <span>Verified Execution</span>
+          </div>
+        </article>
+
+        <article class="work-detail">
+          <div class="card-header">
+            <h2>Telecom Customer Service Intent Recognition</h2>
+            <span class="status">Applied AI Systems</span>
+          </div>
+          <p>
+            Developed a dialogue-understanding pipeline for long, multi-turn telecom service
+            sessions, combining intent recognition, target-plan prediction, structured plan
+            knowledge, retrieval, and LoRA/SFT experimentation.
+          </p>
+          <ul class="work-points">
+            <li>Cleaned, aggregated, and labeled 1,405 multi-turn customer service sessions for intent and plan-related analysis.</li>
+            <li>Converted telecom plan information into retrievable candidate knowledge for downstream reasoning.</li>
+            <li>Designed a RAG plus few-shot workflow that conditions on user plans, candidate plans, and dialogue context.</li>
+            <li>Ran LoRA/SFT experiments on open-source 7B models and compared them with baseline settings.</li>
+          </ul>
+          <div class="keywords">
+            <span>RAG</span>
+            <span>Few-shot Reasoning</span>
+            <span>LoRA/SFT</span>
+            <span>Dialogue Understanding</span>
+          </div>
+        </article>
+
+        <article class="work-detail">
+          <div class="card-header">
+            <h2>AI4MS Medical Knowledge Graph &amp; RAG System</h2>
+            <span class="status">Knowledge Systems</span>
+          </div>
+          <p>
+            Built a local evidence-grounded QA prototype for multiple sclerosis knowledge
+            organization, combining document parsing, vector retrieval, source traceability,
+            and knowledge-graph style structuring.
+          </p>
+          <ul class="work-points">
+            <li>Parsed and organized multi-source medical materials into searchable knowledge assets.</li>
+            <li>Indexed evidence chunks with ChromaDB and multilingual MiniLM embeddings for local retrieval.</li>
+            <li>Mapped user questions to relevant source passages through source-aware retrieval.</li>
+            <li>Preserved citations and evidence links to reduce unsupported answer generation.</li>
+          </ul>
+          <div class="keywords">
+            <span>Knowledge Graph</span>
+            <span>ChromaDB</span>
+            <span>MiniLM</span>
+            <span>Medical RAG</span>
+          </div>
+        </article>
+
+        <article class="work-detail">
+          <div class="card-header">
+            <h2>Training-aware Agent Research</h2>
+            <span class="status">Agent Systems</span>
+          </div>
+          <p>
+            Studying training-aware agent systems that connect learning signals with planning,
+            memory, tool use, and replanning, with emphasis on long-horizon execution and adaptive
+            behavior.
+          </p>
+          <ul class="work-points">
+            <li>Tracked recent work on self-improving agents, agentic reinforcement learning, and tool-augmented workflows.</li>
+            <li>Studied planning and replanning mechanisms as core components for robust long-horizon execution.</li>
+            <li>Prepared technical notes to organize assumptions, design patterns, and experiment directions.</li>
+            <li>Focused on how training signals could shape agent behavior beyond static prompting.</li>
+          </ul>
+          <div class="keywords">
+            <span>Agentic RL</span>
+            <span>Long-Horizon</span>
+            <span>Tool Use</span>
+            <span>Memory</span>
+          </div>
+        </article>
+
+        <article id="falling-pulse-project" class="work-detail">
+          <div class="card-header">
+            <h2>Falling Pulse Rhythm Game</h2>
+            <span class="status">Interactive Game</span>
+          </div>
+          <p>
+            Built a configurable browser-based rhythm game prototype focused on Canvas rendering,
+            timing-sensitive input judgement, player state, and lightweight desktop packaging.
+          </p>
+          <ul class="work-points">
+            <li>Implemented adjustable BPM, scroll speed, difficulty, note count, beat divisions, and 4K/5K/6K lane modes.</li>
+            <li>Designed scoring, combo, accuracy, judgement windows, result statistics, and timing-offset visualization.</li>
+            <li>Added profile customization, rating progression, achievements, key bindings, autoplay, and metronome controls.</li>
+            <li>Organized Canvas visual effects, audio feedback, session state, and a WebView-based desktop build path.</li>
+          </ul>
+          <div class="keywords">
+            <span>Canvas</span>
+            <span>Rhythm Game</span>
+            <span>Input Timing</span>
+            <span>WebView</span>
+            <a href="games/falling-pulse/index.html" data-falling-pulse-trigger>Play Demo</a>
+          </div>
+        </article>
+
+        <article class="work-detail">
+          <div class="card-header">
+            <h2>Style-Aware Humanoid Motion Generation</h2>
+            <span class="status">Embodied AI</span>
+          </div>
+          <p>
+            Built a project layer around MoConVQ for style-aware, language-conditioned humanoid
+            motion generation, emphasizing reproducible generation scripts, structured prompts,
+            and diagnostic reporting.
+          </p>
+          <ul class="work-points">
+            <li>Prepared style lexicons, prompt lists, audit templates, and HumanML3D-derived style subsets.</li>
+            <li>Organized baseline generation, adapter training, evaluation, and report-compilation scripts.</li>
+            <li>Packaged midterm and final deliverables with logs, outputs, and reproducibility notes.</li>
+            <li>Documented runtime asset limitations and avoided unsupported metric claims in the report.</li>
+          </ul>
+          <div class="keywords">
+            <span>MoConVQ</span>
+            <span>HumanML3D</span>
+            <span>Motion Generation</span>
+            <span>Reproducibility</span>
+          </div>
+        </article>
+
+        <article class="work-detail">
+          <div class="card-header">
+            <h2>SnapKV KV Cache Compression Reproduction</h2>
+            <span class="status">Inference Systems</span>
+          </div>
+          <p>
+            Reproduced the SnapKV training-free KV cache compression method and evaluated its
+            latency, memory, and perplexity behavior in small-scale LLM inference settings.
+          </p>
+          <ul class="work-points">
+            <li>Implemented post-prefill KV cache compression with observation-window scoring and pooling.</li>
+            <li>Compared baseline and compressed inference on WikiText and PG-19 workloads.</li>
+            <li>Recorded TTFT, TPOT, throughput, peak memory, FLOPs, and perplexity-related metrics.</li>
+            <li>Ran ablations over compression ratio, observation-window size, and pooling kernel size.</li>
+          </ul>
+          <div class="keywords">
+            <span>KV Cache</span>
+            <span>LLM Inference</span>
+            <span>SnapKV</span>
+            <span>PyTorch</span>
+          </div>
+        </article>
+
+        <article class="work-detail">
+          <div class="card-header">
+            <h2>NatDedProp Proof Agent and Tooling</h2>
+            <span class="status">Formal Reasoning</span>
+          </div>
+          <p>
+            Packaged a natural-deduction proof workflow with command-line checking, VS Code
+            tooling, reusable proof prompts, and logged answer-generation diagnostics.
+          </p>
+          <ul class="work-points">
+            <li>Prepared a self-contained NatDedProp environment with command-line checker and VS Code extension packages.</li>
+            <li>Designed a proof-agent workflow for diagnosing `.mmd` files and replacing proof placeholders.</li>
+            <li>Encoded connective-driven strategies for conjunction, disjunction, implication, equivalence, and classical tautologies.</li>
+            <li>Recorded diagnostics, proof attempts, checker results, and packaging events in JSONL logs.</li>
+          </ul>
+          <div class="keywords">
+            <span>Formal Proof</span>
+            <span>Natural Deduction</span>
+            <span>VS Code Extension</span>
+            <span>Agent Workflow</span>
+          </div>
+        </article>
+
+      </div>
+    </section>
+  </main>
+
+  <div id="falling-pulse-gate" class="game-gate" aria-hidden="true">
+    <div class="game-gate__backdrop" data-game-gate-close></div>
+    <section class="game-gate__panel" role="dialog" aria-modal="true" aria-labelledby="falling-pulse-gate-title">
+      <button class="game-gate__close" type="button" data-game-gate-close aria-label="Close">&times;</button>
+      <p class="eyebrow">Before Playing</p>
+      <div class="game-gate__title-row">
+        <h2 id="falling-pulse-gate-title">Fixed-Lane Rhythm Game Experience?</h2>
+        <div class="game-gate__mark thinking-visual is-animated" aria-hidden="true">
+          <svg class="thinking-line-mark" viewBox="0 0 1254 1254" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <filter id="game-gate-green-glow" x="-35%" y="-35%" width="170%" height="170%">
+                <feGaussianBlur stdDeviation="5" result="blur" />
+                <feMerge>
+                  <feMergeNode in="blur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+              <path
+                id="game-gate-line-shape"
+                fill-rule="evenodd"
+                pathLength="100"
+                d="M787 36L738 23L678 13L643 10L573 11L520 18L454 34L404 52L356 75L306 106L269 134L241 159L199 204L171 241L139 292L115 340L98 383L86 422L77 461L70 507L67 552L68 590L72 634L79 674L88 711L109 772L137 831L169 883L191 912L215 938L203 980L200 1021L203 1049L208 1074L218 1107L227 1128L249 1164L272 1190L296 1210L311 1220L348 1238L366 1244L399 1251L440 1253L487 1247L596 1225L612 1220L634 1207L643 1198L651 1184L654 1173L654 1157L651 1146L644 1134L658 1122L711 1117L769 1105L810 1092L838 1081L872 1065L899 1050L939 1024L975 996L1021 952L1044 926L1071 891L1100 845L1122 802L1137 766L1153 716L1168 645L1173 594L1173 541L1169 495L1158 436L1139 374L1121 331L1098 287L1065 236L1032 195L987 150L945 116L889 80L841 56Z M360 630L387 630L404 637L414 644L425 655L439 675L449 696L455 714L463 751L464 790L461 809L456 825L447 842L427 866L427 877L429 881L436 886L451 887L819 804L831 803L844 807L852 814L858 824L862 838L861 859L854 873L840 884L632 934L632 938L642 943L656 956L663 969L665 977L665 993L662 1004L657 1014L647 1025L631 1035L631 1040L633 1042L645 1047L657 1060L662 1074L662 1088L659 1099L652 1111L641 1122L623 1130L622 1134L637 1146L641 1155L642 1171L635 1188L624 1199L609 1208L588 1214L458 1238L417 1239L392 1236L370 1231L331 1216L306 1201L286 1185L270 1169L254 1149L234 1112L223 1080L214 1035L213 1000L218 969L227 943L247 908L276 873L332 819L346 796L353 777L358 748L358 729L353 697L343 664L343 653L345 645L349 638Z M569 26L629 24L681 28L738 38L789 52L829 67L873 88L925 120L961 147L983 166L1032 217L1063 258L1091 303L1118 359L1137 412L1147 450L1157 511L1160 556L1158 614L1151 665L1138 720L1123 765L1100 817L1076 859L1044 905L1011 943L979 974L930 1013L883 1043L836 1067L777 1089L739 1099L682 1108L669 1107L674 1091L674 1072L667 1053L663 1047L652 1037L662 1027L673 1009L677 993L677 976L673 961L667 950L659 941L666 938L839 897L854 890L866 878L871 868L874 857L874 836L872 827L865 811L855 800L847 795L837 792L820 792L446 876L440 875L438 872L439 869L451 857L466 833L475 804L477 789L477 763L474 740L468 714L460 690L451 671L438 651L424 636L410 626L393 619L384 617L363 617L349 622L338 632L331 650L331 668L338 689L345 724L344 760L335 790L320 814L277 854L255 878L239 898L225 921L221 925L196 896L169 858L150 826L130 786L114 746L101 705L90 658L84 616L81 570L84 507L93 452L107 400L121 361L148 304L178 255L208 215L243 177L281 143L310 121L365 87L414 64L459 48L515 34Z M496 654L496 669L500 680L511 692L517 695L533 698L564 693L602 693L620 695L655 703L680 712L705 724L732 741L748 755L760 761L773 762L785 758L797 746L802 734L802 718L797 707L786 695L772 684L744 666L721 654L692 642L660 632L638 627L601 622L557 622L522 627L508 634L501 642Z M509 654L512 648L521 640L565 634L608 635L658 644L707 661L747 682L773 700L785 711L789 718L790 731L786 740L780 746L774 749L764 749L757 746L735 728L707 711L675 697L653 690L631 685L602 681L563 681L534 686L524 685L512 675L509 669Z M705 299L698 305L691 320L691 333L695 344L705 355L717 360L731 360L762 350L770 350L761 371L757 393L758 417L764 440L776 463L791 479L810 490L821 493L844 493L865 485L885 467L893 455L903 431L907 408L906 384L903 370L896 353L897 351L921 358L965 378L976 378L987 374L995 367L1002 352L1002 337L998 327L990 318L978 310L957 300L923 288L876 277L849 274L805 274L786 276L750 283L718 293Z M711 310L748 297L789 289L811 287L847 287L868 289L920 300L953 312L972 321L987 333L990 339L990 351L987 357L981 363L974 366L966 366L941 353L915 343L891 337L868 335L882 353L891 374L894 388L894 413L892 424L882 449L875 459L864 470L855 476L845 480L824 481L806 474L791 461L777 438L771 417L770 394L773 376L783 352L795 337L795 334L765 337L726 349L718 348L708 341L703 330L704 319Z M461 271L445 275L435 280L423 289L413 300L404 314L396 333L392 350L391 374L393 389L398 406L405 421L414 434L423 443L438 453L458 459L473 459L489 455L502 448L517 434L523 426L533 407L537 395L541 373L541 355L535 326L525 305L520 298L506 284L490 275L473 271Z M458 284L480 285L490 289L500 296L512 309L520 323L528 354L528 374L526 387L522 400L514 416L506 427L495 437L485 443L468 447L453 445L441 440L421 422L410 402L404 377L404 356L409 334L418 315L427 303L437 294L449 287Z M314 196L314 211L318 221L327 231L340 237L358 236L390 222L418 214L446 209L470 207L500 208L530 213L560 222L587 234L603 234L614 229L622 221L627 209L627 196L624 187L618 179L602 169L573 157L542 148L513 143L488 141L463 141L431 144L403 149L377 156L347 167L328 176L319 185Z M326 201L328 194L336 186L362 175L394 165L444 156L495 155L539 161L562 167L587 176L602 183L612 191L615 197L615 208L612 214L606 220L599 223L592 223L565 211L521 199L479 195L455 196L408 204L377 214L353 225L342 225L336 222L330 216L327 210Z"
+              />
+            </defs>
+            <use href="#game-gate-line-shape" class="thinking-line-mark__glow" />
+            <use href="#game-gate-line-shape" class="thinking-line-mark__main" />
+            <use href="#game-gate-line-shape" class="thinking-line-mark__runner" />
+          </svg>
+        </div>
+      </div>
+      <p>
+        Are you a fixed-lane rhythm game player, or do you have experience with fixed-lane rhythm games?
+        If not, you may not know how this demo is played or how its settings work, which could lead
+        to a poor experience.
+      </p>
+      <div class="game-gate__actions">
+        <button class="game-gate__button game-gate__button--primary" type="button" data-game-gate-confirm>Yes</button>
+        <button class="game-gate__button" type="button" data-game-gate-close>No</button>
+      </div>
+    </section>
+  </div>
+
+  <footer class="footer">
+    <p>&copy; <span id="year"></span> Yuhua Luo. </p>
+  </footer>
+</body>
+</html>
