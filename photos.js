@@ -72,11 +72,11 @@
   let visible = false;
   let hovered = false;
   let touching = false;
-  let timer = null;
-  let direction = 1;
   let animationFrame = null;
   let lastFrame = null;
-  let continuousSpeed = 240;
+  let continuousSpeed = 180;
+  let scrollPosition = 0;
+  let loopWidth = 0;
   let lastFocus = null;
   let previousOverflow = "";
   let closeAnimation = null;
@@ -84,22 +84,45 @@
   let loadRequest = 0;
 
   function updatePlayback() {
-    window.cancelAnimationFrame(animationFrame);
-    animationFrame = null;
-    lastFrame = null;
-    if (!playing || !visible || hovered || touching || dialog.open || document.hidden ||
-        strip.contains(document.activeElement) || strip.scrollWidth <= strip.clientWidth + 2) return;
+    if (!playing || !visible || touching || dialog.open || document.hidden ||
+        strip.contains(document.activeElement) || !loopWidth) {
+      window.cancelAnimationFrame(animationFrame);
+      animationFrame = null;
+      lastFrame = null;
+      return;
+    }
+    if (animationFrame !== null) return;
+    scrollPosition = strip.scrollLeft;
     const tick = (timestamp) => {
       if (lastFrame === null) lastFrame = timestamp;
       const delta = Math.min(50, timestamp - lastFrame);
       lastFrame = timestamp;
-      const max = strip.scrollWidth - strip.clientWidth;
-      if (strip.scrollLeft >= max - 1) direction = -1;
-      if (strip.scrollLeft <= 1) direction = 1;
-      strip.scrollLeft += direction * continuousSpeed * delta / 1000;
+      const targetSpeed = hovered ? 90 : 180;
+      // Integrate an exponential easing curve so speed is independent of frame rate.
+      const easing = Math.exp(-delta / 220);
+      const distance = targetSpeed * delta / 1000 +
+        (continuousSpeed - targetSpeed) * 0.22 * (1 - easing);
+      continuousSpeed = targetSpeed + (continuousSpeed - targetSpeed) * easing;
+      advanceStrip(distance);
       animationFrame = requestAnimationFrame(tick);
     };
     animationFrame = requestAnimationFrame(tick);
+  }
+
+  function measureLoop() {
+    const first = strip.firstElementChild;
+    const repeated = strip.children[photos.length];
+    loopWidth = first && repeated
+      ? repeated.getBoundingClientRect().left - first.getBoundingClientRect().left
+      : 0;
+    scrollPosition = loopWidth ? strip.scrollLeft % loopWidth : 0;
+    strip.scrollLeft = scrollPosition;
+  }
+
+  function advanceStrip(distance) {
+    if (!loopWidth) return;
+    scrollPosition = (scrollPosition + distance) % loopWidth;
+    strip.scrollLeft = scrollPosition;
   }
 
   function updateStripButtons() {
@@ -107,11 +130,11 @@
     stripNext.hidden = true;
   }
 
-  function stepStrip(sign) {
+  function stepStrip() {
     const card = strip.firstElementChild;
     if (!card) return;
     const distance = card.getBoundingClientRect().width + 16;
-    strip.scrollLeft += sign * distance;
+    advanceStrip(distance);
   }
 
   function shuffled(items) {
@@ -256,10 +279,22 @@
         image.src = photos[index].thumbUrl || loaded[index].src;
         image.loading = "eager";
       });
+      // Repeat enough cards to cover the widest (three-card) viewport at the seam.
+      // The duplicates stay clickable but do not repeat keyboard/screen-reader entries.
+      if (photos.length > 1) {
+        for (let i = 0; i < 4; i += 1) {
+          const index = i % photos.length;
+          const card = createCard(photos[index], index);
+          card.tabIndex = -1;
+          card.setAttribute("aria-hidden", "true");
+          strip.append(card);
+        }
+      }
       library.replaceChildren();
       empty.hidden = photos.length > 0;
       strip.hidden = !photos.length;
       toolbar.hidden = !photos.length;
+      measureLoop();
       status.textContent = `${photos.length} photos ready`;
       gallery.querySelector("[data-photo-count]").textContent = `${photos.length} ${photos.length === 1 ? "photo" : "photos"}`;
       updateStripButtons();
@@ -276,14 +311,13 @@
     }
   }
 
-  stripPrev.addEventListener("click", () => { stepStrip(-1); updatePlayback(); });
-  stripNext.addEventListener("click", () => { stepStrip(1); updatePlayback(); });
+  stripPrev.addEventListener("click", () => { stepStrip(); updatePlayback(); });
+  stripNext.addEventListener("click", () => { stepStrip(); updatePlayback(); });
   strip.addEventListener("wheel", event => {
     event.preventDefault();
     const sign = event.deltaY || event.deltaX;
     if (Math.abs(sign) < 1) return;
-    direction = sign > 0 ? 1 : -1;
-    strip.scrollLeft += direction * Math.max(1, Math.round(strip.clientWidth * 0.7));
+    advanceStrip(Math.max(1, Math.round(strip.clientWidth * 0.7)));
   }, { passive: false });
   strip.addEventListener("scroll", updateStripButtons, { passive: true });
   strip.addEventListener("pointerenter", event => { if (event.pointerType !== "touch") { hovered = true; updatePlayback(); } });
@@ -327,7 +361,7 @@
     else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
   });
   new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; updatePlayback(); }, { threshold: 0.2 }).observe(strip);
-  new ResizeObserver(() => { updateStripButtons(); updatePlayback(); }).observe(strip);
+  new ResizeObserver(() => { measureLoop(); updateStripButtons(); updatePlayback(); }).observe(strip);
   document.addEventListener("visibilitychange", updatePlayback);
   loadPhotos();
 })();

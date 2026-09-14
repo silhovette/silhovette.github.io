@@ -40,8 +40,11 @@ names are part of the order. Filenames provide captions; no dates or locations
 are invented. Prefer descriptive filenames and web-sized images (about 1600-2400
 pixels on the long edge). HEIC/RAW files should be converted before adding them.
 
-The expanded section plays automatically while visible. It pauses on hover,
-keyboard focus in the strip, while the viewer is open, or when the tab is hidden.
+The expanded section loops from right to left while visible at 180 pixels per
+second. Hovering smoothly slows it to 90 pixels per second; leaving smoothly
+restores 180. Scrolling the mouse wheel advances in the same direction.
+It pauses on keyboard focus in the strip, during touch interaction, while the
+viewer is open, or when the tab is hidden.
 Reduced-motion preferences disable autoplay and transition animations by default.
 Photos open in a full-image viewer with previous/next, an all-photos grid and an
 original-image link. Originals are not cropped or overwritten.
