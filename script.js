@@ -75,6 +75,18 @@ const setupNavigation = () => {
   window.addEventListener("resize", updateActiveLink);
 };
 
+const playgroundDisclosureControls = new WeakMap();
+
+const revealPlaygroundTarget = (target) => {
+  if (!(target instanceof Element)) return;
+  const disclosure = target.closest(".playground-disclosure") ||
+    target.querySelector(":scope > .playground-disclosure");
+  if (!disclosure) return;
+  const setOpen = playgroundDisclosureControls.get(disclosure);
+  if (setOpen) setOpen(true, false);
+  else disclosure.open = true;
+};
+
 const setupSiteSearch = () => {
   const search = document.querySelector("[data-site-search]");
   const input = document.getElementById("site-search-input");
@@ -128,6 +140,7 @@ const setupSiteSearch = () => {
       const section = item.closest("section");
       button.innerHTML = `<strong>${item.textContent.trim().slice(0, 72)}</strong><span>${section?.querySelector(".eyebrow")?.textContent.trim() || "Section"}</span>`;
       button.addEventListener("click", () => {
+        revealPlaygroundTarget(item);
         item.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "center" });
         highlight(item, query);
         input.value = "";
@@ -1009,10 +1022,162 @@ const setupFallingPulseGate = () => {
   });
 };
 
+const setupPlaygroundDisclosures = () => {
+  document.querySelectorAll(".playground-disclosure").forEach((disclosure) => {
+    const summary = disclosure.querySelector("summary");
+    const content = disclosure.querySelector(".playground-disclosure__content");
+    if (!summary || !content) return;
+    let desiredOpen = disclosure.open;
+    let animation = null;
+    content.inert = !desiredOpen;
+
+    const cancelAnimation = () => {
+      if (!animation) return;
+      animation.onfinish = null;
+      animation.cancel();
+      animation = null;
+    };
+
+    const settle = () => {
+      cancelAnimation();
+      disclosure.open = desiredOpen;
+      disclosure.style.height = "";
+      disclosure.style.overflow = "";
+      content.inert = !desiredOpen;
+    };
+
+    const setOpen = (open, animate = true) => {
+      const startHeight = disclosure.getBoundingClientRect().height;
+      desiredOpen = open;
+      cancelAnimation();
+      if (!open && content.contains(document.activeElement)) summary.focus();
+      content.inert = !open;
+      if (!animate || reduceMotion || !disclosure.animate) {
+        settle();
+        return;
+      }
+
+      // Keep the native details open until shrinking finishes; rapid clicks
+      // start from the current rendered height rather than jumping to an end.
+      disclosure.style.height = "";
+      disclosure.open = true;
+      const endHeight = open ? disclosure.getBoundingClientRect().height : summary.getBoundingClientRect().height;
+      disclosure.style.height = `${startHeight}px`;
+      disclosure.style.overflow = "hidden";
+      animation = disclosure.animate(
+        [{ height: `${startHeight}px` }, { height: `${endHeight}px` }],
+        { duration: 300, easing: "cubic-bezier(0.22, 1, 0.36, 1)", fill: "forwards" }
+      );
+      animation.onfinish = settle;
+    };
+
+    playgroundDisclosureControls.set(disclosure, setOpen);
+    summary.addEventListener("click", (event) => {
+      event.preventDefault();
+      setOpen(!desiredOpen);
+    });
+    disclosure.addEventListener("toggle", () => {
+      if (!animation) {
+        desiredOpen = disclosure.open;
+        content.inert = !desiredOpen;
+      }
+    });
+    window.addEventListener("resize", () => {
+      if (animation) settle();
+    });
+  });
+};
+
+const setupPlayground = () => {
+  setupPlaygroundDisclosures();
+  if (document.body.classList.contains("playground-page")) {
+    const revealHashTarget = () => {
+      let id;
+      try {
+        id = decodeURIComponent(window.location.hash.slice(1));
+      } catch {
+        return;
+      }
+      const target = id && document.getElementById(id);
+      if (!target) return;
+      revealPlaygroundTarget(target);
+      window.requestAnimationFrame(() => target.scrollIntoView({ block: "start" }));
+    };
+    revealHashTarget();
+    window.addEventListener("hashchange", revealHashTarget);
+  }
+
+  // Keep existing links to the old project location usable after the move.
+  if (document.body.classList.contains("works-page")) {
+    const redirectGameAnchor = () => {
+      if (window.location.hash === "#falling-pulse-project") {
+        window.location.replace(new URL("index.html#falling-pulse-project", window.location.href));
+      }
+    };
+    redirectGameAnchor();
+    window.addEventListener("hashchange", redirectGameAnchor);
+  }
+
+  const dialog = document.getElementById("mods-dialog");
+  if (!dialog) return;
+  const closeButton = dialog.querySelector("[data-mods-close]");
+  let lastActiveElement = null;
+  let previousOverflow = "";
+  let backdropPressed = false;
+
+  document.querySelectorAll("[data-mods-open]").forEach((trigger) => {
+    trigger.addEventListener("click", () => {
+      if (dialog.open) return;
+      lastActiveElement = document.activeElement;
+      previousOverflow = document.body.style.overflow;
+      dialog.showModal();
+      document.body.style.overflow = "hidden";
+      dialog.querySelector(".mods-dialog__body").scrollTop = 0;
+      // These previews are only downloaded when the collection is opened.
+      dialog.querySelectorAll("img[data-src]").forEach((image) => {
+        image.src = image.dataset.src;
+        delete image.dataset.src;
+      });
+      closeButton.focus();
+    });
+  });
+
+  closeButton.addEventListener("click", () => dialog.close());
+  dialog.addEventListener("keydown", (event) => {
+    if (event.key !== "Tab") return;
+    const controls = Array.from(dialog.querySelectorAll("button, a[href]"));
+    const first = controls[0];
+    const last = controls[controls.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  });
+  const isBackdrop = (event) => {
+    const rect = dialog.getBoundingClientRect();
+    return event.target === dialog &&
+      (event.clientX < rect.left || event.clientX > rect.right ||
+       event.clientY < rect.top || event.clientY > rect.bottom);
+  };
+  dialog.addEventListener("pointerdown", (event) => { backdropPressed = isBackdrop(event); });
+  dialog.addEventListener("click", (event) => {
+    if (backdropPressed && isBackdrop(event)) dialog.close();
+    backdropPressed = false;
+  });
+  dialog.addEventListener("close", () => {
+    document.body.style.overflow = previousOverflow;
+    if (lastActiveElement instanceof HTMLElement) lastActiveElement.focus();
+  });
+};
+
 // Initialization
 setupNavigation();
 setupSiteSearch();
 setupReveal();
+setupPlayground();
 setupFallingPulseGate();
 setupIndexCodePreview();
 setupHoverTooltip();
