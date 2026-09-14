@@ -40,16 +40,19 @@ names are part of the order. Filenames provide captions; no dates or locations
 are invented. Prefer descriptive filenames and web-sized images (about 1600-2400
 pixels on the long edge). HEIC/RAW files should be converted before adding them.
 
-The expanded section loops from right to left while visible at 180 pixels per
+The expanded section loops from right to left while visible at 160 pixels per
 second. Hovering smoothly slows it to 60 pixels per second; leaving smoothly
-restores 180. The mouse wheel adds a short, fast glide in the same direction,
+restores 160. The mouse wheel adds a short, fast glide in the same direction,
 then smoothly returns to the normal scrolling speed. Repeated wheel input blends
 into the ongoing glide instead of jumping between positions.
 It pauses on keyboard focus in the strip, during touch interaction, while the
 viewer is open, or when the tab is hidden.
 Reduced-motion preferences disable autoplay and transition animations by default.
 Photos open in a full-image viewer with previous/next, an all-photos grid and an
-original-image link. Originals are not cropped or overwritten.
+original-image link. The viewer immediately shows the cached thumbnail while
+the original loads. Originals warm in the background with two download workers;
+hovering a photo and opening its neighbors also starts preloading them.
+Originals are not cropped or overwritten.
 
 Do not commit private photographs or unwanted EXIF location data to a public
 repository. No sample photographs are included in the delivered folder.

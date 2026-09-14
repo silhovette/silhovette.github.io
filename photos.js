@@ -61,7 +61,6 @@
   const viewer = dialog.querySelector("[data-photo-viewer]");
   const fullImage = dialog.querySelector("[data-photo-full]");
   const viewerStatus = dialog.querySelector("[data-photo-viewer-status]");
-  const position = dialog.querySelector("[data-photo-position]");
   const original = dialog.querySelector("[data-photo-original]");
   const close = dialog.querySelector("[data-photo-close]");
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -74,7 +73,7 @@
   let touching = false;
   let animationFrame = null;
   let lastFrame = null;
-  let continuousSpeed = 180;
+  let continuousSpeed = 160;
   let scrollPosition = 0;
   let loopWidth = 0;
   let wheelRemaining = 0;
@@ -84,6 +83,30 @@
   let closeAnimation = null;
   let imageRequest = 0;
   let loadRequest = 0;
+  const originalPreloads = new Map();
+
+  function preloadOriginal(url) {
+    if (originalPreloads.has(url)) return originalPreloads.get(url);
+    const ready = new Promise((resolve, reject) => {
+      const image = new Image();
+      image.fetchPriority = "low";
+      image.onload = () => resolve();
+      image.onerror = reject;
+      image.src = url;
+    }).catch(() => { originalPreloads.delete(url); });
+    originalPreloads.set(url, ready);
+    return ready;
+  }
+
+  function warmOriginals(items) {
+    let next = 0;
+    const worker = async () => {
+      while (next < items.length) await preloadOriginal(items[next++].url);
+    };
+    // Keep background downloads limited so a clicked original can load promptly.
+    worker();
+    worker();
+  }
 
   function updatePlayback() {
     const autoplay = playing && !strip.contains(document.activeElement);
@@ -103,7 +126,7 @@
       const delta = Math.min(50, timestamp - lastFrame);
       lastFrame = timestamp;
       const autoplay = playing && !strip.contains(document.activeElement);
-      const targetSpeed = autoplay ? (hovered ? 60 : 180) : 0;
+      const targetSpeed = autoplay ? (hovered ? 60 : 160) : 0;
       // Integrate an exponential easing curve so speed is independent of frame rate.
       const easing = Math.exp(-delta / 220);
       const distance = autoplay ? targetSpeed * delta / 1000 +
@@ -187,6 +210,8 @@
       button.setAttribute("aria-label", `Unavailable photo: ${photo.title}`);
     });
     button.append(image);
+    button.addEventListener("pointerenter", () => preloadOriginal(photo.url), { once: true });
+    button.addEventListener("focus", () => preloadOriginal(photo.url), { once: true });
     button.addEventListener("click", () => openDialog(index));
     return button;
   }
@@ -215,7 +240,6 @@
     viewer.hidden = true;
     library.hidden = false;
     original.hidden = true;
-    position.textContent = `${photos.length} photos`;
     dialog.querySelector("[data-photo-grid]").setAttribute("aria-pressed", "true");
     if (!library.childElementCount) library.replaceChildren(...photos.map(createCard));
     if (!reducedMotion) library.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 200 });
@@ -232,15 +256,19 @@
     original.hidden = false;
     original.href = photo.url;
     dialog.querySelector("[data-photo-grid]").setAttribute("aria-pressed", "false");
-    position.textContent = `${selected + 1} / ${photos.length}`;
-    fullImage.hidden = true;
-    viewerStatus.hidden = false;
-    viewerStatus.textContent = "Loading photo...";
+    fullImage.src = photo.thumbUrl;
+    fullImage.alt = photo.title;
+    fullImage.hidden = false;
+    viewerStatus.hidden = true;
+    viewerStatus.textContent = "";
     dialog.querySelectorAll("[data-photo-prev], [data-photo-next]").forEach(button => {
       button.disabled = photos.length < 2;
     });
     const image = new Image();
+    image.fetchPriority = "high";
     image.src = photo.url;
+    preloadOriginal(photos[(selected + 1) % photos.length].url);
+    preloadOriginal(photos[(selected - 1 + photos.length) % photos.length].url);
     try {
       await image.decode();
       if (request !== imageRequest || !dialog.open) return;
@@ -248,12 +276,11 @@
       fullImage.alt = photo.title;
       fullImage.hidden = false;
       viewerStatus.hidden = true;
-      if (!reducedMotion) fullImage.animate(
-        [{ opacity: 0, transform: "scale(0.985)" }, { opacity: 1, transform: "scale(1)" }],
-        { duration: 260, easing: "ease-out" }
-      );
     } catch {
-      if (request === imageRequest) viewerStatus.textContent = "Photo unavailable";
+      if (request === imageRequest && dialog.open && mode === "single") {
+        viewerStatus.textContent = "Original unavailable. Showing preview.";
+        viewerStatus.hidden = false;
+      }
     }
   }
 
@@ -288,7 +315,7 @@
         thumbUrl: new URL(`assets/photos/thumbs/${encodeURIComponent(decodeURIComponent(url.split("/").at(-1)).replace(/\.[^.]+$/i, ".webp"))}`, location.href).href,
         title: decodeURIComponent(url.split("/").at(-1)).replace(imagePattern, "").replace(/[_-]+/g, " "),
       }));
-      status.textContent = `Preparing ${photos.length} photos...`;
+      status.textContent = "Preparing photos...";
       const loaded = await Promise.all(photos.map(async (photo) => {
         const image = new Image();
         image.decoding = "async";
@@ -318,10 +345,10 @@
       strip.hidden = !photos.length;
       toolbar.hidden = !photos.length;
       measureLoop();
-      status.textContent = `${photos.length} photos ready`;
-      gallery.querySelector("[data-photo-count]").textContent = `${photos.length} ${photos.length === 1 ? "photo" : "photos"}`;
+      status.textContent = photos.length ? "Photos ready" : "No photos yet";
       updateStripButtons();
       updatePlayback();
+      warmOriginals(photos);
     } catch (error) {
       if (request !== loadRequest) return;
       status.textContent = error.name === "AbortError" ? "Photo library timed out" : error.message;
