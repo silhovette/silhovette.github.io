@@ -71,6 +71,7 @@
   let visible = false;
   let hovered = false;
   let touching = false;
+  let keyboardNavigation = false;
   let animationFrame = null;
   let lastFrame = null;
   let continuousSpeed = 160;
@@ -109,7 +110,7 @@
   }
 
   function updatePlayback() {
-    const autoplay = playing && !strip.contains(document.activeElement);
+    const autoplay = playing && !(keyboardNavigation && strip.contains(document.activeElement));
     if (!visible || touching || dialog.open || document.hidden || !loopWidth ||
         (!autoplay && !wheelRemaining)) {
       window.cancelAnimationFrame(animationFrame);
@@ -125,7 +126,7 @@
       if (lastFrame === null) lastFrame = timestamp;
       const delta = Math.min(50, timestamp - lastFrame);
       lastFrame = timestamp;
-      const autoplay = playing && !strip.contains(document.activeElement);
+      const autoplay = playing && !(keyboardNavigation && strip.contains(document.activeElement));
       const targetSpeed = autoplay ? (hovered ? 60 : 160) : 0;
       // Integrate an exponential easing curve so speed is independent of frame rate.
       const easing = Math.exp(-delta / 220);
@@ -385,6 +386,15 @@
   window.addEventListener("pointercancel", endTouch);
   strip.addEventListener("focusin", updatePlayback);
   strip.addEventListener("focusout", () => window.setTimeout(updatePlayback, 0));
+  document.addEventListener("keydown", event => {
+    if (event.key !== "Tab") return;
+    keyboardNavigation = true;
+    updatePlayback();
+  });
+  document.addEventListener("pointerdown", () => {
+    keyboardNavigation = false;
+    updatePlayback();
+  }, { capture: true });
   play.addEventListener("click", () => { playing = !playing; updatePlayback(); });
   retry.addEventListener("click", loadPhotos);
   gallery.querySelector("[data-photo-all]").addEventListener("click", () => openDialog());
@@ -396,7 +406,8 @@
   dialog.addEventListener("close", () => {
     imageRequest += 1;
     document.body.style.overflow = previousOverflow;
-    if (lastFocus instanceof HTMLElement) lastFocus.focus();
+    if (lastFocus instanceof HTMLElement) lastFocus.focus({ preventScroll: true });
+    hovered = strip.matches(":hover");
     updatePlayback();
   });
   let backdropPressed = false;
