@@ -453,7 +453,7 @@ h3 {
 }
 
 .about-portrait__reflection {
-  margin-top: 8px;
+  margin-top: 0;
   aspect-ratio: 4 / 1;
   overflow: hidden;
   opacity: 0.25;
