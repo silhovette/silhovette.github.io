@@ -438,7 +438,7 @@ h3 {
 .about-portrait {
   width: min(280px, 100%);
   justify-self: end;
-  transform: translateX(-24px);
+  transform: translate(-24px, 8px);
 }
 
 .about-portrait img {
@@ -1742,7 +1742,7 @@ h3 {
     order: -1;
     justify-self: center;
     width: min(240px, 70vw);
-    transform: none;
+    transform: translateY(8px);
   }
 
   .about-visual {
