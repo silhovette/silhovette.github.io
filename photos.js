@@ -33,14 +33,17 @@
       if (!Array.isArray(entries)) throw new Error("Photo library unavailable");
       const paths = [...new Set(entries.map(entry => entry.path).filter(path =>
         typeof path === "string" && path.startsWith("assets/photos/") && imagePattern.test(path) &&
-        !path.includes("\\") && path.split("/").every(part => part && !part.startsWith("."))
+        !path.includes("\\") && !path.includes("/thumbs/") && path.split("/").every(part => part && !part.startsWith("."))
       ))].sort(new Intl.Collator("en", { numeric: true, sensitivity: "base" }).compare);
       return paths.map(path => new URL(path.split("/").map(encodeURIComponent).join("/"), location.href).href);
     })();
     return photoBootstrap.ready;
   }
 
-  const warmPhotoCache = () => discoverPhotoUrls().then(urls => preloadPhotoFiles(urls)).catch(() => {});
+  const warmPhotoCache = () => discoverPhotoUrls().then(urls => preloadPhotoFiles(urls.map(url => {
+    const file = decodeURIComponent(url.split("/").at(-1));
+    return new URL(`assets/photos/thumbs/${encodeURIComponent(file.replace(/\.[^.]+$/i, ".webp"))}`, location.href).href;
+  }))).catch(() => {});
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", warmPhotoCache, { once: true });
   else warmPhotoCache();
 
@@ -58,7 +61,6 @@
   const viewer = dialog.querySelector("[data-photo-viewer]");
   const fullImage = dialog.querySelector("[data-photo-full]");
   const viewerStatus = dialog.querySelector("[data-photo-viewer-status]");
-  const caption = dialog.querySelector("[data-photo-caption]");
   const position = dialog.querySelector("[data-photo-position]");
   const original = dialog.querySelector("[data-photo-original]");
   const close = dialog.querySelector("[data-photo-close]");
@@ -185,8 +187,6 @@
     original.href = photo.url;
     dialog.querySelector("[data-photo-grid]").setAttribute("aria-pressed", "false");
     position.textContent = `${selected + 1} / ${photos.length}`;
-    caption.textContent = photo.title;
-    caption.title = photo.title;
     fullImage.hidden = true;
     viewerStatus.hidden = false;
     viewerStatus.textContent = "Loading photo...";
@@ -239,21 +239,15 @@
       if (request !== loadRequest) return;
       photos = shuffled(paths).map(url => ({
         url,
+        thumbUrl: new URL(`assets/photos/thumbs/${encodeURIComponent(decodeURIComponent(url.split("/").at(-1)).replace(/\.[^.]+$/i, ".webp"))}`, location.href).href,
         title: decodeURIComponent(url.split("/").at(-1)).replace(imagePattern, "").replace(/[_-]+/g, " "),
       }));
       status.textContent = `Preparing ${photos.length} photos...`;
       const loaded = await Promise.all(photos.map(async (photo) => {
         const image = new Image();
         image.decoding = "async";
-        image.src = photo.url;
+        image.src = photo.thumbUrl;
         await image.decode();
-        const scale = 0.8;
-        const canvas = document.createElement("canvas");
-        canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
-        canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
-        const context = canvas.getContext("2d", { alpha: false });
-        context.drawImage(image, 0, 0, canvas.width, canvas.height);
-        photo.thumbUrl = canvas.toDataURL("image/webp", 0.82);
         return image;
       }));
       if (request !== loadRequest) return;

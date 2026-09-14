@@ -83,7 +83,6 @@
 .photo-stage { display: grid; place-items: center; width: 100%; height: 100%; min-width: 0; min-height: 0; }
 .photo-stage img { display: block; width: 100%; height: 100%; min-width: 0; min-height: 0; object-fit: contain; }
 .photo-stage p { color: var(--text-muted); font: 0.85rem var(--font-mono); text-align: center; }
-.photo-caption { grid-column: 1 / -1; min-width: 0; margin: 0; padding-top: 8px; text-align: center; color: var(--text-muted); font: 0.76rem var(--font-mono); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 @media (max-width: 860px) {
   .photo-strip { grid-auto-columns: calc((100% - 16px) / 2); }
   .photo-library { grid-template-columns: repeat(2, minmax(0, 1fr)); }

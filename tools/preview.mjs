@@ -23,7 +23,7 @@ export async function listPhotos(root = defaultRoot) {
     for (const entry of entries) {
       if (entry.name.startsWith(".") || entry.isSymbolicLink()) continue;
       const child = `${relative}/${entry.name}`;
-      if (entry.isDirectory()) await visit(child);
+      if (entry.isDirectory() && entry.name !== "thumbs") await visit(child);
       else if (entry.isFile() && imagePattern.test(entry.name)) photos.push({ path: child });
     }
   }
