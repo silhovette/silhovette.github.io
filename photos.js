@@ -75,17 +75,14 @@
     image.alt = photo.title;
     image.width = 600;
     image.height = 450;
-    image.loading = "lazy";
+    image.loading = "eager";
     image.decoding = "async";
     image.addEventListener("error", () => {
       image.hidden = true;
       button.classList.add("is-broken");
       button.setAttribute("aria-label", `Unavailable photo: ${photo.title}`);
     });
-    const label = document.createElement("span");
-    label.textContent = photo.title;
-    label.title = photo.title;
-    button.append(image, label);
+    button.append(image);
     button.addEventListener("click", () => openDialog(index));
     return button;
   }
@@ -202,12 +199,25 @@
         url: new URL(path.split("/").map(encodeURIComponent).join("/"), location.href).href,
         title: path.split("/").at(-1).replace(imagePattern, "").replace(/[_-]+/g, " "),
       }));
+      status.textContent = `Preparing ${photos.length} photos...`;
+      const loaded = await Promise.all(photos.map(async (photo) => {
+        const image = new Image();
+        image.decoding = "async";
+        image.src = photo.url;
+        await image.decode();
+        return image;
+      }));
+      if (request !== loadRequest) return;
       strip.replaceChildren(...photos.map(createCard));
+      strip.querySelectorAll("img").forEach((image, index) => {
+        image.src = loaded[index].src;
+        image.loading = "eager";
+      });
       library.replaceChildren();
       empty.hidden = photos.length > 0;
       strip.hidden = !photos.length;
       toolbar.hidden = !photos.length;
-      status.textContent = "No photos yet";
+      status.textContent = `${photos.length} photos ready`;
       gallery.querySelector("[data-photo-count]").textContent = `${photos.length} ${photos.length === 1 ? "photo" : "photos"}`;
       updateStripButtons();
       updatePlayback();

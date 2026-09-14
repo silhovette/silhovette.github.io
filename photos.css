@@ -54,8 +54,7 @@
   cursor: pointer;
 }
 .photo-card img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 4px; background: #080b07; transition: opacity 200ms ease; }
-.photo-card span { display: block; margin-top: 10px; font: 0.76rem var(--font-mono); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; transition: color 180ms ease; }
-.photo-card:hover span { color: var(--accent); }
+.photo-card span { display: none; }
 .photo-card:hover img { opacity: 0.86; }
 .photo-card.is-broken::before { content: "Image unavailable"; display: grid; place-items: center; width: 100%; aspect-ratio: 4 / 3; background: #080b07; color: var(--text-soft); font: 0.8rem var(--font-mono); }
 .photo-dialog {
