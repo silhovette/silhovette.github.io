@@ -74,7 +74,7 @@
   let direction = 1;
   let animationFrame = null;
   let lastFrame = null;
-  let continuousSpeed = 24;
+  let continuousSpeed = 240;
   let lastFocus = null;
   let previousOverflow = "";
   let closeAnimation = null;
@@ -109,7 +109,7 @@
     const card = strip.firstElementChild;
     if (!card) return;
     const distance = card.getBoundingClientRect().width + 16;
-    strip.scrollTo({ left: strip.scrollLeft + sign * distance, behavior: reducedMotion ? "auto" : "smooth" });
+    strip.scrollLeft += sign * distance;
   }
 
   function shuffled(items) {
@@ -127,7 +127,7 @@
     button.className = "photo-card";
     button.setAttribute("aria-label", `Open photo: ${photo.title}`);
     const image = document.createElement("img");
-    image.src = photo.url;
+    image.src = photo.thumbUrl || photo.url;
     image.alt = photo.title;
     image.width = 600;
     image.height = 450;
@@ -247,12 +247,19 @@
         image.decoding = "async";
         image.src = photo.url;
         await image.decode();
+        const scale = 0.8;
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
+        canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
+        const context = canvas.getContext("2d", { alpha: false });
+        context.drawImage(image, 0, 0, canvas.width, canvas.height);
+        photo.thumbUrl = canvas.toDataURL("image/webp", 0.82);
         return image;
       }));
       if (request !== loadRequest) return;
       strip.replaceChildren(...photos.map(createCard));
       strip.querySelectorAll("img").forEach((image, index) => {
-        image.src = loaded[index].src;
+        image.src = photos[index].thumbUrl || loaded[index].src;
         image.loading = "eager";
       });
       library.replaceChildren();
@@ -282,7 +289,7 @@
     const sign = event.deltaY || event.deltaX;
     if (Math.abs(sign) < 1) return;
     direction = sign > 0 ? 1 : -1;
-    stepStrip(direction);
+    strip.scrollLeft += direction * Math.max(1, Math.round(strip.clientWidth * 0.7));
   }, { passive: false });
   strip.addEventListener("scroll", updateStripButtons, { passive: true });
   strip.addEventListener("pointerenter", event => { if (event.pointerType !== "touch") { hovered = true; updatePlayback(); } });

@@ -38,6 +38,8 @@
   padding: 4px 0 14px;
   scrollbar-width: none;
   overscroll-behavior-x: contain;
+  contain: layout paint;
+  will-change: scroll-position;
 }
 .photo-strip::-webkit-scrollbar { display: none; }
 .photo-card {
