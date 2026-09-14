@@ -1,5 +1,49 @@
 (() => {
   const gallery = document.querySelector("[data-photo-gallery]");
+  const repository = gallery?.dataset.photoRepository || "silhovette/silhovette.github.io";
+  const imagePattern = /\.(jpe?g|png|webp|avif|gif)$/i;
+
+  const preloadPhotoFiles = async (urls) => {
+    await Promise.all(urls.map(async (url) => {
+      const image = new Image();
+      image.decoding = "async";
+      image.src = url;
+      try { await image.decode(); } catch { /* broken files are reported in the gallery */ }
+    }));
+  };
+
+  const photoBootstrap = {
+    ready: null,
+    urls: null,
+  };
+
+  async function discoverPhotoUrls() {
+    if (photoBootstrap.ready) return photoBootstrap.ready;
+    photoBootstrap.ready = (async () => {
+      if (location.protocol === "file:") throw new Error("Local preview required");
+      const hosted = location.hostname === "silhovette.github.io";
+      const url = hosted
+        ? `https://api.github.com/repos/${repository}/git/trees/main?recursive=1`
+        : new URL("assets/photos/index.json", location.href);
+      const response = await fetch(url, { cache: "no-store" });
+      if (!response.ok) throw new Error(response.status === 403 || response.status === 429 ? "Photo library temporarily unavailable" : "Photo library unavailable");
+      const data = await response.json();
+      if (data.truncated) throw new Error("Photo library index is incomplete");
+      const entries = hosted ? data.tree?.filter(entry => entry.type === "blob" && entry.mode !== "120000") : data.photos;
+      if (!Array.isArray(entries)) throw new Error("Photo library unavailable");
+      const paths = [...new Set(entries.map(entry => entry.path).filter(path =>
+        typeof path === "string" && path.startsWith("assets/photos/") && imagePattern.test(path) &&
+        !path.includes("\\") && path.split("/").every(part => part && !part.startsWith("."))
+      ))].sort(new Intl.Collator("en", { numeric: true, sensitivity: "base" }).compare);
+      return paths.map(path => new URL(path.split("/").map(encodeURIComponent).join("/"), location.href).href);
+    })();
+    return photoBootstrap.ready;
+  }
+
+  const warmPhotoCache = () => discoverPhotoUrls().then(urls => preloadPhotoFiles(urls)).catch(() => {});
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", warmPhotoCache, { once: true });
+  else warmPhotoCache();
+
   if (!gallery) return;
   const dialog = document.getElementById("photo-dialog");
   const strip = gallery.querySelector("[data-photo-strip]");
@@ -19,7 +63,6 @@
   const original = dialog.querySelector("[data-photo-original]");
   const close = dialog.querySelector("[data-photo-close]");
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const imagePattern = /\.(jpe?g|png|webp|avif|gif)$/i;
   let photos = [];
   let selected = 0;
   let mode = "grid";
@@ -29,6 +72,9 @@
   let touching = false;
   let timer = null;
   let direction = 1;
+  let animationFrame = null;
+  let lastFrame = null;
+  let continuousSpeed = 24;
   let lastFocus = null;
   let previousOverflow = "";
   let closeAnimation = null;
@@ -36,26 +82,27 @@
   let loadRequest = 0;
 
   function updatePlayback() {
-    window.clearInterval(timer);
-    timer = null;
-    play.setAttribute("aria-pressed", String(playing));
-    play.setAttribute("aria-label", playing ? "Pause slideshow" : "Play slideshow");
-    play.title = playing ? "Pause slideshow" : "Play slideshow";
-    play.querySelector("use").setAttribute("href", `assets/icons/gallery.svg#${playing ? "pause" : "play"}`);
-    const maxScroll = strip.scrollWidth - strip.clientWidth;
+    window.cancelAnimationFrame(animationFrame);
+    animationFrame = null;
+    lastFrame = null;
     if (!playing || !visible || hovered || touching || dialog.open || document.hidden ||
-        strip.contains(document.activeElement) || maxScroll < 2) return;
-    timer = window.setInterval(() => {
+        strip.contains(document.activeElement) || strip.scrollWidth <= strip.clientWidth + 2) return;
+    const tick = (timestamp) => {
+      if (lastFrame === null) lastFrame = timestamp;
+      const delta = Math.min(50, timestamp - lastFrame);
+      lastFrame = timestamp;
       const max = strip.scrollWidth - strip.clientWidth;
-      if (strip.scrollLeft >= max - 2) direction = -1;
-      if (strip.scrollLeft <= 2) direction = 1;
-      stepStrip(direction);
-    }, 3600);
+      if (strip.scrollLeft >= max - 1) direction = -1;
+      if (strip.scrollLeft <= 1) direction = 1;
+      strip.scrollLeft += direction * continuousSpeed * delta / 1000;
+      animationFrame = requestAnimationFrame(tick);
+    };
+    animationFrame = requestAnimationFrame(tick);
   }
 
   function updateStripButtons() {
-    stripPrev.disabled = strip.scrollLeft <= 2;
-    stripNext.disabled = strip.scrollLeft >= strip.scrollWidth - strip.clientWidth - 2;
+    stripPrev.hidden = true;
+    stripNext.hidden = true;
   }
 
   function stepStrip(sign) {
@@ -63,6 +110,15 @@
     if (!card) return;
     const distance = card.getBoundingClientRect().width + 16;
     strip.scrollTo({ left: strip.scrollLeft + sign * distance, behavior: reducedMotion ? "auto" : "smooth" });
+  }
+
+  function shuffled(items) {
+    const result = [...items];
+    for (let i = result.length - 1; i > 0; i -= 1) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [result[i], result[j]] = [result[j], result[i]];
+    }
+    return result;
   }
 
   function createCard(photo, index) {
@@ -179,25 +235,11 @@
     const controller = new AbortController();
     const timeout = window.setTimeout(() => controller.abort(), 12000);
     try {
-      if (location.protocol === "file:") throw new Error("Local preview required");
-      const hosted = location.hostname === "silhovette.github.io";
-      const url = hosted
-        ? `https://api.github.com/repos/${gallery.dataset.photoRepository}/git/trees/main?recursive=1`
-        : new URL("assets/photos/index.json", location.href);
-      const response = await fetch(url, { cache: "no-store", signal: controller.signal });
-      if (!response.ok) throw new Error(response.status === 403 || response.status === 429 ? "Photo library temporarily unavailable" : "Photo library unavailable");
-      const data = await response.json();
-      if (data.truncated) throw new Error("Photo library index is incomplete");
-      const entries = hosted ? data.tree?.filter(entry => entry.type === "blob" && entry.mode !== "120000") : data.photos;
-      if (!Array.isArray(entries)) throw new Error("Photo library unavailable");
-      const paths = [...new Set(entries.map(entry => entry.path).filter(path =>
-        typeof path === "string" && path.startsWith("assets/photos/") && imagePattern.test(path) &&
-        !path.includes("\\") && path.split("/").every(part => part && !part.startsWith("."))
-      ))].sort(new Intl.Collator("en", { numeric: true, sensitivity: "base" }).compare);
+      const paths = await discoverPhotoUrls();
       if (request !== loadRequest) return;
-      photos = paths.map(path => ({
-        url: new URL(path.split("/").map(encodeURIComponent).join("/"), location.href).href,
-        title: path.split("/").at(-1).replace(imagePattern, "").replace(/[_-]+/g, " "),
+      photos = shuffled(paths).map(url => ({
+        url,
+        title: decodeURIComponent(url.split("/").at(-1)).replace(imagePattern, "").replace(/[_-]+/g, " "),
       }));
       status.textContent = `Preparing ${photos.length} photos...`;
       const loaded = await Promise.all(photos.map(async (photo) => {
@@ -235,6 +277,13 @@
 
   stripPrev.addEventListener("click", () => { stepStrip(-1); updatePlayback(); });
   stripNext.addEventListener("click", () => { stepStrip(1); updatePlayback(); });
+  strip.addEventListener("wheel", event => {
+    event.preventDefault();
+    const sign = event.deltaY || event.deltaX;
+    if (Math.abs(sign) < 1) return;
+    direction = sign > 0 ? 1 : -1;
+    stepStrip(direction);
+  }, { passive: false });
   strip.addEventListener("scroll", updateStripButtons, { passive: true });
   strip.addEventListener("pointerenter", event => { if (event.pointerType !== "touch") { hovered = true; updatePlayback(); } });
   strip.addEventListener("pointerleave", () => { hovered = false; updatePlayback(); });

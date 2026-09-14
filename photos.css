@@ -4,7 +4,7 @@
 .photo-gallery { min-height: 320px; }
 .photo-gallery [hidden], .photo-dialog [hidden] { display: none !important; }
 .photo-toolbar, .photo-toolbar__actions { display: flex; align-items: center; gap: 10px; }
-.photo-toolbar { justify-content: space-between; margin-bottom: 18px; }
+.photo-toolbar { justify-content: flex-end; margin-bottom: 18px; }
 .photo-count, .photo-dialog [data-photo-position] { color: var(--text-muted); font: 0.76rem var(--font-mono); }
 .photo-icon-button {
   display: inline-grid;
@@ -22,7 +22,7 @@
 }
 .photo-icon-button svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .photo-icon-button:hover:not(:disabled) { color: var(--text); background: var(--accent-soft); border-color: var(--border-strong); }
-.photo-icon-button:disabled { opacity: 0.28; cursor: default; }
+.photo-icon-button:disabled, .photo-toolbar [data-photo-autoplay], .photo-toolbar [data-strip-prev], .photo-toolbar [data-strip-next] { display: none !important; }
 .photo-view-all { margin-left: 8px; padding: 4px 0; color: var(--text-muted); font: 0.8rem var(--font-mono); background: none; border: 0; cursor: pointer; transition: color 180ms ease; }
 .photo-view-all:hover { color: var(--accent); }
 .photo-gallery button:focus-visible, .photo-dialog :is(button, a):focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
@@ -33,14 +33,13 @@
   grid-auto-flow: column;
   grid-auto-columns: calc((100% - 32px) / 3);
   gap: 16px;
-  overflow-x: auto;
+  overflow-x: hidden;
   overflow-y: hidden;
   padding: 4px 0 14px;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: thin;
-  scrollbar-color: var(--border-strong) transparent;
+  scrollbar-width: none;
   overscroll-behavior-x: contain;
 }
+.photo-strip::-webkit-scrollbar { display: none; }
 .photo-card {
   display: grid;
   align-content: start;
