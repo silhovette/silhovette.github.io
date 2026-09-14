@@ -42,9 +42,10 @@ pixels on the long edge). HEIC/RAW files should be converted before adding them.
 
 The expanded section loops from right to left while visible at 160 pixels per
 second. Hovering smoothly slows it to 60 pixels per second; leaving smoothly
-restores 160. The mouse wheel adds a short, fast glide in the same direction,
-then smoothly returns to the normal scrolling speed. Repeated wheel input blends
-into the ongoing glide instead of jumping between positions.
+restores 160. Scrolling the mouse wheel down glides photos left; scrolling up
+glides them right, using the same wheel speed and easing in both directions.
+After the glide, scrolling smoothly returns to its normal leftward speed.
+Repeated or reversed wheel input blends into the ongoing glide without jumps.
 It pauses on keyboard focus in the strip, during touch interaction, while the
 viewer is open, or when the tab is hidden.
 Reduced-motion preferences disable autoplay and transition animations by default.

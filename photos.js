@@ -112,7 +112,7 @@
   function updatePlayback() {
     const autoplay = playing && !(keyboardNavigation && strip.contains(document.activeElement));
     if (!visible || touching || dialog.open || document.hidden || !loopWidth ||
-        (!autoplay && !wheelRemaining)) {
+        (!autoplay && !wheelRemaining && !wheelSpeed)) {
       window.cancelAnimationFrame(animationFrame);
       animationFrame = null;
       lastFrame = null;
@@ -141,12 +141,16 @@
       wheelSpeed = (wheelSpeed + 10 * (10 * wheelRemaining - wheelSpeed) * seconds) * decay;
       const wheelDistance = wheelRemaining - remaining;
       wheelRemaining = remaining;
-      if (wheelRemaining < 0.1 && wheelSpeed < 1) {
+      if (Math.abs(wheelRemaining) < 0.1 && Math.abs(wheelSpeed) < 1) {
         wheelRemaining = 0;
         wheelSpeed = 0;
       }
-      advanceStrip(distance + wheelDistance);
-      if (!autoplay && !wheelRemaining) {
+      // Fade autoplay out while the wheel glide takes over, so leftward autoplay
+      // does not make a downward gesture faster than an upward one.
+      const wheelBlend = Math.min(1, Math.abs(wheelDistance) / Math.max(distance, 0.001));
+      const autoplayWeight = 1 - wheelBlend * wheelBlend * (3 - 2 * wheelBlend);
+      advanceStrip(distance * autoplayWeight + wheelDistance);
+      if (!autoplay && !wheelRemaining && !wheelSpeed) {
         animationFrame = null;
         lastFrame = null;
         return;
@@ -169,6 +173,7 @@
   function advanceStrip(distance) {
     if (!loopWidth) return;
     scrollPosition = (scrollPosition + distance) % loopWidth;
+    if (scrollPosition < 0) scrollPosition += loopWidth;
     strip.scrollLeft = scrollPosition;
   }
 
@@ -369,12 +374,13 @@
     const sign = event.deltaY || event.deltaX;
     if (Math.abs(sign) < 1) return;
     const unit = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? strip.clientWidth : 1;
-    const distance = Math.min(Math.abs(sign) * unit * 2, strip.clientWidth * 0.3);
+    const distance = Math.sign(sign) * Math.min(Math.abs(sign) * unit * 2, strip.clientWidth * 0.3);
     if (reducedMotion) {
       advanceStrip(distance);
       return;
     }
-    wheelRemaining = Math.min(wheelRemaining + distance, strip.clientWidth * 0.6);
+    const maxDistance = strip.clientWidth * 0.6;
+    wheelRemaining = Math.max(-maxDistance, Math.min(wheelRemaining + distance, maxDistance));
     updatePlayback();
   }, { passive: false });
   strip.addEventListener("scroll", updateStripButtons, { passive: true });
