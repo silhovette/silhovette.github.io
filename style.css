@@ -1670,6 +1670,15 @@ h3 {
   transform: translateY(0);
 }
 
+.home-page main > .reveal {
+  transform: none;
+}
+
+.home-page main > .reveal:not(.is-visible) {
+  opacity: 0;
+  pointer-events: none;
+}
+
 @keyframes fadeUp {
   from {
     opacity: 0;

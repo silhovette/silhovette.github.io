@@ -184,6 +184,36 @@ const setupSiteSearch = () => {
 };
 // Reveal animation
 const setupReveal = () => {
+  if (document.body.classList.contains("home-page")) {
+    const sections = [...document.querySelectorAll("main > .reveal")];
+    const revealAll = () => {
+      sections.forEach(section => section.classList.add("is-visible"));
+      window.removeEventListener("scroll", revealOnScroll);
+    };
+    const revealOnScroll = () => {
+      if (window.scrollY > 0) revealAll();
+    };
+    const revealHashTarget = () => {
+      if (window.location.hash && window.location.hash !== "#hero") revealAll();
+    };
+
+    window.addEventListener("scroll", revealOnScroll, { passive: true });
+    window.addEventListener("pageshow", revealOnScroll);
+    window.addEventListener("hashchange", revealHashTarget);
+    // Navigation to About can leave the page at scrollY === 0.
+    document.querySelectorAll('a[href^="#"]').forEach(link => {
+      link.addEventListener("click", () => {
+        if (link.getAttribute("href") !== "#hero") revealAll();
+      });
+    });
+    document.addEventListener("focusin", event => {
+      if (sections.some(section => section.contains(event.target))) revealAll();
+    });
+    revealOnScroll();
+    revealHashTarget();
+    return;
+  }
+
   if (!reduceMotion && "IntersectionObserver" in window) {
     const revealObserver = new IntersectionObserver(
       (entries, observer) => {
