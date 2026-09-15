@@ -347,9 +347,21 @@
         }
       }
       library.replaceChildren();
+      if (photos.length && !reducedMotion) {
+        await empty.animate([{ opacity: 1 }, { opacity: 0 }], {
+          duration: 180, easing: "ease-out",
+        }).finished;
+        if (request !== loadRequest) return;
+      }
       empty.hidden = photos.length > 0;
       strip.hidden = !photos.length;
       toolbar.hidden = !photos.length;
+      if (photos.length && !reducedMotion) {
+        [strip, toolbar].forEach(element => element.animate(
+          [{ opacity: 0 }, { opacity: 1 }],
+          { duration: 560, easing: "ease-out" }
+        ));
+      }
       measureLoop();
       status.textContent = photos.length ? "Photos ready" : "No photos yet";
       updateStripButtons();
