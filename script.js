@@ -186,8 +186,13 @@ const setupSiteSearch = () => {
 const setupReveal = () => {
   if (document.body.classList.contains("home-page")) {
     const sections = [...document.querySelectorAll("main > .reveal")];
+    const scrollCue = document.querySelector(".scroll-cue");
     const revealAll = () => {
       sections.forEach(section => section.classList.add("is-visible"));
+      if (scrollCue) {
+        scrollCue.classList.add("is-dismissed");
+        scrollCue.disabled = true;
+      }
       window.removeEventListener("scroll", revealOnScroll);
     };
     const revealOnScroll = () => {
@@ -208,6 +213,10 @@ const setupReveal = () => {
     });
     document.addEventListener("focusin", event => {
       if (sections.some(section => section.contains(event.target))) revealAll();
+    });
+    scrollCue?.addEventListener("click", () => {
+      revealAll();
+      document.getElementById("about").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
     });
     revealOnScroll();
     revealHashTarget();
