@@ -343,6 +343,16 @@ main {
   max-width: 820px;
   animation: fadeUp 700ms ease both;
 }
+.home-page .hero-content {
+  translate: 0 0;
+  transition: translate 650ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.home-hero-lowered .home-page .hero-content {
+  translate: 0 clamp(24px, 8vh, 88px);
+}
+@media (max-width: 600px) {
+  .home-hero-lowered .home-page .hero-content { translate: 0 clamp(20px, 4vh, 36px); }
+}
 
 /* Fade foreground elements only; keep the body's background stacking stable. */
 .home-page > .site-header,
@@ -363,6 +373,7 @@ main {
   to { opacity: 1; }
 }
 @media (prefers-reduced-motion: reduce) {
+  .home-page .hero-content { transition: none; }
   .home-page > .site-header,
   .home-page .hero-content,
   .home-page > .scroll-cue:not(.is-dismissed),

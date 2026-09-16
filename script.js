@@ -193,6 +193,7 @@ const setupReveal = () => {
     const sections = [...document.querySelectorAll("main > .reveal")];
     const scrollCue = document.querySelector(".scroll-cue");
     const revealAll = () => {
+      document.documentElement.classList.remove("home-hero-lowered");
       sections.forEach(section => section.classList.add("is-visible"));
       if (scrollCue) {
         scrollCue.classList.add("is-dismissed");
