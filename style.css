@@ -1384,6 +1384,7 @@ h3 {
 
 .personal-timeline {
   position: relative;
+  isolation: isolate;
   list-style: none;
   margin: 10px 0 0;
   padding: 0;
@@ -1392,6 +1393,7 @@ h3 {
 
 .personal-timeline > li {
   position: relative;
+  z-index: 1;
   display: grid;
   grid-template-columns: 130px minmax(0, 1fr);
   column-gap: 48px;
@@ -1402,6 +1404,7 @@ h3 {
 .personal-timeline::after {
   content: "";
   position: absolute;
+  z-index: 0;
   left: 154px;
   top: 10px;
   height: var(--timeline-axis-height, calc(100% - 2rem));
