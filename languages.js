@@ -1,6 +1,20 @@
 (() => {
   // Shared copy: English fallback, Simplified Chinese, Traditional Chinese.
   const translations = {
+    "timeline_heading": ["Along the Way", "一路走来", "一路走來"],
+    "timeline_bilingual_school": ["Shanghai International Studies University Bilingual School", "上海外国语大学附属双语学校", "上海外國語大學附屬雙語學校"],
+    "timeline_primary": ["Primary School", "小学", "小學"],
+    "timeline_middle": ["Middle School", "初中", "初中"],
+    "timeline_high_school": ["High School Affiliated to Shanghai Jiao Tong University", "上海交通大学附属中学", "上海交通大學附屬中學"],
+    "timeline_gaokao": ["Gaokao", "高考", "高考"],
+    "timeline_gaokao_result": ["617 / 660 · Shanghai Rank #67", "617 / 660 · 上海第 67 名", "617 / 660 · 上海第 67 名"],
+    "timeline_subjects": ["Physics · Chemistry · Geography", "物理 · 化学 · 地理", "物理 · 化學 · 地理"],
+    "timeline_sjtu": ["Shanghai Jiao Tong University", "上海交通大学", "上海交通大學"],
+    "timeline_ai_school": ["School of Artificial Intelligence", "人工智能学院", "人工智能學院"],
+    "timeline_monitor": ["Class Monitor of the First Undergraduate Cohort", "人工智能学院首届本科生班长", "人工智能學院首屆本科生班長"],
+    "timeline_talk": ["Hosted my first talk on science and technology innovation", "首次举办科技创新主题讲座", "首次舉辦科技創新主題講座"],
+    "timeline_merit": ["Merit Student", "三好学生", "三好學生"],
+    "timeline_league": ["Outstanding League Member", "优秀共青团员", "優秀共青團員"],
     "yuhua_luo_an_ai_undergraduate_at_shanghai_jiao_tong_university_focusing_on_llm": ["Yuhua Luo, an AI undergraduate at Shanghai Jiao Tong University focusing on LLM agents, multi-agent systems and model collaboration.", "Yuhua Luo，上海交通大学人工智能专业本科生，主要研究 LLM Agent、多智能体系统与模型协作。", "Yuhua Luo，上海交通大學人工智能專業本科生，主要研究 LLM Agent、多智能體系統與模型協作。"],
     "skip_to_content": ["Skip to content", "跳转到主要内容", "跳轉到主要內容"],
     "primary_navigation": ["Primary navigation", "主导航", "主導航"],
