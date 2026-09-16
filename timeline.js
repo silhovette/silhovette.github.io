@@ -10,17 +10,16 @@
 
   const update = () => {
     frame = null;
+    const positions = items.map(item => item.getBoundingClientRect());
+    timeline.style.setProperty("--timeline-axis-height", `${positions.at(-1).top - positions[0].top}px`);
     timeline.classList.toggle("timeline-animated", !reducedMotion.matches);
     if (reducedMotion.matches) {
       items.forEach(item => item.classList.remove("is-current"));
       return;
     }
     const readingLine = window.innerHeight * 0.45;
-    const positions = items.map(item => item.getBoundingClientRect());
     let current = -1;
     positions.forEach((rect, index) => {
-      const progress = Math.max(0, Math.min(1, (readingLine - rect.top - 10) / rect.height));
-      items[index].style.setProperty("--timeline-progress", `${progress * 100}%`);
       if (rect.top + 10 <= readingLine) current = index;
     });
     // Stop the pulse when the timeline has left the viewport.
