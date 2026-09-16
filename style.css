@@ -1394,6 +1394,8 @@ h3 {
 .timeline-event h3 { margin: 0; font: 500 1.05rem/1.5 var(--font-body); }
 .timeline-event p { margin: 6px 0 0; color: var(--text-muted); font-size: 0.92rem; }
 .timeline-event .timeline-result { color: var(--text); font-weight: 500; }
+.timeline-rank, .timeline-rank > span { display: inline-block; }
+.timeline-rank { white-space: nowrap; }
 
 .personal-timeline > li::after {
   transition: transform 220ms ease, box-shadow 220ms ease, opacity 220ms ease;

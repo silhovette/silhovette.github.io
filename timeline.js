@@ -4,6 +4,21 @@
   const items = [...timeline.children];
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   let frame = null;
+  const rank = timeline.querySelector(".timeline-rank");
+  let rankAnimations = [];
+  rank?.addEventListener("pointerenter", event => {
+    if (event.pointerType === "touch" || reducedMotion.matches ||
+        rankAnimations.some(animation => animation.playState === "running")) return;
+    rankAnimations = [...rank.children].map((digit, index) => {
+      const direction = index === 0 ? -1 : 1;
+      return digit.animate([0, 4, 0, -4, 0].map(distance => ({
+        transform: `translateY(${distance * direction}px)`, easing: "ease-in-out",
+      })), { duration: 600, iterations: 3 });
+    });
+  });
+  reducedMotion.addEventListener("change", () => {
+    if (reducedMotion.matches) rankAnimations.forEach(animation => animation.cancel());
+  });
 
   // Focus gives keyboard and touch users the same gentle emphasis as hovering.
   items.forEach(item => { item.tabIndex = 0; });
