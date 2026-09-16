@@ -344,14 +344,15 @@ main {
   animation: fadeUp 700ms ease both;
 }
 .home-page .hero-content {
-  translate: 0 0;
-  transition: translate 650ms cubic-bezier(0.22, 1, 0.36, 1);
+  transform: translate3d(0, 0, 0);
+  transition: transform 750ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 .home-hero-lowered .home-page .hero-content {
-  translate: 0 clamp(24px, 8vh, 88px);
+  transform: translate3d(0, clamp(24px, 8vh, 88px), 0);
+  will-change: transform;
 }
 @media (max-width: 600px) {
-  .home-hero-lowered .home-page .hero-content { translate: 0 clamp(20px, 4vh, 36px); }
+  .home-hero-lowered .home-page .hero-content { transform: translate3d(0, clamp(20px, 4vh, 36px), 0); }
 }
 
 /* Fade foreground elements only; keep the body's background stacking stable. */
