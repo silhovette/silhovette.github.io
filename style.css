@@ -256,7 +256,8 @@ p {
 .language-switcher button:hover,
 .language-switcher button[aria-pressed="true"] { color: var(--text); }
 .language-switcher button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 3px; }
-.nav--languages .nav-links { flex: 0 0 auto; }
+/* Reserve the homepage menu's width even on pages with only a Home link. */
+.nav--languages .nav-links { flex: 0 0 29.25rem; }
 
 .nav-links {
   display: flex;
