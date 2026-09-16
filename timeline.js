@@ -11,9 +11,15 @@
         rankAnimations.some(animation => animation.playState === "running")) return;
     rankAnimations = [...rank.children].map((digit, index) => {
       const direction = index === 0 ? -1 : 1;
-      return digit.animate([0, 4, 0, -4, 0].map(distance => ({
-        transform: `translateY(${distance * direction}px)`, easing: "ease-in-out",
-      })), { duration: 600, iterations: 3 });
+      // One continuous wave avoids pausing each time the digits cross their baseline.
+      const keyframes = Array.from({ length: 181 }, (_, step) => {
+        const progress = step / 180;
+        const ramp = Math.min(1, progress / 0.12, (1 - progress) / 0.12);
+        const envelope = ramp * ramp * (3 - 2 * ramp);
+        const distance = 3 * Math.sin(progress * Math.PI * 6) * envelope * direction;
+        return { transform: `translateY(${distance}px)`, offset: progress };
+      });
+      return digit.animate(keyframes, { duration: 2100, easing: "linear" });
     });
   });
   reducedMotion.addEventListener("change", () => {
