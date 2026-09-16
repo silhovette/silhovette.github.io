@@ -1672,7 +1672,8 @@ h3 {
   font-size: 1.55rem;
 }
 
-.works-secondary .section-heading h2 { font-size: 1.45rem; color: var(--text-muted); }
+.works-page .section-heading h2 { font-size: 1.45rem; }
+.works-secondary .section-heading h2 { color: var(--text-muted); }
 .works-secondary .works-list { gap: 14px; }
 .works-secondary .work-detail { padding: 22px; border-left-color: var(--border); box-shadow: none; }
 .works-secondary .work-detail h3 { font-size: 1.2rem; }
