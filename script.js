@@ -281,6 +281,7 @@ const setupHoverTooltip = () => {
 
   const showTooltip = (trigger) => {
     activeTrigger = trigger;
+    tooltip.classList.toggle("hover-tooltip--compact", trigger.classList.contains("card-update-dot"));
     tooltip.textContent = trigger.dataset.tooltip;
     tooltip.setAttribute("aria-hidden", "false");
     tooltip.classList.add("is-visible");
@@ -296,6 +297,7 @@ const setupHoverTooltip = () => {
 
   const scheduleTooltip = (trigger, x, y) => {
     activeTrigger = trigger;
+    tooltip.classList.toggle("hover-tooltip--compact", trigger.classList.contains("card-update-dot"));
     pointer = { x, y };
     tooltip.textContent = trigger.dataset.tooltip;
     tooltip.classList.remove("is-visible");
