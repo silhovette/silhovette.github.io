@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta
+    name="description"
+    content="Personal timeline of Yuhua Luo."
+   data-i18n-content="timeline_description"/>
+  <title data-i18n="timeline_title">On My Way | Yuhua Luo</title>
+  <link rel="stylesheet" href="style.css?v=22" />
+  <link rel="preload" href="assets/fonts/IBMPlexSans-Regular.woff2" as="font" type="font/woff2" crossorigin />
+  <script src="languages.js?v=7" defer></script>
+  <script src="script.js?v=6" defer></script>
+</head>
+<body class="timeline-page">
+  <a class="skip-link" href="#main" data-i18n="skip_to_content">Skip to content</a>
+  <canvas id="cursor-field" class="cursor-field" aria-hidden="true"></canvas>
+
+  <header class="site-header">
+    <nav class="nav nav--languages" aria-label="Primary navigation" data-i18n-aria-label="primary_navigation">
+      <div class="site-search" data-site-search role="search">
+        <label class="sr-only" for="site-search-input" data-i18n="search_this_page">Search this page</label>
+        <input id="site-search-input" type="search" placeholder="Search" autocomplete="off" />
+        <div class="site-search__results" role="listbox" aria-label="Search results" data-i18n-aria-label="search_results"></div>
+      </div>
+      <div class="language-switcher" data-language-switcher role="group" aria-label="Language" data-i18n-aria-label="language">
+        <button type="button" data-language="en" lang="en" aria-label="English" aria-pressed="true">EN</button>
+        <button type="button" data-language="zh-Hans" lang="zh-Hans" aria-label="简体中文" aria-pressed="false">简</button>
+        <button type="button" data-language="zh-Hant" lang="zh-Hant" aria-label="繁體中文" aria-pressed="false">繁</button>
+      </div>
+      <div class="nav-links">
+        <a href="index.html#about" data-i18n="home">Home</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section id="timeline" class="section works-hero">
+      <div class="section-heading">
+        <p class="eyebrow">Timeline</p>
+        <h1 data-i18n="timeline_heading">On My Way</h1>
+      </div>
+      <ol class="personal-timeline" role="list">
+        <li>
+          <span class="timeline-date">2012–2017</span>
+          <div class="timeline-event">
+            <h3 data-i18n="timeline_bilingual_school">Shanghai International Studies University Bilingual School</h3>
+            <p data-i18n="timeline_primary">Primary School</p>
+          </div>
+        </li>
+        <li>
+          <span class="timeline-date">2017–2021</span>
+          <div class="timeline-event">
+            <h3 data-i18n="timeline_bilingual_school">Shanghai International Studies University Bilingual School</h3>
+            <p data-i18n="timeline_middle">Middle School</p>
+          </div>
+        </li>
+        <li>
+          <span class="timeline-date">2021–2024</span>
+          <div class="timeline-event">
+            <h3 data-i18n="timeline_high_school">High School Affiliated to Shanghai Jiao Tong University</h3>
+          </div>
+        </li>
+        <li>
+          <time class="timeline-date" datetime="2024-06">Jun 2024</time>
+          <div class="timeline-event">
+            <h3 data-i18n="timeline_gaokao">Gaokao</h3>
+            <p class="timeline-result" data-i18n="timeline_gaokao_result">617 / 660 · Shanghai Rank #67</p>
+            <p data-i18n="timeline_subjects">Physics · Chemistry · Geography</p>
+          </div>
+        </li>
+        <li>
+          <time class="timeline-date" datetime="2024-09">Sep 2024</time>
+          <div class="timeline-event">
+            <h3 data-i18n="timeline_sjtu">Shanghai Jiao Tong University</h3>
+            <p data-i18n="timeline_ai_school">School of Artificial Intelligence</p>
+          </div>
+        </li>
+        <li>
+          <time class="timeline-date" datetime="2024-09">Sep 2024</time>
+          <div class="timeline-event">
+            <h3 data-i18n="timeline_monitor">Class Monitor of the First Undergraduate Cohort</h3>
+            <p data-i18n="timeline_ai_school">School of Artificial Intelligence</p>
+          </div>
+        </li>
+        <li>
+          <time class="timeline-date" datetime="2025-03">Mar 2025</time>
+          <div class="timeline-event">
+            <h3 data-i18n="timeline_talk">Hosted my first talk on science and technology innovation</h3>
+          </div>
+        </li>
+        <li>
+          <time class="timeline-date" datetime="2025-10">Oct 2025</time>
+          <div class="timeline-event">
+            <h3 data-i18n="timeline_merit">Merit Student</h3>
+            <p data-i18n="timeline_sjtu">Shanghai Jiao Tong University</p>
+          </div>
+        </li>
+        <li>
+          <time class="timeline-date" datetime="2026-01">Jan 2026</time>
+          <div class="timeline-event">
+            <h3 data-i18n="timeline_league">Outstanding League Member</h3>
+            <p data-i18n="timeline_sjtu">Shanghai Jiao Tong University</p>
+          </div>
+        </li>
+        <li>
+          <time class="timeline-date" datetime="2026-06">Jun 2026</time>
+          <div class="timeline-event">
+            <h3>CET-6 · <strong>662</strong></h3>
+          </div>
+        </li>
+        <li>
+          <time class="timeline-date" datetime="2026-07">Jul 2026</time>
+          <div class="timeline-event">
+            <h3>2026 Summer School on Reinforcement Learning</h3>
+            <p>Shanghai Innovation Institute</p>
+          </div>
+        </li>
+      </ol>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; <span id="year"></span> Yuhua Luo.</p>
+  </footer>
+</body>
+</html>

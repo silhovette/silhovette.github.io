@@ -1,7 +1,9 @@
 (() => {
   // Shared copy: English fallback, Simplified Chinese, Traditional Chinese.
   const translations = {
-    "timeline_heading": ["Along the Way", "一路走来", "一路走來"],
+    "timeline_title": ["On My Way | Yuhua Luo", "在路上 | Yuhua Luo", "在路上 | Yuhua Luo"],
+    "timeline_description": ["Personal timeline of Yuhua Luo.", "Yuhua Luo 的个人时间轴。", "Yuhua Luo 的個人時間軸。"],
+    "timeline_heading": ["On My Way", "在路上", "在路上"],
     "timeline_bilingual_school": ["Shanghai International Studies University Bilingual School", "上海外国语大学附属双语学校", "上海外國語大學附屬雙語學校"],
     "timeline_primary": ["Primary School", "小学", "小學"],
     "timeline_middle": ["Middle School", "初中", "初中"],
