@@ -1333,6 +1333,15 @@ h3 {
 }
 
 .timeline-page .personal-timeline { margin-top: 32px; }
+.timeline-page { animation: timelinePageIn 900ms ease-out backwards; }
+.timeline-page .section-heading { animation: none; }
+@keyframes timelinePageIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .timeline-page { animation: none; }
+}
 
 .personal-timeline {
   position: relative;
