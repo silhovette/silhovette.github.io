@@ -123,6 +123,7 @@ let rafId = 0;
 let state = null;
 let lastConfig = null;
 let lastFrameTime = 0;
+let pendingGameFrames = 2;
 let judgementTimer = 0;
 let judgementFadeAfterTimer = false;
 let countdownTimer = 0;
@@ -393,6 +394,9 @@ function updateActiveLaneCount(forceRender = false) {
 }
 
 function resizeCanvas() {
+  // Resizing resets context state. Retain the following frame as well, so
+  // cached lane strokes match the steady rendering state of the original loop.
+  pendingGameFrames = 2;
   const renderScale = Number(window.__FALLING_PULSE_RENDER_SCALE) || window.devicePixelRatio || 5;
   const dpr = Math.min(renderScale, 2);
   resizeCanvasToDisplay(setupParticleCanvas, setupParticleCtx, dpr);
@@ -1461,7 +1465,10 @@ function loop(now) {
 
   const songTime = currentSongTime(now);
   if (!state.isPaused) update(delta, songTime);
-  draw(songTime);
+  if (!state.isPaused || pendingGameFrames > 0) {
+    draw(songTime);
+    pendingGameFrames = Math.max(0, pendingGameFrames - 1);
+  }
   drawParticleCluster(now, delta);
   updateBeatIndicator(songTime);
   rafId = requestAnimationFrame(loop);
@@ -1469,6 +1476,7 @@ function loop(now) {
 
 function togglePause() {
   if (!state || state.finished) return;
+  pendingGameFrames = Math.max(1, pendingGameFrames);
   if (state.isPaused) {
     state.pausedTotal += performance.now() - state.pausedAt;
     state.isPaused = false;

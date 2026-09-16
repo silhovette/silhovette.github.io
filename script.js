@@ -814,7 +814,7 @@ const setupHeroPolyhedron = () => {
 
     drawPulseLayer(timestamp || performance.now(), projected);
 
-    if (!reduceMotion && isVisible) {
+    if (!reduceMotion && isVisible && !document.hidden) {
       animationFrame = window.requestAnimationFrame(draw);
     } else {
       animationFrame = null;
@@ -822,7 +822,7 @@ const setupHeroPolyhedron = () => {
   };
 
   const startAnimation = () => {
-    if (!reduceMotion && animationFrame === null) {
+    if (!reduceMotion && isVisible && !document.hidden && animationFrame === null) {
       lastFrameTime = null;
       animationFrame = window.requestAnimationFrame(draw);
     }
@@ -907,9 +907,7 @@ const setupHeroPolyhedron = () => {
   }
 
   document.addEventListener("visibilitychange", () => {
-    isVisible = !document.hidden;
-
-    if (isVisible) {
+    if (isVisible && !document.hidden) {
       startAnimation();
     } else {
       stopAnimation();
@@ -939,6 +937,11 @@ const setupIndexCodePreview = () => {
   let previewFrame = null;
   let previewStartedAt = null;
   let lastActiveElement = null;
+  let previewVisible = !("IntersectionObserver" in window);
+  let sourceReady = false;
+  let previewDuration = 52000;
+  let maxPreviewScroll = 0;
+  const previewViewport = preview.parentElement;
 
   const blockCopy = (element) => {
     ["copy", "cut", "contextmenu", "dragstart", "selectstart"].forEach((eventName) => {
@@ -969,30 +972,39 @@ const setupIndexCodePreview = () => {
   const compactSourceForDisplay = (source) => source.replace(/^\s*[\r\n]/gm, "");
 
   const scrollPreview = (timestamp) => {
-    const viewport = preview.parentElement;
-    const maxScroll = viewport.scrollHeight - viewport.clientHeight;
-
-    if (maxScroll <= 0 || reduceMotion) {
-      previewFrame = null;
-      return;
-    }
-
-    if (previewStartedAt === null) {
-      previewStartedAt = timestamp;
-    }
-
-    const duration = Math.max(52000, preview.textContent.length * 16);
-    const progress = ((timestamp - previewStartedAt) % duration) / duration;
-    viewport.scrollTop = progress * maxScroll;
+    const progress = ((timestamp - previewStartedAt) % previewDuration) / previewDuration;
+    previewViewport.scrollTop = progress * maxPreviewScroll;
     previewFrame = window.requestAnimationFrame(scrollPreview);
   };
 
   const startPreviewScroll = () => {
-    if (previewFrame === null && !reduceMotion) {
-      previewStartedAt = null;
+    const shouldRun = sourceReady && previewVisible && !document.hidden &&
+      !modal.classList.contains("is-open") && !reduceMotion && maxPreviewScroll > 0;
+    if (!shouldRun) {
+      window.cancelAnimationFrame(previewFrame);
+      previewFrame = null;
+    } else if (previewFrame === null) {
       previewFrame = window.requestAnimationFrame(scrollPreview);
     }
   };
+
+  const measurePreview = () => {
+    maxPreviewScroll = previewViewport.scrollHeight - previewViewport.clientHeight;
+    startPreviewScroll();
+  };
+  // Preserve the original timeline when returning onscreen, without rendering
+  // intermediate frames that cannot be seen.
+  if ("IntersectionObserver" in window) {
+    new IntersectionObserver(([entry]) => {
+      previewVisible = entry.isIntersecting;
+      if (previewVisible) measurePreview();
+      else startPreviewScroll();
+    }).observe(showcase);
+  }
+  new ResizeObserver(measurePreview).observe(previewViewport);
+  new ResizeObserver(measurePreview).observe(preview);
+  document.fonts.ready.then(measurePreview);
+  document.addEventListener("visibilitychange", startPreviewScroll);
 
   const openModal = () => {
     lastActiveElement = document.activeElement;
@@ -1001,12 +1013,14 @@ const setupIndexCodePreview = () => {
     modalSource.scrollTop = 0;
     document.body.style.overflow = "hidden";
     closeButton.focus();
+    startPreviewScroll();
   };
 
   const closeModal = () => {
     modal.classList.remove("is-open");
     modal.setAttribute("aria-hidden", "true");
     document.body.style.overflow = "";
+    startPreviewScroll();
 
     if (lastActiveElement instanceof HTMLElement) {
       lastActiveElement.focus();
@@ -1034,7 +1048,10 @@ const setupIndexCodePreview = () => {
     const displaySource = compactSourceForDisplay(source);
     preview.textContent = displaySource;
     modalCode.textContent = displaySource;
-    startPreviewScroll();
+    previewDuration = Math.max(52000, displaySource.length * 16);
+    previewStartedAt = performance.now();
+    sourceReady = true;
+    measurePreview();
   });
 };
 

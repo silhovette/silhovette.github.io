@@ -5,14 +5,21 @@
   const repository = gallery?.dataset.photoRepository || "silhovette/silhovette.github.io";
   const imagePattern = /\.(jpe?g|png|webp|avif|gif)$/i;
 
-  const preloadPhotoFiles = async (urls) => {
-    await Promise.all(urls.map(async (url) => {
-      const image = new Image();
-      image.decoding = "async";
-      image.src = url;
-      try { await image.decode(); } catch { /* broken files are reported in the gallery */ }
-    }));
+  const thumbnailPreloads = new Map();
+  const prepareThumbnail = (url) => {
+    if (thumbnailPreloads.has(url)) return thumbnailPreloads.get(url);
+    const image = new Image();
+    image.decoding = "async";
+    image.src = url;
+    const ready = image.decode().catch(error => {
+      thumbnailPreloads.delete(url);
+      throw error;
+    });
+    thumbnailPreloads.set(url, ready);
+    return ready;
   };
+
+  const preloadPhotoFiles = urls => Promise.allSettled(urls.map(prepareThumbnail));
 
   const photoBootstrap = {
     ready: null,
@@ -330,17 +337,11 @@
         title: decodeURIComponent(url.split("/").at(-1)).replace(imagePattern, "").replace(/[_-]+/g, " "),
       }));
       i18n.setText(status, "preparing_photos");
-      const loaded = await Promise.all(photos.map(async (photo) => {
-        const image = new Image();
-        image.decoding = "async";
-        image.src = photo.thumbUrl;
-        await image.decode();
-        return image;
-      }));
+      await Promise.all(photos.map(photo => prepareThumbnail(photo.thumbUrl)));
       if (request !== loadRequest) return;
       strip.replaceChildren(...photos.map(createCard));
       strip.querySelectorAll("img").forEach((image, index) => {
-        image.src = photos[index].thumbUrl || loaded[index].src;
+        image.src = photos[index].thumbUrl;
         image.loading = "eager";
       });
       // Repeat enough cards to cover the widest (three-card) viewport at the seam.
