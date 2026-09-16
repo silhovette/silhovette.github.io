@@ -296,6 +296,7 @@
     return interpolate(entry?.[supported.indexOf(language)] ?? entry?.[0] ?? fallback, vars);
   };
   const binding = (element, target, key) => {
+    if (element.closest('[translate="no"]')) return;
     let values = originals.get(element);
     if (!values) { values = new Map(); originals.set(element, values); }
     if (!values.has(target)) values.set(target, {
@@ -314,8 +315,15 @@
     element.setAttribute("data-i18n" + suffix, key);
     binding(element, target, key);
   };
+  const getSourceText = element => {
+    const original = originals.get(element)?.get("text");
+    if (original) return original.english;
+    return Array.from(element.childNodes, node =>
+      node.nodeType === Node.TEXT_NODE ? node.textContent : getSourceText(node)).join("");
+  };
   window.siteI18n = {
     t,
+    getSourceText,
     get language() { return language; },
     setText: (element, key, vars) => set(element, "text", key, vars),
     setAttribute: (element, attribute, key, vars) => set(element, attribute, key, vars),

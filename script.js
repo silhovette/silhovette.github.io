@@ -143,7 +143,12 @@ const setupSiteSearch = () => {
       button.className = "site-search__result";
       button.setAttribute("role", "option");
       const section = item.closest("section");
-      button.innerHTML = `<strong>${item.textContent.trim().slice(0, 72)}</strong><span>${section?.querySelector(".eyebrow")?.textContent.trim() || window.siteI18n.t("section")}</span>`;
+      const title = document.createElement("strong");
+      title.textContent = window.siteI18n.getSourceText(item).trim().slice(0, 72);
+      const label = document.createElement("span");
+      const eyebrow = section?.querySelector(".eyebrow");
+      label.textContent = eyebrow ? window.siteI18n.getSourceText(eyebrow).trim() : "Section";
+      button.append(title, label);
       button.addEventListener("click", () => {
         revealPlaygroundTarget(item);
         item.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "center" });
@@ -157,7 +162,7 @@ const setupSiteSearch = () => {
     if (!matches.length) {
       const empty = document.createElement("p");
       empty.className = "site-search__empty";
-      empty.textContent = window.siteI18n.t("no_matching_section");
+      empty.textContent = "No matching section";
       results.appendChild(empty);
     }
     search.classList.add("has-results");
