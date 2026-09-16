@@ -1366,13 +1366,13 @@ h3 {
 }
 .personal-timeline::after {
   width: 2px;
-  background: linear-gradient(to bottom, transparent 5%, rgba(118, 185, 0, 0.55) 28%, #d5ff8a 45%, #b7ee58 53%, var(--accent) 59%, transparent 75%);
-  background-size: 100% 320px;
+  background: linear-gradient(to bottom, transparent 2.5%, rgba(118, 185, 0, 0.55) 14%, #d5ff8a 22.5%, #b7ee58 26.5%, var(--accent) 29.5%, transparent 37.5%);
+  background-size: 100% 640px;
   filter: drop-shadow(0 0 5px var(--accent));
-  animation: timelineLinePulse 2s linear infinite;
+  animation: timelineLinePulse 4s linear infinite;
 }
 @keyframes timelineLinePulse {
-  from { background-position: 0 -320px; }
+  from { background-position: 0 -640px; }
   to { background-position: 0 0; }
 }
 
