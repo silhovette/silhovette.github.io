@@ -1,6 +1,8 @@
 (() => {
   // Shared copy: English fallback, Simplified Chinese, Traditional Chinese.
   const translations = {
+    "timeline_present": ["Present", "现在", "現在"],
+    "timeline_exploration": ["Endless exploration, endless growth.", "无限探索，无限进步。", "無限探索，無限進步。"],
     "timeline_title": ["On My Way | Yuhua Luo", "On My Way | Yuhua Luo", "On My Way | Yuhua Luo"],
     "timeline_description": ["Personal timeline of Yuhua Luo.", "Yuhua Luo 的个人时间轴。", "Yuhua Luo 的個人時間軸。"],
     "timeline_heading": ["On My Way", "On My Way", "On My Way"],
