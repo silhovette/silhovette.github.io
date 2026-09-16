@@ -6,27 +6,33 @@
   <meta
     name="description"
     content="Games, Night Runners mods and side projects by Yuhua Luo."
-  />
-  <title>Playground | Yuhua Luo</title>
-  <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="photos.css?v=2" />
+   data-i18n-content="games_night_runners_mods_and_side_projects_by_yuhua_luo"/>
+  <title data-i18n="playground_yuhua_luo">Playground | Yuhua Luo</title>
+  <link rel="stylesheet" href="style.css?v=19" />
+  <link rel="stylesheet" href="photos.css?v=3" />
   <link rel="preload" href="assets/fonts/IBMPlexSans-Regular.woff2" as="font" type="font/woff2" crossorigin />
-  <script src="script.js" defer></script>
-  <script src="photos.js?v=5" defer></script>
+  <script src="languages.js?v=2" defer></script>
+  <script src="script.js?v=6" defer></script>
+  <script src="photos.js?v=6" defer></script>
 </head>
 <body class="playground-page">
-  <a class="skip-link" href="#main">Skip to content</a>
+  <a class="skip-link" href="#main" data-i18n="skip_to_content">Skip to content</a>
   <canvas id="cursor-field" class="cursor-field" aria-hidden="true"></canvas>
 
   <header class="site-header">
-    <nav class="nav" aria-label="Primary navigation">
+    <nav class="nav nav--languages" aria-label="Primary navigation" data-i18n-aria-label="primary_navigation">
       <div class="site-search" data-site-search role="search">
-        <label class="sr-only" for="site-search-input">Search this page</label>
-        <input id="site-search-input" type="search" placeholder="Search" autocomplete="off" />
-        <div class="site-search__results" role="listbox" aria-label="Search results"></div>
+        <label class="sr-only" for="site-search-input" data-i18n="search_this_page">Search this page</label>
+        <input id="site-search-input" type="search" placeholder="Search" autocomplete="off"  data-i18n-placeholder="search"/>
+        <div class="site-search__results" role="listbox" aria-label="Search results" data-i18n-aria-label="search_results"></div>
+      </div>
+      <div class="language-switcher" data-language-switcher role="group" aria-label="Language" data-i18n-aria-label="language">
+        <button type="button" data-language="en" lang="en" aria-label="English" aria-pressed="true">EN</button>
+        <button type="button" data-language="zh-Hans" lang="zh-Hans" aria-label="简体中文" aria-pressed="false">简</button>
+        <button type="button" data-language="zh-Hant" lang="zh-Hant" aria-label="繁體中文" aria-pressed="false">繁</button>
       </div>
       <div class="nav-links">
-        <a href="index.html#playground">Home</a>
+        <a href="index.html#playground" data-i18n="home">Home</a>
       </div>
     </nav>
   </header>
@@ -35,30 +41,30 @@
     <section id="playground-intro" class="section works-hero">
       <div class="section-heading">
         <p class="eyebrow">playground</p>
-        <h1>Beyond Research</h1>
+        <h1 data-i18n="beyond">Beyond Research</h1>
       </div>
     </section>
 
     <section id="photography" class="section">
       <details class="playground-disclosure" open>
         <summary class="section-heading playground-summary">
-          <h2><span class="eyebrow">Photography</span><span>Photo Collection</span></h2>
+          <h2><span class="eyebrow" data-i18n="photography">Photography</span><span data-i18n="photo_collection">Photo Collection</span></h2>
         </summary>
         <div class="playground-disclosure__content">
           <div class="photo-gallery" data-photo-gallery data-photo-repository="silhovette/silhovette.github.io">
             <div class="photo-toolbar" data-photo-toolbar hidden>
               <div class="photo-toolbar__actions">
-                <button class="photo-icon-button" type="button" data-strip-prev title="Previous photos" aria-label="Previous photos"><svg aria-hidden="true"><use href="assets/icons/gallery.svg#chevron-left"></use></svg></button>
-                <button class="photo-icon-button" type="button" data-photo-autoplay title="Pause slideshow" aria-label="Pause slideshow" aria-pressed="true"><svg aria-hidden="true"><use href="assets/icons/gallery.svg#pause"></use></svg></button>
-                <button class="photo-icon-button" type="button" data-strip-next title="Next photos" aria-label="Next photos"><svg aria-hidden="true"><use href="assets/icons/gallery.svg#chevron-right"></use></svg></button>
-                <button class="photo-view-all" type="button" data-photo-all>View all</button>
+                <button class="photo-icon-button" type="button" data-strip-prev title="Previous photos" aria-label="Previous photos" data-i18n-aria-label="previous_photos" data-i18n-title="previous_photos"><svg aria-hidden="true"><use href="assets/icons/gallery.svg#chevron-left"></use></svg></button>
+                <button class="photo-icon-button" type="button" data-photo-autoplay title="Pause slideshow" aria-label="Pause slideshow" aria-pressed="true" data-i18n-aria-label="pause_slideshow" data-i18n-title="pause_slideshow"><svg aria-hidden="true"><use href="assets/icons/gallery.svg#pause"></use></svg></button>
+                <button class="photo-icon-button" type="button" data-strip-next title="Next photos" aria-label="Next photos" data-i18n-aria-label="next_photos" data-i18n-title="next_photos"><svg aria-hidden="true"><use href="assets/icons/gallery.svg#chevron-right"></use></svg></button>
+                <button class="photo-view-all" type="button" data-photo-all data-i18n="view_all">View all</button>
               </div>
             </div>
             <div class="photo-empty" data-photo-empty>
-              <p data-photo-status role="status">Loading photos...</p>
-              <button class="photo-icon-button" type="button" data-photo-retry title="Reload photos" aria-label="Reload photos" hidden><svg aria-hidden="true"><use href="assets/icons/gallery.svg#refresh-cw"></use></svg></button>
+              <p data-photo-status role="status" data-i18n="loading_photos">Loading photos...</p>
+              <button class="photo-icon-button" type="button" data-photo-retry title="Reload photos" aria-label="Reload photos" hidden data-i18n-aria-label="reload_photos" data-i18n-title="reload_photos"><svg aria-hidden="true"><use href="assets/icons/gallery.svg#refresh-cw"></use></svg></button>
             </div>
-            <div class="photo-strip" data-photo-strip role="region" aria-label="Photo slideshow" hidden></div>
+            <div class="photo-strip" data-photo-strip role="region" aria-label="Photo slideshow" hidden data-i18n-aria-label="photo_slideshow"></div>
           </div>
         </div>
       </details>
@@ -68,67 +74,67 @@
       <details class="playground-disclosure" open>
         <summary class="section-heading playground-summary">
           <h2>
-            <span class="eyebrow">Mods</span>
-            <span>Mods for <em>Night Runners</em></span>
+            <span class="eyebrow" data-i18n="mods_text">Mods</span>
+            <span><span data-i18n="mods_for">Mods for </span><em>Night Runners</em><span data-i18n="mods_suffix"></span></span>
           </h2>
         </summary>
         <div class="playground-disclosure__content">
       <div class="playground-profile-link">
-        <a href="https://www.nexusmods.com/profile/AZX777" target="_blank" rel="noreferrer">AZX777 on Nexus Mods &nearr;</a>
+        <a href="https://www.nexusmods.com/profile/AZX777" target="_blank" rel="noreferrer"><span data-i18n="azx777_on_nexus_mods">AZX777 on Nexus Mods</span> &nearr;</a>
       </div>
       <div class="works-list mod-gallery">
       <article class="work-detail mod-entry">
-        <img loading="lazy" src="assets/playground/mod-86.webp" width="960" height="540" alt="Midnight Monarchs cover artwork with rival cars and crew portraits" decoding="async" />
+        <img loading="lazy" src="assets/playground/mod-86.webp" width="960" height="540" alt="Midnight Monarchs cover artwork with rival cars and crew portraits" decoding="async"  data-i18n-alt="midnight_monarchs_cover_artwork_with_rival_cars_and_crew_portraits"/>
         <div class="mod-entry__content">
-          <p class="mod-entry__category">Rival Crew</p>
+          <p class="mod-entry__category" data-i18n="rival_crew">Rival Crew</p>
           <h2><a href="https://www.nexusmods.com/nightrunners/mods/86" target="_blank" rel="noreferrer">NEW Rival Crew - Midnight Monarchs</a></h2>
-          <p>Replaces G-COMPANY with a new Mt. Haruna rival crew, bringing new opponents, cars, portraits and race-based progression.</p>
-          <a class="mod-entry__link" href="https://www.nexusmods.com/nightrunners/mods/86" target="_blank" rel="noreferrer">View on Nexus Mods &nearr;</a>
+          <p data-i18n="replaces_g_company_with_a_new_mt_haruna_rival_crew_bringing_new_opponents_cars">Replaces G-COMPANY with a new Mt. Haruna rival crew, bringing new opponents, cars, portraits and race-based progression.</p>
+          <a class="mod-entry__link" href="https://www.nexusmods.com/nightrunners/mods/86" target="_blank" rel="noreferrer"><span data-i18n="view_on_nexus_mods">View on Nexus Mods</span> &nearr;</a>
         </div>
       </article>
       <article class="work-detail mod-entry">
-        <img loading="lazy" src="assets/playground/mod-85.webp" width="960" height="720" alt="A collage of vehicles available with the ULTIMATE Unlocker" decoding="async" />
+        <img loading="lazy" src="assets/playground/mod-85.webp" width="960" height="720" alt="A collage of vehicles available with the ULTIMATE Unlocker" decoding="async"  data-i18n-alt="a_collage_of_vehicles_available_with_the_ultimate_unlocker"/>
         <div class="mod-entry__content">
-          <p class="mod-entry__category">Vehicle Unlock</p>
+          <p class="mod-entry__category" data-i18n="vehicle_unlock">Vehicle Unlock</p>
           <h2><a href="https://www.nexusmods.com/nightrunners/mods/85" target="_blank" rel="noreferrer">the ULTIMATE Unlocker</a></h2>
-          <p>Expands the Private Alpha roster with the 360, RX-7 FD, Skyline PGC10/R32/R33/R34, 180SX, NSX NA1 and 964.</p>
-          <a class="mod-entry__link" href="https://www.nexusmods.com/nightrunners/mods/85" target="_blank" rel="noreferrer">View on Nexus Mods &nearr;</a>
+          <p data-i18n="expands_the_private_alpha_roster_with_the_360_rx_7_fd_skyline_pgc10_r32_r33_r3">Expands the Private Alpha roster with the 360, RX-7 FD, Skyline PGC10/R32/R33/R34, 180SX, NSX NA1 and 964.</p>
+          <a class="mod-entry__link" href="https://www.nexusmods.com/nightrunners/mods/85" target="_blank" rel="noreferrer"><span data-i18n="view_on_nexus_mods">View on Nexus Mods</span> &nearr;</a>
         </div>
       </article>
       <article class="work-detail mod-entry">
-        <img loading="lazy" src="assets/playground/mod-83.webp" width="960" height="540" alt="A lineup of Korschen K6 variants" decoding="async" />
+        <img loading="lazy" src="assets/playground/mod-83.webp" width="960" height="540" alt="A lineup of Korschen K6 variants" decoding="async"  data-i18n-alt="a_lineup_of_korschen_k6_variants"/>
         <div class="mod-entry__content">
-          <p class="mod-entry__category">Vehicle Unlock</p>
+          <p class="mod-entry__category" data-i18n="vehicle_unlock">Vehicle Unlock</p>
           <h2><a href="https://www.nexusmods.com/nightrunners/mods/83" target="_blank" rel="noreferrer">Porsche Unlocker for Priv Alpha</a></h2>
-          <p>Opens up Korschen K6 variants, including Turbo, Flatnose and Gemballa, for purchase, driving and customization.</p>
-          <a class="mod-entry__link" href="https://www.nexusmods.com/nightrunners/mods/83" target="_blank" rel="noreferrer">View on Nexus Mods &nearr;</a>
+          <p data-i18n="opens_up_korschen_k6_variants_including_turbo_flatnose_and_gemballa_for_purcha">Opens up Korschen K6 variants, including Turbo, Flatnose and Gemballa, for purchase, driving and customization.</p>
+          <a class="mod-entry__link" href="https://www.nexusmods.com/nightrunners/mods/83" target="_blank" rel="noreferrer"><span data-i18n="view_on_nexus_mods">View on Nexus Mods</span> &nearr;</a>
         </div>
       </article>
       <article class="work-detail mod-entry">
-        <img loading="lazy" src="assets/playground/mod-81.webp?v=3" width="960" height="540" alt="180SX with a white and orange racing livery" decoding="async" />
+        <img loading="lazy" src="assets/playground/mod-81.webp?v=3" width="960" height="540" alt="180SX with a white and orange racing livery" decoding="async"  data-i18n-alt="180sx_with_a_white_and_orange_racing_livery"/>
         <div class="mod-entry__content">
-          <p class="mod-entry__category">Vehicle Unlock</p>
+          <p class="mod-entry__category" data-i18n="vehicle_unlock">Vehicle Unlock</p>
           <h2><a href="https://www.nexusmods.com/nightrunners/mods/81" target="_blank" rel="noreferrer">180SX Unlocker for Priv Alpha</a></h2>
-          <p>Makes the 180SX available to purchase, drive and customize in the Private Alpha.</p>
-          <a class="mod-entry__link" href="https://www.nexusmods.com/nightrunners/mods/81" target="_blank" rel="noreferrer">View on Nexus Mods &nearr;</a>
+          <p data-i18n="makes_the_180sx_available_to_purchase_drive_and_customize_in_the_private_alpha">Makes the 180SX available to purchase, drive and customize in the Private Alpha.</p>
+          <a class="mod-entry__link" href="https://www.nexusmods.com/nightrunners/mods/81" target="_blank" rel="noreferrer"><span data-i18n="view_on_nexus_mods">View on Nexus Mods</span> &nearr;</a>
         </div>
       </article>
       <article class="work-detail mod-entry">
-        <img loading="lazy" src="assets/playground/mod-63.webp" width="960" height="540" alt="Flame graphics along a dark JZX100 Mark II" decoding="async" />
+        <img loading="lazy" src="assets/playground/mod-63.webp" width="960" height="540" alt="Flame graphics along a dark JZX100 Mark II" decoding="async"  data-i18n-alt="flame_graphics_along_a_dark_jzx100_mark_ii"/>
         <div class="mod-entry__content">
-          <p class="mod-entry__category">Livery</p>
+          <p class="mod-entry__category" data-i18n="livery">Livery</p>
           <h2><a href="https://www.nexusmods.com/nightrunners/mods/63" target="_blank" rel="noreferrer">flame livery for JZX MarkII</a></h2>
-          <p>A drift-inspired flame design for the JZX100 Mark II.</p>
-          <a class="mod-entry__link" href="https://www.nexusmods.com/nightrunners/mods/63" target="_blank" rel="noreferrer">View on Nexus Mods &nearr;</a>
+          <p data-i18n="a_drift_inspired_flame_design_for_the_jzx100_mark_ii">A drift-inspired flame design for the JZX100 Mark II.</p>
+          <a class="mod-entry__link" href="https://www.nexusmods.com/nightrunners/mods/63" target="_blank" rel="noreferrer"><span data-i18n="view_on_nexus_mods">View on Nexus Mods</span> &nearr;</a>
         </div>
       </article>
       <article class="work-detail mod-entry">
-        <img loading="lazy" src="assets/playground/mod-61.webp" width="960" height="540" alt="Kita Ikuyo artwork on the side of a red 200SX" decoding="async" />
+        <img loading="lazy" src="assets/playground/mod-61.webp" width="960" height="540" alt="Kita Ikuyo artwork on the side of a red 200SX" decoding="async"  data-i18n-alt="kita_ikuyo_artwork_on_the_side_of_a_red_200sx"/>
         <div class="mod-entry__content">
-          <p class="mod-entry__category">Livery</p>
+          <p class="mod-entry__category" data-i18n="livery">Livery</p>
           <h2><a href="https://www.nexusmods.com/nightrunners/mods/61" target="_blank" rel="noreferrer">200SX Kita IKuyo itasha</a></h2>
-          <p>A Kita Ikuyo-themed itasha livery for the 200SX.</p>
-          <a class="mod-entry__link" href="https://www.nexusmods.com/nightrunners/mods/61" target="_blank" rel="noreferrer">View on Nexus Mods &nearr;</a>
+          <p data-i18n="a_kita_ikuyo_themed_itasha_livery_for_the_200sx">A Kita Ikuyo-themed itasha livery for the 200SX.</p>
+          <a class="mod-entry__link" href="https://www.nexusmods.com/nightrunners/mods/61" target="_blank" rel="noreferrer"><span data-i18n="view_on_nexus_mods">View on Nexus Mods</span> &nearr;</a>
         </div>
       </article>
       </div>
@@ -140,32 +146,32 @@
       <details class="playground-disclosure" open>
         <summary class="section-heading playground-summary">
           <h2>
-            <span class="eyebrow">Games</span>
-            <span>For Fun</span>
+            <span class="eyebrow" data-i18n="games">Games</span>
+            <span data-i18n="for_fun">For Fun</span>
           </h2>
         </summary>
         <div class="playground-disclosure__content">
       <div class="works-list playground-details">
         <article id="falling-pulse-project" class="work-detail">
           <div class="publication-content">
-            <h2>Falling Pulse Rhythm Game</h2>
-            <p class="publication-venue">Interactive Game</p>
-            <p class="publication-summary">
+            <h2 data-i18n="falling_pulse_rhythm_game">Falling Pulse Rhythm Game</h2>
+            <p class="publication-venue" data-i18n="interactive_game">Interactive Game</p>
+            <p class="publication-summary" data-i18n="playground_game">
               Built a configurable browser-based rhythm game prototype focused on Canvas rendering,
               timing-sensitive input judgement, player state, and lightweight desktop packaging.
             </p>
             <ul class="work-points">
-              <li>Implemented adjustable BPM, scroll speed, difficulty, note count, beat divisions, and 4K/5K/6K lane modes.</li>
-              <li>Designed scoring, combo, accuracy, judgement windows, result statistics, and timing-offset visualization.</li>
-              <li>Added profile customization, rating progression, achievements, key bindings, autoplay, and metronome controls.</li>
-              <li>Organized Canvas visual effects, audio feedback, session state, and a WebView-based desktop build path.</li>
+              <li data-i18n="implemented_adjustable_bpm_scroll_speed_difficulty_note_count_beat_divisions_a">Implemented adjustable BPM, scroll speed, difficulty, note count, beat divisions, and 4K/5K/6K lane modes.</li>
+              <li data-i18n="designed_scoring_combo_accuracy_judgement_windows_result_statistics_and_timing">Designed scoring, combo, accuracy, judgement windows, result statistics, and timing-offset visualization.</li>
+              <li data-i18n="added_profile_customization_rating_progression_achievements_key_bindings_autop">Added profile customization, rating progression, achievements, key bindings, autoplay, and metronome controls.</li>
+              <li data-i18n="organized_canvas_visual_effects_audio_feedback_session_state_and_a_webview_bas">Organized Canvas visual effects, audio feedback, session state, and a WebView-based desktop build path.</li>
             </ul>
             <div class="keywords">
               <span>Canvas</span>
-              <span>Rhythm Game</span>
-              <span>Input Timing</span>
+              <span data-i18n="rhythm_game">Rhythm Game</span>
+              <span data-i18n="input_timing">Input Timing</span>
               <span>WebView</span>
-              <a href="games/falling-pulse/index.html" data-falling-pulse-trigger>Play Demo</a>
+              <a href="games/falling-pulse/index.html" data-falling-pulse-trigger data-i18n="play_demo">Play Demo</a>
             </div>
           </div>
         </article>
@@ -175,36 +181,36 @@
         </div>
       </details>
       <div class="section-link">
-        <a href="index.html#playground">Back to homepage</a>
+        <a href="index.html#playground" data-i18n="back_to_homepage">Back to homepage</a>
       </div>
     </section>
   </main>
 
   <dialog id="photo-dialog" class="photo-dialog" aria-labelledby="photo-dialog-title">
     <header class="photo-dialog__header">
-      <h2 id="photo-dialog-title">Photo Collection</h2>
-      <button class="photo-icon-button" type="button" data-photo-grid title="All photos" aria-label="All photos"><svg aria-hidden="true"><use href="assets/icons/gallery.svg#grid-2x2"></use></svg></button>
-      <a class="photo-icon-button" data-photo-original target="_blank" rel="noreferrer" title="Open original" aria-label="Open original photo" hidden><svg aria-hidden="true"><use href="assets/icons/gallery.svg#external-link"></use></svg></a>
-      <button class="photo-icon-button" type="button" data-photo-close title="Close" aria-label="Close photo viewer" autofocus><svg aria-hidden="true"><use href="assets/icons/gallery.svg#x"></use></svg></button>
+      <h2 id="photo-dialog-title" data-i18n="photo_collection">Photo Collection</h2>
+      <button class="photo-icon-button" type="button" data-photo-grid title="All photos" aria-label="All photos" data-i18n-aria-label="all_photos" data-i18n-title="all_photos"><svg aria-hidden="true"><use href="assets/icons/gallery.svg#grid-2x2"></use></svg></button>
+      <a class="photo-icon-button" data-photo-original target="_blank" rel="noreferrer" title="Open original" aria-label="Open original photo" hidden data-i18n-aria-label="open_original_photo" data-i18n-title="open_original"><svg aria-hidden="true"><use href="assets/icons/gallery.svg#external-link"></use></svg></a>
+      <button class="photo-icon-button" type="button" data-photo-close title="Close" aria-label="Close photo viewer" autofocus data-i18n-aria-label="close_photo_viewer" data-i18n-title="close"><svg aria-hidden="true"><use href="assets/icons/gallery.svg#x"></use></svg></button>
     </header>
     <div class="photo-library" data-photo-library hidden></div>
     <div class="photo-viewer" data-photo-viewer hidden>
-      <button class="photo-icon-button photo-viewer__prev" type="button" data-photo-prev title="Previous photo" aria-label="Previous photo"><svg aria-hidden="true"><use href="assets/icons/gallery.svg#chevron-left"></use></svg></button>
+      <button class="photo-icon-button photo-viewer__prev" type="button" data-photo-prev title="Previous photo" aria-label="Previous photo" data-i18n-aria-label="previous_photo" data-i18n-title="previous_photo"><svg aria-hidden="true"><use href="assets/icons/gallery.svg#chevron-left"></use></svg></button>
       <div class="photo-stage">
         <img data-photo-full alt="" hidden />
         <p data-photo-viewer-status role="status"></p>
       </div>
-      <button class="photo-icon-button photo-viewer__next" type="button" data-photo-next title="Next photo" aria-label="Next photo"><svg aria-hidden="true"><use href="assets/icons/gallery.svg#chevron-right"></use></svg></button>
+      <button class="photo-icon-button photo-viewer__next" type="button" data-photo-next title="Next photo" aria-label="Next photo" data-i18n-aria-label="next_photo" data-i18n-title="next_photo"><svg aria-hidden="true"><use href="assets/icons/gallery.svg#chevron-right"></use></svg></button>
     </div>
   </dialog>
 
   <div id="falling-pulse-gate" class="game-gate" aria-hidden="true">
     <div class="game-gate__backdrop" data-game-gate-close></div>
     <section class="game-gate__panel" role="dialog" aria-modal="true" aria-labelledby="falling-pulse-gate-title">
-      <button class="game-gate__close" type="button" data-game-gate-close aria-label="Close">&times;</button>
-      <p class="eyebrow">Before Playing</p>
+      <button class="game-gate__close" type="button" data-game-gate-close aria-label="Close" data-i18n-aria-label="close">&times;</button>
+      <p class="eyebrow" data-i18n="before_playing">Before Playing</p>
       <div class="game-gate__title-row">
-        <h2 id="falling-pulse-gate-title">Fixed-Lane Rhythm Game Experience?</h2>
+        <h2 id="falling-pulse-gate-title" data-i18n="fixed_lane_rhythm_game_experience">Fixed-Lane Rhythm Game Experience?</h2>
         <div class="game-gate__mark thinking-visual is-animated" aria-hidden="true">
           <svg class="thinking-line-mark" viewBox="0 0 1254 1254" xmlns="http://www.w3.org/2000/svg">
             <defs>
@@ -228,14 +234,14 @@
           </svg>
         </div>
       </div>
-      <p>
+      <p data-i18n="are_you_a_fixed_lane_rhythm_game_player_or_do_you_have_experience_with_fixed_l">
         Are you a fixed-lane rhythm game player, or do you have experience with fixed-lane rhythm games?
         If not, you may not know how this demo is played or how its settings work, which could lead
         to a poor experience.
       </p>
       <div class="game-gate__actions">
-        <button class="game-gate__button game-gate__button--primary" type="button" data-game-gate-confirm>Yes</button>
-        <button class="game-gate__button" type="button" data-game-gate-close>No</button>
+        <button class="game-gate__button game-gate__button--primary" type="button" data-game-gate-confirm data-i18n="yes">Yes</button>
+        <button class="game-gate__button" type="button" data-game-gate-close data-i18n="no">No</button>
       </div>
     </section>
   </div>

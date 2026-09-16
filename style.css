@@ -1859,7 +1859,7 @@ h3 {
   .nav--languages .site-search { width: 100%; min-width: 0; }
   .nav--languages .nav-links { grid-column: 1 / -1; scrollbar-width: none; }
   .nav--languages .nav-links::-webkit-scrollbar { display: none; }
-  .home-page main { padding-top: 124px; }
+  .home-page main, .works-page main { padding-top: 124px; }
   .home-page .section { scroll-margin-top: 40px; }
 
   .nav-links {

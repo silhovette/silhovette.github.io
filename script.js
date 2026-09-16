@@ -98,7 +98,7 @@ const setupSiteSearch = () => {
   const results = search?.querySelector(".site-search__results");
   if (!search || !input || !results) return;
 
-  const searchableItems = Array.from(document.querySelectorAll("main section[id] h1, main section[id] h2, main section[id] h3, main section[id] p, main section[id] li, main section[id] a, main section[id] .keywords span")).filter((item) => item.textContent.trim().length > 2 && !item.closest(".code-showcase"));
+  const searchableItems = Array.from(document.querySelectorAll("main section[id] h1, main section[id] h2, main section[id] h3, main section[id] p, main section[id] li, main section[id] a, main section[id] .keywords span")).filter((item) => !item.closest(".code-showcase"));
   let activeHighlight = null;
 
   const clearHighlight = () => {
@@ -143,7 +143,7 @@ const setupSiteSearch = () => {
       button.className = "site-search__result";
       button.setAttribute("role", "option");
       const section = item.closest("section");
-      button.innerHTML = `<strong>${item.textContent.trim().slice(0, 72)}</strong><span>${section?.querySelector(".eyebrow")?.textContent.trim() || "Section"}</span>`;
+      button.innerHTML = `<strong>${item.textContent.trim().slice(0, 72)}</strong><span>${section?.querySelector(".eyebrow")?.textContent.trim() || window.siteI18n.t("section")}</span>`;
       button.addEventListener("click", () => {
         revealPlaygroundTarget(item);
         item.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "center" });
@@ -157,7 +157,7 @@ const setupSiteSearch = () => {
     if (!matches.length) {
       const empty = document.createElement("p");
       empty.className = "site-search__empty";
-      empty.textContent = "No matching section";
+      empty.textContent = window.siteI18n.t("no_matching_section");
       results.appendChild(empty);
     }
     search.classList.add("has-results");
@@ -176,7 +176,7 @@ const setupSiteSearch = () => {
     }
   });
   document.addEventListener("click", (event) => {
-    if (!search.contains(event.target)) {
+    if (!search.contains(event.target) && !event.target.closest("[data-language-switcher]")) {
       search.classList.remove("has-results");
       if (!event.target.closest(".search-highlight")) clearHighlight();
     }
@@ -339,6 +339,12 @@ const setupHoverTooltip = () => {
     trigger.addEventListener("blur", hideTooltip);
   });
 
+  document.addEventListener("site-language-change", () => {
+    if (activeTrigger) {
+      tooltip.textContent = activeTrigger.dataset.tooltip;
+      requestPlacement();
+    }
+  });
   window.addEventListener("scroll", hideTooltip, { passive: true });
   window.addEventListener("resize", hideTooltip);
 };

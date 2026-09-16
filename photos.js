@@ -1,4 +1,6 @@
 (() => {
+  const i18n = window.siteI18n;
+  const photoError = key => Object.assign(new Error(i18n.t(key)), { i18nKey: key });
   const gallery = document.querySelector("[data-photo-gallery]");
   const repository = gallery?.dataset.photoRepository || "silhovette/silhovette.github.io";
   const imagePattern = /\.(jpe?g|png|webp|avif|gif)$/i;
@@ -20,17 +22,17 @@
   async function discoverPhotoUrls() {
     if (photoBootstrap.ready) return photoBootstrap.ready;
     photoBootstrap.ready = (async () => {
-      if (location.protocol === "file:") throw new Error("Local preview required");
+      if (location.protocol === "file:") throw photoError("local_preview_required");
       const hosted = location.hostname === "silhovette.github.io";
       const url = hosted
         ? `https://api.github.com/repos/${repository}/git/trees/main?recursive=1`
         : new URL("assets/photos/index.json", location.href);
       const response = await fetch(url, { cache: "no-store" });
-      if (!response.ok) throw new Error(response.status === 403 || response.status === 429 ? "Photo library temporarily unavailable" : "Photo library unavailable");
+      if (!response.ok) throw photoError(response.status === 403 || response.status === 429 ? "photo_library_temporarily_unavailable" : "photo_library_unavailable");
       const data = await response.json();
-      if (data.truncated) throw new Error("Photo library index is incomplete");
+      if (data.truncated) throw photoError("photo_library_index_is_incomplete");
       const entries = hosted ? data.tree?.filter(entry => entry.type === "blob" && entry.mode !== "120000") : data.photos;
-      if (!Array.isArray(entries)) throw new Error("Photo library unavailable");
+      if (!Array.isArray(entries)) throw photoError("photo_library_unavailable");
       const paths = [...new Set(entries.map(entry => entry.path).filter(path =>
         typeof path === "string" && path.startsWith("assets/photos/") && imagePattern.test(path) &&
         !path.includes("\\") && !path.includes("/thumbs/") && path.split("/").every(part => part && !part.startsWith("."))
@@ -110,6 +112,10 @@
   }
 
   function updatePlayback() {
+    const playbackLabel = playing ? "pause_slideshow" : "resume_slideshow";
+    i18n.setAttribute(play, "aria-label", playbackLabel);
+    i18n.setAttribute(play, "title", playbackLabel);
+    play.setAttribute("aria-pressed", String(playing));
     const autoplay = playing && !(keyboardNavigation && strip.contains(document.activeElement));
     if (!visible || touching || dialog.open || document.hidden || !loopWidth ||
         (!autoplay && !wheelRemaining && !wheelSpeed)) {
@@ -202,7 +208,8 @@
     const button = document.createElement("button");
     button.type = "button";
     button.className = "photo-card";
-    button.setAttribute("aria-label", `Open photo: ${photo.title}`);
+    i18n.setAttribute(button, "aria-label", "open_photo_title", { title: photo.title });
+    i18n.setAttribute(button, "data-error-label", "image_unavailable");
     const image = document.createElement("img");
     image.src = photo.thumbUrl || photo.url;
     image.alt = photo.title;
@@ -213,7 +220,7 @@
     image.addEventListener("error", () => {
       image.hidden = true;
       button.classList.add("is-broken");
-      button.setAttribute("aria-label", `Unavailable photo: ${photo.title}`);
+      i18n.setAttribute(button, "aria-label", "unavailable_photo_title", { title: photo.title });
     });
     button.append(image);
     button.addEventListener("pointerenter", () => preloadOriginal(photo.url), { once: true });
@@ -267,6 +274,7 @@
     fullImage.hidden = false;
     viewerStatus.hidden = true;
     viewerStatus.textContent = "";
+    viewerStatus.removeAttribute("data-i18n");
     dialog.querySelectorAll("[data-photo-prev], [data-photo-next]").forEach(button => {
       button.disabled = photos.length < 2;
     });
@@ -284,7 +292,7 @@
       viewerStatus.hidden = true;
     } catch {
       if (request === imageRequest && dialog.open && mode === "single") {
-        viewerStatus.textContent = "Original unavailable. Showing preview.";
+        i18n.setText(viewerStatus, "original_unavailable_showing_preview");
         viewerStatus.hidden = false;
       }
     }
@@ -309,7 +317,7 @@
 
   async function loadPhotos() {
     const request = ++loadRequest;
-    status.textContent = "Loading photos...";
+    i18n.setText(status, "loading_photos");
     retry.hidden = true;
     const controller = new AbortController();
     const timeout = window.setTimeout(() => controller.abort(), 12000);
@@ -321,7 +329,7 @@
         thumbUrl: new URL(`assets/photos/thumbs/${encodeURIComponent(decodeURIComponent(url.split("/").at(-1)).replace(/\.[^.]+$/i, ".webp"))}`, location.href).href,
         title: decodeURIComponent(url.split("/").at(-1)).replace(imagePattern, "").replace(/[_-]+/g, " "),
       }));
-      status.textContent = "Preparing photos...";
+      i18n.setText(status, "preparing_photos");
       const loaded = await Promise.all(photos.map(async (photo) => {
         const image = new Image();
         image.decoding = "async";
@@ -363,13 +371,13 @@
         ));
       }
       measureLoop();
-      status.textContent = photos.length ? "Photos ready" : "No photos yet";
+      i18n.setText(status, photos.length ? "photos_ready" : "no_photos_yet");
       updateStripButtons();
       updatePlayback();
       warmOriginals(photos);
     } catch (error) {
       if (request !== loadRequest) return;
-      status.textContent = error.name === "AbortError" ? "Photo library timed out" : error.message;
+      i18n.setText(status, error.name === "AbortError" ? "photo_library_timed_out" : error.i18nKey || "photo_library_unavailable");
       retry.hidden = false;
       empty.hidden = false;
       strip.hidden = true;
