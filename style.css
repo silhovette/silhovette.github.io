@@ -71,10 +71,11 @@
 }
 
 :root {
-  --font-body: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  --font-display: "Space Grotesk", "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
-  --font-code: Consolas, "SFMono-Regular", "Liberation Mono", "IBM Plex Mono", monospace;
+  --font-cjk: "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", "Noto Sans SC", "Microsoft JhengHei", "Heiti SC";
+  --font-body: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, var(--font-cjk), sans-serif;
+  --font-display: "Space Grotesk", "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", var(--font-cjk), sans-serif;
+  --font-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, "Liberation Mono", var(--font-cjk), monospace;
+  --font-code: Consolas, "SFMono-Regular", "Liberation Mono", "IBM Plex Mono", var(--font-cjk), monospace;
   --bg: #0b0d10;
   --bg-soft: #10140f;
   --surface: rgba(18, 22, 17, 0.78);
@@ -92,6 +93,10 @@
   --radius: 8px;
   --space-section: 60px;
   --space-page: 36px;
+}
+
+:root:lang(zh-Hant) {
+  --font-cjk: "Microsoft JhengHei", "PingFang TC", "Noto Sans CJK TC", "Noto Sans TC", "Microsoft YaHei", "Heiti TC";
 }
 
 * {

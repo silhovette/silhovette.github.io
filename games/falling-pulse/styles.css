@@ -12,7 +12,7 @@
   --lane: rgba(255, 255, 255, 0.045);
   --lane-active: rgba(69, 208, 181, 0.18);
   --shadow: rgba(0, 0, 0, 0.36);
-  font-family: "Segoe UI Variable Text", "Segoe UI", "Helvetica Neue", Arial, "Microsoft YaHei UI", sans-serif;
+  font-family: "Segoe UI Variable Text", "Segoe UI", "Helvetica Neue", Arial, "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", "Noto Sans SC", "Microsoft JhengHei", "Heiti SC", sans-serif;
 }
 
 * {

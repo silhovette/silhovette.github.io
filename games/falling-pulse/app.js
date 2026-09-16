@@ -107,7 +107,7 @@ const BEAT_DIVISION_TICK_STEPS = new Map([
   [24, 4],
   [32, 3],
 ]);
-const UI_FONT = `"Segoe UI Variable Text", "Segoe UI", "Helvetica Neue", Arial, sans-serif`;
+const UI_FONT = `"Segoe UI Variable Text", "Segoe UI", "Helvetica Neue", Arial, "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", "Noto Sans SC", "Microsoft JhengHei", "Heiti SC", sans-serif`;
 const fullCircle = Math.PI * 2;
 const JUDGEMENT_HOLD_MS = 360;
 const FINAL_JUDGEMENT_HOLD_MS = 800;
