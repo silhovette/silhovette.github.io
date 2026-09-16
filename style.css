@@ -741,6 +741,11 @@ h3 {
   white-space: normal;
 }
 
+.publication-placeholder-lines { display: grid; gap: 12px; margin: 20px 0 8px; }
+.publication-placeholder-lines span { height: 8px; width: 92%; border-radius: 4px; background: var(--text-soft); opacity: 0.3; }
+.publication-placeholder-lines span:nth-child(2) { width: 76%; }
+.publication-placeholder-lines span:nth-child(3) { width: 44%; }
+
 .section-link {
   display: flex;
   justify-content: flex-end;
@@ -1662,9 +1667,16 @@ h3 {
   transform: translateY(-3px);
 }
 
-.work-detail h2 {
+.work-detail h2,
+.works-page .work-detail h3 {
   font-size: 1.55rem;
 }
+
+.works-secondary .section-heading h2 { font-size: 1.45rem; color: var(--text-muted); }
+.works-secondary .works-list { gap: 14px; }
+.works-secondary .work-detail { padding: 22px; border-left-color: var(--border); box-shadow: none; }
+.works-secondary .work-detail h3 { font-size: 1.2rem; }
+.works-secondary .work-detail:hover { border-left-color: var(--accent); }
 
 .work-detail p,
 .work-points {
