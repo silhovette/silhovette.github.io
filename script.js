@@ -1257,6 +1257,18 @@ const setupPlayground = () => {
   });
 };
 
+// Keep breathing glows on a separate opacity layer; animating text-shadow
+// changes text overflow and repeatedly invalidates layout during scrolling.
+const setupAccentGlow = () => {
+  if (!document.body.classList.contains("home-page")) return;
+  const labels = [...document.querySelectorAll(".eyebrow, .status")];
+  const updateLabels = () => labels.forEach(label => {
+    label.dataset.accentText = label.textContent;
+  });
+  updateLabels();
+  document.addEventListener("site-language-change", updateLabels);
+};
+
 // Initialization
 // The hero is part of the first paint, not an idle background task.
 try {
@@ -1265,6 +1277,7 @@ try {
   document.documentElement.classList.remove("home-intro-pending");
 }
 setupNavigation();
+setupAccentGlow();
 setupSiteSearch();
 setupReveal();
 setupPlayground();

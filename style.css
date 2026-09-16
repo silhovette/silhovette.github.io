@@ -345,11 +345,11 @@ main {
 }
 .home-page .hero-content {
   transform: translate3d(0, 0, 0);
+  will-change: transform;
   transition: transform 750ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 .home-hero-lowered .home-page .hero-content {
   transform: translate3d(0, clamp(24px, 8vh, 88px), 0);
-  will-change: transform;
 }
 @media (max-width: 600px) {
   .home-hero-lowered .home-page .hero-content { transform: translate3d(0, clamp(20px, 4vh, 36px), 0); }
@@ -1076,6 +1076,9 @@ h3 {
 .thinking-visual.is-animated .thinking-line-mark__runner {
   opacity: 0.72;
   animation: thinkingRunnerMove 2.8s linear infinite;
+}
+.game-gate:not(.is-open) :is(.thinking-line-mark__glow, .thinking-line-mark__runner) {
+  animation-play-state: paused;
 }
 
 @keyframes thinkingGlowBreathe {
@@ -2301,6 +2304,30 @@ h3 {
   font-size: 0.85rem;
   color: var(--text-muted);
   text-decoration: none;
+}
+
+.home-page :is(.eyebrow, .status)[data-accent-text] {
+  position: relative;
+  animation: none;
+}
+.home-page :is(.eyebrow, .status)[data-accent-text]::after {
+  content: attr(data-accent-text) / "";
+  position: absolute;
+  inset: 0;
+  padding: inherit;
+  color: transparent;
+  text-shadow: 0 0 4px rgba(118, 185, 0, 0.16), 0 0 8px rgba(118, 185, 0, 0.08);
+  pointer-events: none;
+  opacity: 0;
+  animation: accentGlowOpacity 6.8s ease-in-out 1s infinite backwards;
+}
+@keyframes accentGlowOpacity {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .home-page :is(.eyebrow, .status)[data-accent-text]::after { animation: none; }
+  .home-page .hero-content { will-change: auto; }
 }
 .timeline-link::after {
   content: "";
