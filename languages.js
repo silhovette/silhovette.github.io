@@ -91,7 +91,7 @@
     "beyond": ["Beyond Research", "研究之外", "研究之外"],
     "photo_collection": ["Photo Collection", "照片集", "照片集"],
     "photography": ["Photography", "摄影", "攝影"],
-    "photographs": ["Photographs of everyday moments, places, and details that caught my eye.", "用照片记录日常生活中吸引我目光的瞬间、地方和细节。", "用照片記錄日常生活中吸引我目光的瞬間、地方和細節。"],
+    "photographs": ["Photographs of everyday moments, places, and details.", "用照片记录日常生活中的瞬间、地方和细节。", "用照片記錄日常生活中的瞬間、地方和細節。"],
     "view_photos": ["View Photos", "查看照片", "查看照片"],
     "mods_azx777": ["Mods · AZX777", "Mod · AZX777", "Mod · AZX777"],
     "mods": ["Custom liveries, vehicle unlocks and a new rival crew for Night Runners.", "为 Night Runners 制作 Mod，包括自定义涂装、车辆解锁功能和新的对手车队。", "為 Night Runners 製作 Mod，包括自訂塗裝、車輛解鎖功能和新的對手車隊。"],
