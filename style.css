@@ -351,6 +351,13 @@ main {
 .home-page > .footer {
   animation: homeContentIn 900ms ease-out backwards;
 }
+/* Start the foreground fade only once the hero's first canvas frame is ready. */
+.home-intro-pending .home-page > .site-header,
+.home-intro-pending .home-page .hero-content,
+.home-intro-pending .home-page > .scroll-cue:not(.is-dismissed),
+.home-intro-pending .home-page > .footer {
+  animation-play-state: paused;
+}
 @keyframes homeContentIn {
   from { opacity: 0; }
   to { opacity: 1; }

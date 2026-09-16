@@ -1257,6 +1257,12 @@ const setupPlayground = () => {
 };
 
 // Initialization
+// The hero is part of the first paint, not an idle background task.
+try {
+  setupHeroPolyhedron();
+} finally {
+  document.documentElement.classList.remove("home-intro-pending");
+}
 setupNavigation();
 setupSiteSearch();
 setupReveal();
@@ -1265,13 +1271,8 @@ setupFallingPulseGate();
 setupIndexCodePreview();
 setupHoverTooltip();
 
-const startAmbientEffects = () => {
-  setupHeroPolyhedron();
-  setupCursorField();
-};
-
 if ("requestIdleCallback" in window) {
-  window.requestIdleCallback(startAmbientEffects, { timeout: 1200 });
+  window.requestIdleCallback(setupCursorField, { timeout: 1200 });
 } else {
-  window.setTimeout(startAmbientEffects, 120);
+  window.setTimeout(setupCursorField, 120);
 }
