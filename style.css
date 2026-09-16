@@ -1351,6 +1351,18 @@ h3 {
 }
 
 .timeline-page .personal-timeline { margin-top: 32px; }
+/* Keep this page's background independent of document height and foreground compositing. */
+.timeline-page { isolation: isolate; background: #080a08; }
+.timeline-page::before {
+  z-index: -1;
+  background:
+    radial-gradient(circle at 18% 10%, rgba(118, 185, 0, 0.08), transparent 28rem),
+    linear-gradient(180deg, #080a08 0%, #10140f 50%, #080a08 100%);
+  background-size: auto;
+  mask-image: none;
+  -webkit-mask-image: none;
+}
+.timeline-page::after { content: none; }
 .timeline-page > :is(.site-header, main, .footer) { animation: timelinePageIn 900ms ease-out backwards; }
 .timeline-page .section-heading { animation: none; }
 @keyframes timelinePageIn {
