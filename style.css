@@ -466,7 +466,7 @@ h3 {
 .about-portrait {
   width: min(280px, 100%);
   justify-self: end;
-  transform: translate(-24px, 20px);
+  transform: translate(-36px, 8px);
 }
 
 .about-portrait img {
