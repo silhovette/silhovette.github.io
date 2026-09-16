@@ -917,6 +917,11 @@ const setupHeroPolyhedron = () => {
   });
 
   draw();
+  if (!reduceMotion) {
+    canvas.animate([{ opacity: 0 }, { opacity: getComputedStyle(canvas).opacity }], {
+      duration: 900, easing: "ease-out",
+    });
+  }
 };
 
 const setupIndexCodePreview = () => {
