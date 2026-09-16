@@ -1474,9 +1474,26 @@ h3 {
   0%, 100% { box-shadow: 0 0 0 0 transparent; }
   50% { box-shadow: 0 0 0 4px var(--accent-soft), 0 0 8px rgba(118, 185, 0, 0.3); }
 }
+.personal-timeline > li.timeline-present::after {
+  background: #b7ff65;
+  box-shadow: 0 0 5px rgba(118, 185, 0, 0.6);
+  animation: timelinePresentPulse 2.8s ease-in-out infinite;
+}
+.personal-timeline > li.timeline-present .timeline-date { color: var(--accent); }
+@keyframes timelinePresentPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 2px rgba(118, 185, 0, 0.08), 0 0 5px rgba(118, 185, 0, 0.45);
+  }
+  50% {
+    transform: scale(1.2);
+    box-shadow: 0 0 0 5px rgba(118, 185, 0, 0.18), 0 0 12px rgba(118, 185, 0, 0.9), 0 0 22px rgba(118, 185, 0, 0.4);
+  }
+}
 @media (prefers-reduced-motion: reduce) {
   .personal-timeline::after { animation: none; opacity: 0; }
   .personal-timeline > li::after { animation: none; transition: none; }
+  .personal-timeline > li.timeline-present::after { animation: none; }
   .personal-timeline > li:focus::after, .personal-timeline > li:hover::after { transform: none; }
   .timeline-date { transition: none; }
 }
