@@ -1384,7 +1384,7 @@ h3 {
   height: 7px;
   border-radius: 50%;
   background: var(--accent);
-  opacity: 0.7;
+  opacity: 1;
 }
 
 .personal-timeline > li:last-child { padding-bottom: 0; }
@@ -1419,8 +1419,8 @@ h3 {
   .personal-timeline > li:hover .timeline-date { color: var(--text); }
 }
 @keyframes timelineNodePulse {
-  0%, 100% { opacity: 0.65; box-shadow: 0 0 0 0 transparent; }
-  50% { opacity: 1; box-shadow: 0 0 0 4px var(--accent-soft), 0 0 8px rgba(118, 185, 0, 0.3); }
+  0%, 100% { box-shadow: 0 0 0 0 transparent; }
+  50% { box-shadow: 0 0 0 4px var(--accent-soft), 0 0 8px rgba(118, 185, 0, 0.3); }
 }
 @media (prefers-reduced-motion: reduce) {
   .personal-timeline::after { animation: none; opacity: 0; }
