@@ -1,9 +1,9 @@
 (() => {
   // Shared copy: English fallback, Simplified Chinese, Traditional Chinese.
   const translations = {
-    "timeline_title": ["On My Way | Yuhua Luo", "在路上 | Yuhua Luo", "在路上 | Yuhua Luo"],
+    "timeline_title": ["On My Way | Yuhua Luo", "On My Way | Yuhua Luo", "On My Way | Yuhua Luo"],
     "timeline_description": ["Personal timeline of Yuhua Luo.", "Yuhua Luo 的个人时间轴。", "Yuhua Luo 的個人時間軸。"],
-    "timeline_heading": ["On My Way", "在路上", "在路上"],
+    "timeline_heading": ["On My Way", "On My Way", "On My Way"],
     "timeline_bilingual_school": ["Shanghai International Studies University Bilingual School", "上海外国语大学附属双语学校", "上海外國語大學附屬雙語學校"],
     "timeline_primary": ["Primary School", "小学", "小學"],
     "timeline_middle": ["Middle School", "初中", "初中"],
@@ -11,7 +11,9 @@
     "timeline_high_school_level": ["High School", "高中", "高中"],
     "timeline_college": ["Undergraduate Studies", "本科学习", "本科學習"],
     "timeline_sjtu_ai": ["School of Artificial Intelligence, Shanghai Jiao Tong University", "上海交通大学人工智能学院", "上海交通大學人工智能學院"],
-    "timeline_gaokao": ["Gaokao (National College Entrance Examination)", "高考（全国普通高等学校招生统一考试）", "高考（全國普通高等學校招生統一考試）"],
+    "timeline_gaokao": ["Gaokao (National College Entrance Examination)", "高考", "高考"],
+    "timeline_summer_school": ["2026 Summer School on Reinforcement Learning", "2026强化学习暑期学校", "2026強化學習暑期學校"],
+    "timeline_innovation_institute": ["Shanghai Innovation Institute", "上海创智学院", "上海創智學院"],
     "timeline_gaokao_result": ["617 / 660 · Shanghai Rank #67", "617 / 660 · 上海第 67 名", "617 / 660 · 上海第 67 名"],
     "timeline_subjects": ["Physics · Chemistry · Geography", "物理 · 化学 · 地理", "物理 · 化學 · 地理"],
     "timeline_sjtu": ["Shanghai Jiao Tong University", "上海交通大学", "上海交通大學"],
