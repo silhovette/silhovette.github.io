@@ -108,16 +108,6 @@
     return ready;
   }
 
-  function warmOriginals(items) {
-    let next = 0;
-    const worker = async () => {
-      while (next < items.length) await preloadOriginal(items[next++].url);
-    };
-    // Keep background downloads limited so a clicked original can load promptly.
-    worker();
-    worker();
-  }
-
   function updatePlayback() {
     const playbackLabel = playing ? "pause_slideshow" : "resume_slideshow";
     i18n.setAttribute(play, "aria-label", playbackLabel);
@@ -375,7 +365,6 @@
       i18n.setText(status, photos.length ? "photos_ready" : "no_photos_yet");
       updateStripButtons();
       updatePlayback();
-      warmOriginals(photos);
     } catch (error) {
       if (request !== loadRequest) return;
       i18n.setText(status, error.name === "AbortError" ? "photo_library_timed_out" : error.i18nKey || "photo_library_unavailable");

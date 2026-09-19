@@ -240,6 +240,8 @@
     "mods_suffix": ["", " Mod", " Mod"],
     "games_night_runners_mods_and_side_projects_by_yuhua_luo": ["Games, Night Runners mods and side projects by Yuhua Luo.", "Yuhua Luo 的游戏、Night Runners Mod 与个人项目。", "Yuhua Luo 的遊戲、Night Runners Mod 與個人項目。"],
     "playground_yuhua_luo": ["Playground | Yuhua Luo", "研究之外 | Yuhua Luo", "研究之外 | Yuhua Luo"],
+    "miniature_car_photography": ["Miniature car photography", "微缩汽车摄影", "微縮汽車攝影"],
+    "miniature_models_summary": ["Miniature cars, photographed with an eye for form, light, and detail.", "用镜头捕捉微缩汽车的造型、光影与细节。", "用鏡頭捕捉微縮汽車的造型、光影與細節。"],
     "previous_photos": ["Previous photos", "上一组照片", "上一組照片"],
     "pause_slideshow": ["Pause slideshow", "暂停轮播", "暫停輪播"],
     "next_photos": ["Next photos", "下一组照片", "下一組照片"],
