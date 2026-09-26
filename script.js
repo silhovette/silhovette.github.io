@@ -1061,22 +1061,22 @@ const setupIndexCodePreview = () => {
   });
 };
 
-const setupFallingPulseGate = () => {
-  const trigger = document.querySelector("[data-falling-pulse-trigger]");
+const setupGameDemoGate = () => {
+  const triggers = document.querySelectorAll("[data-game-demo-trigger]");
   const gate = document.getElementById("falling-pulse-gate");
   const confirmButton = gate?.querySelector("[data-game-gate-confirm]");
   const closeControls = gate ? Array.from(gate.querySelectorAll("[data-game-gate-close]")) : [];
 
-  if (!trigger || !gate || !confirmButton) {
+  if (!triggers.length || !gate || !confirmButton) {
     return;
   }
 
-  let targetHref = trigger.getAttribute("href") || "";
+  let targetHref = "";
   let lastActiveElement = null;
 
   const openGate = (event) => {
     event.preventDefault();
-    targetHref = trigger.getAttribute("href") || targetHref;
+    targetHref = event.currentTarget.getAttribute("href") || "";
     lastActiveElement = document.activeElement;
     gate.classList.add("is-open");
     gate.setAttribute("aria-hidden", "false");
@@ -1094,7 +1094,7 @@ const setupFallingPulseGate = () => {
     }
   };
 
-  trigger.addEventListener("click", openGate);
+  triggers.forEach((trigger) => trigger.addEventListener("click", openGate));
   closeControls.forEach((control) => control.addEventListener("click", closeGate));
   confirmButton.addEventListener("click", () => {
     window.location.href = targetHref;
@@ -1281,7 +1281,7 @@ setupAccentGlow();
 setupSiteSearch();
 setupReveal();
 setupPlayground();
-setupFallingPulseGate();
+setupGameDemoGate();
 setupIndexCodePreview();
 setupHoverTooltip();
 
