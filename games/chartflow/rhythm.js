@@ -89,6 +89,10 @@ window.CF = window.CF || {};
       gain.gain.exponentialRampToValueAtTime(0.0001, at + length);
       osc.connect(gain);
       gain.connect(this.ctx.destination);
+      osc.onended = () => {
+        osc.disconnect();
+        gain.disconnect();
+      };
       osc.start(at);
       osc.stop(at + length + 0.01);
     }
@@ -111,6 +115,8 @@ window.CF = window.CF || {};
             this.tone(
               next % 4 === 0 ? 1000 : 650,
               this.ctx.currentTime + Math.max(0, delay) / 1000,
+              0.055,
+              0.5,
             );
           next++;
         }
