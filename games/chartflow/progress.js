@@ -156,7 +156,7 @@ CF.progress = {
     entry.promise
       .then(() => {
         if (earned.length)
-          CF.ui.toast("Achievement unlocked · " + earned.join(" · "));
+          CF.ui.toast("Achievement unlocked · " + earned.join(" · "), "achievement");
       })
       .catch(() =>
         CF.ui.toast("Progress could not be saved. Try exporting your save."),

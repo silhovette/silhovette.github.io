@@ -79,6 +79,7 @@
     closeChartMenu();
     app.audio.stop();
     app.pressed.clear();
+    app.pointerLanes?.clear();
     app.state = state;
     if (state !== "editor" && !(["play", "results"].includes(state) && app.testing))
       app.editor = null;
@@ -96,6 +97,7 @@
         if (app.editor) app.editor.dirty = true;
         scheduleFrame();
       });
+      if (canvas.id === "stage-canvas") attachStagePointer(canvas);
     }
     $("#main").classList.remove("screen-enter");
     void $("#main").offsetWidth;
@@ -117,6 +119,38 @@
     $("#nav-count").textContent = app.charts.length;
     window.scrollTo(0, 0);
     if (state === "results") fitResult();
+  }
+  function stageLaneFromEvent(event, canvas) {
+    const rect = canvas.getBoundingClientRect();
+    return Math.max(0, Math.min(app.current.keyCount - 1,
+      Math.floor(((event.clientX - rect.left) / rect.width) * app.current.keyCount)));
+  }
+  function stagePointerDown(event) {
+    if (!["record", "play"].includes(app.state) || !app.session) return;
+    if (event.pointerType === "mouse" && event.button !== 0) return;
+    const canvas = event.currentTarget;
+    const lane = stageLaneFromEvent(event, canvas);
+    canvas.setPointerCapture?.(event.pointerId);
+    app.pointerLanes ||= new Map();
+    if (app.pointerLanes.has(event.pointerId)) return;
+    app.pointerLanes.set(event.pointerId, lane);
+    laneDown(lane, performance.now());
+    event.preventDefault();
+  }
+  function stagePointerUp(event) {
+    const lane = app.pointerLanes?.get(event.pointerId);
+    if (lane === undefined) return;
+    app.pointerLanes.delete(event.pointerId);
+    laneUp(lane);
+    event.preventDefault();
+  }
+  function attachStagePointer(canvas) {
+    canvas.addEventListener("pointerdown", stagePointerDown);
+    canvas.addEventListener("pointerup", stagePointerUp);
+    canvas.addEventListener("pointercancel", stagePointerUp);
+    canvas.addEventListener("pointerleave", (event) => {
+      if (event.pointerType !== "mouse") stagePointerUp(event);
+    });
   }
   function fitResult() {
     const main = $("#main"), panel = main.querySelector(".result-panel");
@@ -150,7 +184,7 @@
     setScreen(
       "library",
       `${header("Your charts", "A space for your rhythm. Capture it. Shape it. Play it.")}
-  <section class="hero glass"><div class="hero-copy"><div class="eyebrow">FROM INSTINCT TO INSTRUMENT</div><h2>Find your rhythm.<br>Make it a chart.</h2><p>Perform into empty lanes. Turn a moment of flow<br>into something you can play, perfect, and keep.</p><div class="actions">${button("Start creating <span>↗</span>", "new", "primary")}${button("↥ <span>Import</span>", "import")}</div></div><div class="hero-visual" aria-hidden="true"><div class="hero-art"><div class="hero-grid">${[0, 1, 2, 3].map((n) => `<div class="hero-lane">${[0, 1, 2].map((k) => `<i class="${n === 1 && k === 1 ? "hero-note-highlight" : ""}" style="top:calc(${15 + ((n * 21 + k * 32) % 80)}% - 4.5px)"></i>`).join("")}</div>`).join("")}<div class="hero-line"></div></div></div><div class="hero-label">EVERY PATTERN STARTS WITH A PULSE</div></div></section>
+  <section class="hero glass"><div class="hero-copy"><div class="eyebrow">FROM INSTINCT TO INSTRUMENT</div><h2>Find your rhythm.<br>Make it a chart.</h2><p>Perform into empty lanes. Turn a moment of flow<br>into something you can play, perfect, and keep.</p><div class="actions">${button("Start creating <span></span>", "new", "primary")}${button("↥ <span>Import</span>", "import")}</div></div><div class="hero-visual" aria-hidden="true"><div class="hero-art"><div class="hero-grid">${[0, 1, 2, 3].map((n) => `<div class="hero-lane">${[0, 1, 2].map((k) => `<i class="${n === 1 && k === 1 ? "hero-note-highlight" : ""}" style="top:calc(${15 + ((n * 21 + k * 32) % 80)}% - 4.5px)"></i>`).join("")}</div>`).join("")}<div class="hero-line"></div></div></div><div class="hero-label">EVERY PATTERN STARTS WITH A PULSE</div></div></section>
   <section aria-label="Chart library"><div class="section-bar"><div class="section-title">All charts <span class="pill">${app.charts.length}</span></div><div class="filter-group"><div class="search-wrap"><span>⌕</span><input class="search" id="search" placeholder="Search your charts…" aria-label="Search charts"></div><select id="sort" aria-label="Sort charts"><option value="recent">Recently edited</option><option value="name">Name A–Z</option><option value="bpm">BPM</option></select></div></div><div class="list-labels"><span>CHART / DETAILS</span><span>RHYTHM OVERVIEW</span><span>LAST EDITED</span><span style="text-align:right">ACTIONS</span></div><div class="chart-list" id="chart-list"></div><div class="library-note"><span id="library-count"></span><span>Stored locally <b>·</b> Ready when you are</span></div></section>
   <section class="workflow"><div class="workflow-step"><span class="step-number">01 —</span><div><h3>Perform freely</h3><p>Press Space. Count in for 8 beats.<br>Just you, empty lanes, and the beat.</p></div></div><div class="workflow-step"><span class="step-number">02 —</span><div><h3>Make it precise</h3><p>Automatic 1/32 quantization.<br>A full editor for the finer details.</p></div></div><div class="workflow-step"><span class="step-number">03 —</span><div><h3>Get into the flow</h3><p>Play your creation. Find your limits.<br>Refine it, then go again.</p></div></div></section>`,
       "Your charts",
@@ -542,7 +576,7 @@
     const ed = app.editor;
     setScreen(
       "editor",
-      `${header(E(app.current.name), "Shape the rhythm, one detail at a time.", button("Rename", "rename") + button("← Chart View", "detail"), "EDIT / MUSICAL TIMELINE")}<section class="glass editor-shell"><div class="editor-toolbar">${button("↶", "undo", "icon", 'id="undo" title="Undo (Ctrl+Z)" aria-label="Undo"')}${button("↷", "redo", "icon", 'id="redo" title="Redo (Ctrl+Y)" aria-label="Redo"')}<span class="divider" style="margin:0 5px"></span><label>Snap <select id="snap">${[4, 8, 12, 16, 24, 32, 48, 64, 96, 128].map((n) => `<option value="${n}" ${n === ed.snap ? "selected" : ""}>1/${n}</option>`).join("")}</select></label>${button("＋ Note", "add-note", "small", 'title="Add at cursor"')}${button("Resnap", "resnap", "small", 'id="resnap" title="Resnap selection"')}${button("Save", "save-chart", "small", 'title="Save chart (Ctrl+S / Cmd+S)"')}<span class="toolbar-spacer"></span>${speedControl()}${button("▷ Preview", "timeline-play", "small", 'id="timeline-play"')}${button("← Timeline", "stop-preview", "small", 'id="stop-preview" hidden')}${button("Test here ↗", "test", "small primary")}${button("Jump to start", "jump-start", "small ghost")}</div><div class="editor-workspace"><canvas class="editor-canvas" id="editor-canvas" tabindex="0" aria-label="Chart timeline. Click empty grid to add notes. Right click notes to delete. Ctrl click to select multiple. Drag notes to move."></canvas><aside class="editor-inspector"><div class="section-kicker">SELECTION</div><h3 id="selection-count">0 selected</h3><p>Click a note to select.<br>Drag a pattern to reshape it.</p><div class="hint-panel"><div class="section-kicker">QUICK CONTROLS</div><div class="hint"><span>Add note</span><kbd>Left click</kbd></div><div class="hint"><span>Multi-select</span><kbd>Ctrl click</kbd></div><div class="hint"><span>Delete note</span><kbd>Right click</kbd></div><div class="hint"><span>Move</span><kbd>↑ ↓ ← →</kbd></div><div class="hint"><span>Copy / paste</span><kbd>Ctrl C / V</kbd></div><div class="hint"><span>Zoom</span><kbd>Ctrl wheel</kbd></div><div class="hint"><span>Preview</span><kbd>P</kbd></div></div><div class="hint-panel"><p>Snap affects your next edit.<br>Use Resnap to change existing notes.<br><br>Ctrl-click empty space to place the cursor for pasting or testing. Drag empty space to box-select.</p></div></aside></div><div class="editor-statusbar"><span id="editor-time">00:00.000</span><span>${app.current.bpm} BPM</span><span id="editor-note-count"></span><span class="right">ZOOM <b id="editor-zoom">100%</b></span></div></section>`,
+      `${header(E(app.current.name), "Shape the rhythm, one detail at a time.", button("Rename", "rename") + button("← Chart View", "detail"), "EDIT / MUSICAL TIMELINE")}<section class="glass editor-shell"><div class="editor-toolbar">${button("↶", "undo", "icon", 'id="undo" title="Undo (Ctrl+Z)" aria-label="Undo"')}${button("↷", "redo", "icon", 'id="redo" title="Redo (Ctrl+Y)" aria-label="Redo"')}<span class="divider" style="margin:0 5px"></span><label>Snap <select id="snap">${[4, 8, 12, 16, 24, 32, 48, 64, 96, 128].map((n) => `<option value="${n}" ${n === ed.snap ? "selected" : ""}>1/${n}</option>`).join("")}</select></label>${button("＋ Note", "add-note", "small", 'title="Add at cursor"')}${button("Resnap", "resnap", "small", 'id="resnap" title="Resnap selection"')}${button("Save", "save-chart", "small", 'title="Save chart (Ctrl+S / Cmd+S)"')}<span class="toolbar-spacer"></span>${speedControl()}${button("▷ Preview", "timeline-play", "small", 'id="timeline-play"')}${button("← Timeline", "stop-preview", "small", 'id="stop-preview" hidden')}${button("Test here ", "test", "small primary")}${button("Jump to start", "jump-start", "small ghost")}</div><div class="editor-workspace"><canvas class="editor-canvas" id="editor-canvas" tabindex="0" aria-label="Chart timeline. Click empty grid to add notes. Right click notes to delete. Ctrl click to select multiple. Drag notes to move."></canvas><aside class="editor-inspector"><div class="section-kicker">SELECTION</div><h3 id="selection-count">0 selected</h3><p>Click a note to select.<br>Drag a pattern to reshape it.</p><div class="hint-panel"><div class="section-kicker">QUICK CONTROLS</div><div class="hint"><span>Add note</span><kbd>Left click</kbd></div><div class="hint"><span>Multi-select</span><kbd>Ctrl click</kbd></div><div class="hint"><span>Delete note</span><kbd>Right click</kbd></div><div class="hint"><span>Move</span><kbd>↑ ↓ ← →</kbd></div><div class="hint"><span>Copy / paste</span><kbd>Ctrl C / V</kbd></div><div class="hint"><span>Zoom</span><kbd>Ctrl wheel</kbd></div><div class="hint"><span>Preview</span><kbd>P</kbd></div></div><div class="hint-panel"><p>Snap affects your next edit.<br>Use Resnap to change existing notes.<br><br>Ctrl-click empty space to place the cursor for pasting or testing. Drag empty space to box-select.</p></div></aside></div><div class="editor-statusbar"><span id="editor-time">00:00.000</span><span>${app.current.bpm} BPM</span><span id="editor-note-count"></span><span class="right">ZOOM <b id="editor-zoom">100%</b></span></div></section>`,
       "Editor",
     );
     $("#snap").onchange = (e) => {
@@ -783,7 +817,7 @@
     CF.music.setVolume(app.settings.musicVolume);
     await CF.storage.saveSettings(app.settings);
     renderKeyTest();
-    CF.ui.toast("Settings saved");
+    CF.ui.toast("Settings saved", "short");
   }
   async function help() {
     if (
@@ -835,7 +869,7 @@
     "add-note": () => app.editor.add(),
     resnap: () => app.editor.resnap(),
     "save-chart": async () => {
-      if (await saveNow(app.current)) CF.ui.toast("Chart saved");
+      if (await saveNow(app.current)) CF.ui.toast("Chart saved", "short");
     },
     "timeline-play": () => app.editor.toggle(app.audio),
     "stop-preview": () => app.editor.stop(app.audio),
@@ -878,6 +912,31 @@
     if (/^Digit[0-9]$/.test(event.code)) return event.code.slice(5);
     if (event.code === "Semicolon") return ";";
     return event.key.toLowerCase();
+  }
+  function laneDown(lane, now = performance.now()) {
+    if (!app.session) return;
+    const key = app.settings.bindings[app.current.keyCount][lane];
+    if (app.pressed.has(key)) return;
+    app.pressed.add(key);
+    app.audio.unlock();
+    const s = app.session;
+    s.flashes[lane] = now;
+    scheduleFrame();
+    if (app.state === "record") {
+      if (s.phase === "running") {
+        s.raw.push({ lane, timestampMs: s.clock.time(now) });
+        const finishButton = $('[data-action="finish"]');
+        finishButton.disabled = false;
+        finishButton.removeAttribute("title");
+      }
+    } else if (s.phase === "running") hit(lane, now);
+  }
+  function laneUp(lane) {
+    const count = app.state === "setup" ? app.setupKeys : app.current?.keyCount;
+    const key = count && app.settings.bindings[count][lane];
+    if (key) app.pressed.delete(key);
+    scheduleFrame();
+    if (app.state === "setup") renderKeyTest();
   }
   document.addEventListener("keydown", (e) => {
     if (app.state === "editor" && (e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s") {
@@ -966,30 +1025,19 @@
     if (lane < 0) return;
     e.preventDefault();
     if (e.repeat || app.pressed.has(key)) return;
-    app.pressed.add(key);
-    app.audio.unlock();
     if (app.state === "setup") {
+      app.pressed.add(key);
       renderKeyTest();
       return;
     }
-    const s = app.session,
-      wall = performance.now(),
-      now = Math.abs(e.timeStamp - wall) < 10000 ? e.timeStamp : wall;
-    s.flashes[lane] = wall;
-    scheduleFrame();
-    if (app.state === "record") {
-      if (s.phase === "running") {
-        s.raw.push({ lane, timestampMs: s.clock.time(now) });
-        const finishButton = $('[data-action="finish"]');
-        finishButton.disabled = false;
-        finishButton.removeAttribute("title");
-      }
-    } else if (s.phase === "running") hit(lane, now);
+    const wall = performance.now();
+    laneDown(lane, Math.abs(e.timeStamp - wall) < 10000 ? e.timeStamp : wall);
   });
   document.addEventListener("keyup", (e) => {
-    app.pressed.delete(laneKey(e));
-    scheduleFrame();
-    if (app.state === "setup") renderKeyTest();
+    const key = laneKey(e);
+    const count = app.state === "setup" ? app.setupKeys : app.current?.keyCount;
+    const lane = count ? app.settings.bindings[count].indexOf(key) : -1;
+    if (lane >= 0) laneUp(lane);
   });
   window.addEventListener("blur", () => {
     app.pressed.clear();

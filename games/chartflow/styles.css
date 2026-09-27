@@ -409,6 +409,12 @@ main {
 .hero .button {
   font-size: 11px;
 }
+.hero .actions .button.primary {
+  width: 148px;
+  padding-left: 10px;
+  padding-right: 10px;
+  text-align: center;
+}
 .hero-visual {
   position: relative;
   min-height: 240px;
@@ -1517,6 +1523,19 @@ dialog::backdrop {
 #toast.show {
   opacity: 1;
   transform: translate(-50%, 0);
+}
+#toast.achievement-toast {
+  left: auto;
+  right: 28px;
+  bottom: 28px;
+  transform: translate(24px, 0);
+  border-color: #6fe7d280;
+  box-shadow: 0 12px 36px #0008, 0 0 0 1px #6fe7d21c;
+}
+#toast.achievement-toast.show { transform: translate(0, 0); }
+#toast.short-toast { transition-duration: 160ms; }
+@media (max-width: 760px) {
+  #toast.achievement-toast { right: 14px; bottom: 14px; max-width: calc(100vw - 28px); }
 }
 body[data-screen="results"] #toast {
   bottom: 0;

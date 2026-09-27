@@ -226,7 +226,7 @@ CF.guide = {
 
     if (!this.dialog.querySelector(".guide-top")) {
       this.dialog.innerHTML =
-        '<div class="guide-top"><span class="eyebrow">CHARTFLOW / GETTING STARTED</span><button class="guide-nav" data-guide="close">Skip guide ↗</button></div><div class="guide-scroll"></div><footer class="guide-footer"><div class="guide-position"><span class="guide-page-number" aria-live="polite"></span><div class="guide-progress" aria-hidden="true"><i></i></div></div><div class="actions"><button class="guide-nav" data-guide="back">← Back</button><button class="guide-nav guide-next" data-guide="next"></button></div></footer>';
+        '<div class="guide-top"><span class="eyebrow">CHARTFLOW / GETTING STARTED</span><button class="guide-nav" data-guide="close">Skip guide </button></div><div class="guide-scroll"></div><footer class="guide-footer"><div class="guide-position"><span class="guide-page-number" aria-live="polite"></span><div class="guide-progress" aria-hidden="true"><i></i></div></div><div class="actions"><button class="guide-nav" data-guide="back">← Back</button><button class="guide-nav guide-next" data-guide="next"></button></div></footer>';
       this.dialog.querySelector('[data-guide="close"]').onclick = () =>
         this.close();
       this.dialog.querySelector('[data-guide="back"]').onclick = () =>
@@ -244,7 +244,7 @@ CF.guide = {
       (intro ? 0 : ((this.step + 1) / this.pages.length) * 100) + "%";
     this.dialog.querySelector('[data-guide="back"]').disabled = this.step === this.firstStep;
     this.dialog.querySelector('[data-guide="next"]').textContent =
-      this.step === this.pages.length - 1 ? "Let’s begin ↗" : "Continue →";
+      this.step === this.pages.length - 1 ? "Let’s begin " : "Continue →";
     this.dialog.querySelector(".guide-top").inert = intro;
     this.dialog.querySelector(".guide-footer").inert = intro;
     this.fit();

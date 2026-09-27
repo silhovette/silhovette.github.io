@@ -67,12 +67,13 @@ CF.ui = {
         ? `${h}h ago`
         : `${Math.floor(h / 24)}d ago`;
   },
-  toast(message) {
+  toast(message, kind = "default") {
     const el = document.querySelector("#toast");
     el.textContent = message;
+    el.className = kind === "achievement" ? "achievement-toast" : kind === "short" ? "short-toast" : "";
     el.classList.add("show");
     clearTimeout(this.toastTimer);
-    this.toastTimer = setTimeout(() => el.classList.remove("show"), 3200);
+    this.toastTimer = setTimeout(() => el.classList.remove("show"), kind === "achievement" ? 2000 : kind === "short" ? 1000 : 3200);
   },
   density(chart, large = false) {
     const summary = this.summary(chart), index = large ? 1 : 0;
