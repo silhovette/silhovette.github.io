@@ -1273,54 +1273,98 @@ const setupPaperPreviews = () => {
   const cards = [...document.querySelectorAll("[data-paper-preview]")];
   if (!cards.length) return;
 
-  const preview = document.createElement("img");
-  preview.className = "publication-paper-preview";
-  preview.setAttribute("aria-hidden", "true");
-  document.body.append(preview);
+  const layer = document.createElement("div");
+  layer.className = "publication-preview-layer";
+  layer.setAttribute("aria-hidden", "true");
+  document.body.append(layer);
 
   let activeCard = null;
-  let lastPointer = { clientX: 0, clientY: 0 };
-  const hide = () => {
-    activeCard = null;
-    preview.classList.remove("is-visible");
+  let activePreview = null;
+  let generation = 0;
+  let frame = null;
+  let pointerX = 0;
+  let pointerY = 0;
+  let viewportWidth = window.innerWidth;
+  let viewportHeight = window.innerHeight;
+  const sizes = new Map();
+
+  // Pointer events only record coordinates; movement writes once per frame.
+  const position = () => {
+    frame = null;
+    if (!activePreview) return;
+    const size = sizes.get(activePreview);
+    const x = Math.max(16, Math.min(pointerX + 18, viewportWidth - size.width - 16));
+    const y = Math.max(16, Math.min(pointerY + 18, viewportHeight - size.height - 16));
+    layer.style.transform = `translate3d(${x}px, ${y}px, 0)`;
   };
-  const position = (event) => {
-    const gap = 18;
-    const maxLeft = Math.max(16, window.innerWidth - preview.offsetWidth - 16);
-    const maxTop = Math.max(16, window.innerHeight - preview.offsetHeight - 16);
-    preview.style.left = `${Math.min(event.clientX + gap, maxLeft)}px`;
-    preview.style.top = `${Math.min(event.clientY + gap, maxTop)}px`;
+  const schedulePosition = () => {
+    if (activePreview && frame === null) frame = requestAnimationFrame(position);
   };
-  preview.addEventListener("load", () => {
-    if (activeCard) position(lastPointer);
+  const resizeObserver = new ResizeObserver(entries => {
+    entries.forEach(({ target, contentRect }) => {
+      sizes.set(target, { width: contentRect.width, height: contentRect.height });
+    });
+    schedulePosition();
   });
 
-  cards.forEach((card) => {
-    card.addEventListener("click", (event) => {
+  // Keep both small images decoded, so opening or switching needs no source swap.
+  const previews = new Map(cards.map(card => {
+    const image = new Image();
+    image.className = "publication-paper-preview";
+    image.alt = card.dataset.paperPreviewAlt || "Paper figure preview";
+    image.src = card.dataset.paperPreview;
+    layer.append(image);
+    sizes.set(image, { width: 0, height: 0 });
+    resizeObserver.observe(image);
+    const ready = image.decode().then(() => true, () => false);
+    return [card, { image, ready }];
+  }));
+
+  const hide = () => {
+    generation += 1;
+    activeCard = null;
+    activePreview?.classList.remove("is-visible");
+    activePreview = null;
+    if (frame !== null) cancelAnimationFrame(frame);
+    frame = null;
+  };
+
+  cards.forEach(card => {
+    card.addEventListener("click", async event => {
       if (event.target.closest("a, button")) return;
       if (activeCard === card) {
         hide();
         return;
       }
+      hide();
       activeCard = card;
-      lastPointer = { clientX: event.clientX, clientY: event.clientY };
-      preview.src = card.dataset.paperPreview;
-      preview.alt = card.dataset.paperPreviewAlt || "Paper figure preview";
-      preview.classList.add("is-visible");
-      requestAnimationFrame(() => position(event));
+      pointerX = event.clientX;
+      pointerY = event.clientY;
+      const currentGeneration = generation;
+      const { image, ready } = previews.get(card);
+      if (!await ready || generation !== currentGeneration) return;
+      // Measure only on opening; movement uses dimensions cached by ResizeObserver.
+      sizes.set(image, { width: image.offsetWidth, height: image.offsetHeight });
+      activePreview = image;
+      position();
+      image.classList.add("is-visible");
     });
-    card.addEventListener("pointermove", (event) => {
-      if (activeCard === card) {
-        lastPointer = { clientX: event.clientX, clientY: event.clientY };
-        position(event);
-      }
+    card.addEventListener("pointermove", event => {
+      if (activeCard !== card) return;
+      pointerX = event.clientX;
+      pointerY = event.clientY;
+      schedulePosition();
     }, { passive: true });
     card.addEventListener("pointerleave", hide);
   });
 
   window.addEventListener("scroll", hide, { passive: true });
   window.addEventListener("wheel", hide, { passive: true });
-  window.addEventListener("resize", hide);
+  window.addEventListener("resize", () => {
+    viewportWidth = window.innerWidth;
+    viewportHeight = window.innerHeight;
+    hide();
+  });
 };
 
 // Initialization

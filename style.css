@@ -900,9 +900,19 @@ h3 {
   white-space: nowrap;
 }
 
-.publication-paper-preview {
+.publication-preview-layer {
   position: fixed;
+  top: 0;
+  left: 0;
   z-index: 40;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.publication-paper-preview {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: auto;
   max-width: min(420px, 42vw);
   max-height: min(360px, calc(100vh - 32px));
@@ -914,15 +924,14 @@ h3 {
   box-shadow: var(--shadow);
   opacity: 0;
   visibility: hidden;
-  transform: translateY(8px) scale(0.98);
   pointer-events: none;
-  transition: opacity 220ms ease, transform 220ms ease, visibility 0s linear 220ms;
+  will-change: opacity;
+  transition: opacity 140ms ease, visibility 0s linear 140ms;
 }
 
 .publication-paper-preview.is-visible {
   opacity: 1;
   visibility: visible;
-  transform: none;
   transition-delay: 0s;
 }
 
