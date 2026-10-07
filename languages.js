@@ -302,7 +302,7 @@
     "image_unavailable": ["Image unavailable", "图片不可用", "圖片不可用"],
     "programming_languages": ["Languages", "编程语言", "編程語言"],
     "languages": ["Python and C++ for research prototyping, LLM and RL experimentation, data pipelines, and systems-oriented engineering.", "主要使用 Python 和 C++ 开发研究原型、运行 LLM 与强化学习实验、搭建数据处理流程，并进行相关系统开发。", "主要使用 Python 和 C++ 開發研究原型、運行 LLM 與強化學習實驗、搭建資料處理流程，並進行相關系統開發。"],
-    "last_synced": ["Last synced: 2026.9", "最近同步：2026.9", "最近同步：2026.9"],
+    "last_synced": ["Last synced: 2026.10", "最近同步：2026.10", "最近同步：2026.10"],
   };
 
   const supported = ["en", "zh-Hans", "zh-Hant"];

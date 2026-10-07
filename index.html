@@ -94,11 +94,11 @@
           <p class="timeline-invitation"><a class="timeline-link" href="timeline.html">more about me</a></p>
         </div>
         <div class="about-portrait">
-          <img class="about-portrait__image" src="assets/avatar/IMG_9119-optimized.png" width="558" height="558" alt="Portrait of Yuhua Luo" decoding="async"  data-i18n-alt="portrait_of_yuhua_luo"/>
-          <div class="about-portrait__reflection" aria-hidden="true">
+          <img class="about-portrait__image" src="assets/avatar/IMG_9119-optimized.png" width="558" height="558" alt="Portrait of Yuhua Luo" decoding="async"  data-i18n-alt="portrait_of_yuhua_luo" hidden/>
+          <div class="about-portrait__reflection" aria-hidden="true" hidden>
             <img src="assets/avatar/IMG_9119-optimized.png" width="558" height="558" alt="" decoding="async" />
           </div>
-          <div class="about-emblem" hidden aria-hidden="true">
+          <div class="about-emblem" aria-hidden="true">
           <svg
             class="sjtu-line-mark sjtu-line-mark--traced"
             viewBox="0 0 1382 1138"
@@ -737,37 +737,37 @@
         <article class="card card--pending">
           <span class="card-update-dot" tabindex="0" role="img" aria-label="To be updated..." data-tooltip="To be updated..."></span>
           <div class="card-header">
-            <h3>Beyond Global Replanning: Hierarchical Recovery for Cross-Device Agent Systems</h3>
+            <h3>OctoNest: Adaptive Cross-Device Execution through Stateful Control</h3>
             <span class="status">Agent Systems</span>
           </div>
           <p>
-            Designed H-RePlan, a hierarchical recovery framework that lets cross-device agents
-            switch API, CLI, and GUI strategies locally before escalating structured failure
-            evidence to the orchestrator for task or device-level replanning.
+            A stateful cross-device control framework in which Device Agents refine subtasks and
+            switch execution modalities locally while an Orchestrator revises plans and assignments.
           </p>
           <div class="keywords">
             <span>Agent Systems</span>
-            <span>Long-Horizon</span>
-            <span>Recovery</span>
-            <span>Cross-Device</span>
+            <span>Stateful Control</span>
+            <span>Modality Switching</span>
+            <span>CAPEBench</span>
           </div>
         </article>
 
-        <article class="card">
+        <article class="card card--pending">
+          <span class="card-update-dot" tabindex="0" role="img" aria-label="To be updated..." data-tooltip="To be updated..."></span>
           <div class="card-header">
-            <h3>LLM Continual Learning Research</h3>
-            <span class="status">LLM Adaptation</span>
+            <h3>ChainLoRA: Geometry-Preserving Task Vector Merging for Continual Learning in LLMs</h3>
+            <span class="status">Continual Learning</span>
           </div>
           <p>
-            Investigated parameter-efficient continual learning for language models through
-            replay-free LoRA composition, task-vector structure, and shared/private parameter
-            decomposition for balancing transfer and task isolation.
+            A replay-free continual PEFT framework using task-vector geometry, adaptive SVD merging,
+            Procrustes alignment, and effective-rank control to separate shared and task-specific parts.
           </p>
           <div class="keywords">
             <span>Continual Learning</span>
-            <span>PEFT</span>
+            <span>Replay-Free PEFT</span>
             <span>Task Vectors</span>
-            <span>LoRA</span>
+            <span>Adaptive SVD</span>
+            <span>Procrustes</span>
           </div>
         </article>
 
@@ -823,11 +823,11 @@
         <article class="publication-item card--pending">
           <span class="card-update-dot" tabindex="0" role="img" aria-label="To be updated..." data-tooltip="To be updated..."></span>
           <div class="publication-content">
-            <h3>Beyond Global Replanning: Hierarchical Recovery for Cross-Device Agent Systems</h3>
+            <h3>OctoNest: Adaptive Cross-Device Execution through Stateful Control</h3>
             <p class="publication-venue">arXiv preprint, 2026</p>
             <p class="publication-summary">
-              Hierarchical recovery for cross-device agents, enabling local interface-level adaptation
-              before orchestrator-level replanning.
+              Stateful cross-device orchestration that combines local modality refinement with
+              execution-feedback-driven plan and device reassignment.
             </p>
             <div class="publication-links">
               <a href="https://arxiv.org/abs/2606.20487" target="_blank" rel="noreferrer">arXiv:2606.20487</a>
@@ -836,7 +836,47 @@
           </div>
         </article>
 
-        <article class="publication-item publication-item--blurred card--pending">
+        <article class="publication-item card--pending">
+          <span class="card-update-dot" tabindex="0" role="img" aria-label="To be updated..." data-tooltip="To be updated..."></span>
+          <div class="publication-content">
+            <h3>ChainLoRA: Geometry-Preserving Task Vector Merging for Continual Learning in LLMs</h3>
+            <p class="publication-venue">arXiv preprint, 2026</p>
+            <p class="publication-summary">
+              Replay-free continual learning with chain-updated task vectors, adaptive SVD merging,
+              and geometric separation of shared and task-specific knowledge.
+            </p>
+            <div class="publication-links">
+              <a href="https://arxiv.org/abs/2610.00431" target="_blank" rel="noreferrer">arXiv:2610.00431</a>
+              <a href="https://arxiv.org/pdf/2610.00431" target="_blank" rel="noreferrer">PDF</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="publication-item card--pending" data-paper-preview="assets/papers/01_Cross_Version_Collaboration_and_CAPT.png" data-paper-preview-alt="CAPT paper figure">
+          <span class="card-update-dot" tabindex="0" role="img" aria-label="To be updated..." data-tooltip="To be updated..."></span>
+          <div class="publication-content">
+            <h3>CAPT: Compatibility-Aware Post-Training for Evolving Multi-Agent Systems</h3>
+            <p class="publication-venue">Manuscript, 2026</p>
+            <p class="publication-summary">
+              Preserves collaboration with historical partner versions by constraining post-training
+              updates against measured cross-version compatibility.
+            </p>
+          </div>
+        </article>
+
+        <article class="publication-item card--pending" data-paper-preview="assets/papers/Figure 1 RACP Overview.png" data-paper-preview-alt="RACP overview figure">
+          <span class="card-update-dot" tabindex="0" role="img" aria-label="To be updated..." data-tooltip="To be updated..."></span>
+          <div class="publication-content">
+            <h3>Behind Team Success: Compensation-Masked Capability Loss in Multi-Agent Language Systems</h3>
+            <p class="publication-venue">Manuscript, 2026</p>
+            <p class="publication-summary">
+              Exposes individual capability loss hidden by teammate compensation, then preserves
+              endangered fallback skills through responsibility-aware rehearsal.
+            </p>
+          </div>
+        </article>
+
+        <article class="publication-item publication-item--blurred publication-item--report card--pending">
           <span class="card-update-dot" tabindex="0" role="img" aria-label="To be updated..." data-tooltip="To be updated..."></span>
           <div class="publication-content">
             <h3>Unpublished manuscript</h3>
@@ -906,17 +946,6 @@
           </div>
         </article>
 
-        <article id="miniature-models" class="publication-item playground-item">
-          <div class="publication-content">
-            <h3>Miniature Models</h3>
-            <p class="publication-venue" data-i18n="photography">Photography</p>
-            <p class="publication-summary" data-i18n="miniature_models_summary">Miniature cars, photographed with an eye for form, light, and detail.</p>
-            <div class="publication-links">
-              <a href="playground.html#miniature-models" data-i18n="view_photos">View Photos</a>
-            </div>
-          </div>
-        </article>
-
         <article id="night-runners-mods" class="publication-item playground-item">
           <div class="publication-content">
             <h3><button class="playground-title-button" type="button" data-mods-open aria-haspopup="dialog" aria-controls="mods-dialog">Night Runners Mods</button></h3>
@@ -925,19 +954,6 @@
             <div class="publication-links">
               <button type="button" data-mods-open aria-haspopup="dialog" aria-controls="mods-dialog" data-i18n="view_mods">View Mods</button>
               <a href="https://www.nexusmods.com/profile/AZX777" target="_blank" rel="noreferrer" data-i18n="nexus_mods_profile">Nexus Mods Profile</a>
-            </div>
-          </div>
-        </article>
-
-        <article id="chartflow-project" class="publication-item playground-item">
-          <div class="publication-content">
-            <h3>ChartFlow</h3>
-            <p class="publication-venue" data-i18n="rhythm_chart_editor">Rhythm Chart Editor</p>
-            <p class="publication-summary" data-i18n="chartflow_summary">A browser-based rhythm chart tool for recording, editing, and playing 4K–8K charts.</p>
-            <div class="publication-links">
-              <a href="playground.html#chartflow-project" data-i18n="explore_projects">Explore Projects</a>
-              <a href="games/chartflow/index.html" data-game-demo-trigger data-i18n="play_demo">Play Demo</a>
-              <a href="https://github.com/silhovette/chartflow" target="_blank" rel="noreferrer" data-i18n="view_on_github">View on GitHub</a>
             </div>
           </div>
         </article>
@@ -1091,7 +1107,7 @@
 
   <footer class="footer">
     <p>&copy; <span id="year"></span> Yuhua Luo.</p>
-    <p>Last synced: 2026.9</p>
+    <p>Last synced: 2026.10</p>
   </footer>
 </body>
 </html>

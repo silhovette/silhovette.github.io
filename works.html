@@ -50,51 +50,50 @@
       <div class="works-list">
         <article class="work-detail">
           <div class="card-header">
-            <h3>Beyond Global Replanning: Hierarchical Recovery for Cross-Device Agent Systems</h3>
+            <h3>OctoNest: Adaptive Cross-Device Execution through Stateful Control</h3>
             <span class="status">Agent Systems</span>
           </div>
           <p>
-            Designed and implemented H-RePlan, a hierarchical replanning framework for
-            cross-device agents that separates device-local strategy recovery from
-            orchestrator-level task and device reassignment.
+            Proposed OctoNest, a stateful cross-device execution framework that coordinates
+            device-local modality control with orchestrator-level plan and device revision.
           </p>
           <ul class="work-points">
-            <li>Added an LLM-based strategy planner that selects and retries API, CLI, and GUI execution strategies within each device context.</li>
-            <li>Introduced Cross-Layer Failure Events (CLFEs) to compress local execution evidence into structured signals for orchestration-level replanning.</li>
-            <li>Integrated capability-aware strategy bindings, retry budgets, chain history, and partial DAG-result reuse into the MDC/UFO³ execution flow.</li>
-            <li>Built HeraBench fault-injection workflows over Linux and Android devices, covering local, global, and mixed failures across 174 task variants.</li>
+            <li>Uses Device Agents to refine subtasks and select execution modalities as changing conditions are revealed during interaction.</li>
+            <li>Uses an Orchestrator to revise task plans and device assignments from execution feedback.</li>
+            <li>Introduced CAPEBench with 158 instances from 23 cross-device seed tasks and controlled perturbations.</li>
+            <li>Improved Perfect Pass by 18.35 percentage points over the strongest baseline and reduced token cost per Perfect Pass by 39.8%.</li>
           </ul>
           <div class="keywords">
             <span>Agent Systems</span>
             <span>Cross-Device</span>
-            <span>API / CLI / GUI</span>
-            <span>Long-Horizon</span>
-            <span>Recovery</span>
-            <a href="https://www.alphaxiv.org/abs/2606.20487v1" target="_blank" rel="noreferrer">Paper</a>
+            <span>Stateful Control</span>
+            <span>Modality Switching</span>
+            <span>CAPEBench</span>
+            <a href="https://arxiv.org/abs/2606.20487" target="_blank" rel="noreferrer">Paper</a>
           </div>
         </article>
 
         <article class="work-detail">
           <div class="card-header">
-            <h3>LLM Continual Learning Research</h3>
-            <span class="status">LLM Adaptation</span>
+            <h3>ChainLoRA: Geometry-Preserving Task Vector Merging for Continual Learning in LLMs</h3>
+            <span class="status">Continual Learning</span>
           </div>
           <p>
-            Investigated parameter-efficient continual learning for language models, focusing on
-            replay-free LoRA composition, task-vector structure, and shared/private parameter
-            decomposition.
+            Studied ChainLoRA, a replay-free continual parameter-efficient fine-tuning framework
+            that treats forgetting as geometric interference between task updates.
           </p>
           <ul class="work-points">
-            <li>Analyzed LoRA updates as task vectors and studied how task-specific changes appear in parameter space.</li>
-            <li>Explored geometry-aware decomposition between transferable shared components and task-private residuals.</li>
-            <li>Built continual-learning experiment workflows across multiple text-classification task sequences.</li>
-            <li>Organized training logs, metric aggregation, and ablation records for reproducible comparison.</li>
+            <li>Combines chain-updated training with post-stream adaptive SVD merging while keeping historical-state overhead constant.</li>
+            <li>Uses Procrustes adaptation to align a shared carrier with the latest task and separate shared from task-specific components.</li>
+            <li>Adds a one-sided orthogonality proxy and effective-rank penalty to limit inter-task interference and use the task subspace efficiently.</li>
+            <li>Reports strong replay-free results on Large and SuperNI and competitive results on Standard CL.</li>
           </ul>
           <div class="keywords">
             <span>Continual Learning</span>
-            <span>PEFT</span>
+            <span>Replay-Free PEFT</span>
             <span>Task Vectors</span>
-            <span>LoRA</span>
+            <span>Adaptive SVD</span>
+            <span>Procrustes</span>
           </div>
         </article>
 

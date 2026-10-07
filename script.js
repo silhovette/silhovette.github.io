@@ -1269,6 +1269,60 @@ const setupAccentGlow = () => {
   document.addEventListener("site-language-change", updateLabels);
 };
 
+const setupPaperPreviews = () => {
+  const cards = [...document.querySelectorAll("[data-paper-preview]")];
+  if (!cards.length) return;
+
+  const preview = document.createElement("img");
+  preview.className = "publication-paper-preview";
+  preview.setAttribute("aria-hidden", "true");
+  document.body.append(preview);
+
+  let activeCard = null;
+  let lastPointer = { x: 0, y: 0 };
+  const hide = () => {
+    activeCard = null;
+    preview.classList.remove("is-visible");
+  };
+  const position = (event) => {
+    const gap = 18;
+    const maxLeft = Math.max(16, window.innerWidth - preview.offsetWidth - 16);
+    const maxTop = Math.max(16, window.innerHeight - preview.offsetHeight - 16);
+    preview.style.left = `${Math.min(event.clientX + gap, maxLeft)}px`;
+    preview.style.top = `${Math.min(event.clientY + gap, maxTop)}px`;
+  };
+  preview.addEventListener("load", () => {
+    if (activeCard) position(lastPointer);
+  });
+
+  cards.forEach((card) => {
+    card.addEventListener("click", (event) => {
+      if (event.target.closest("a, button")) return;
+      if (activeCard === card) {
+        hide();
+        return;
+      }
+      activeCard = card;
+      lastPointer = { x: event.clientX, y: event.clientY };
+      preview.src = card.dataset.paperPreview;
+      preview.alt = card.dataset.paperPreviewAlt || "Paper figure preview";
+      preview.classList.add("is-visible");
+      requestAnimationFrame(() => position(event));
+    });
+    card.addEventListener("pointermove", (event) => {
+      if (activeCard === card) {
+        lastPointer = { x: event.clientX, y: event.clientY };
+        position(event);
+      }
+    }, { passive: true });
+    card.addEventListener("pointerleave", hide);
+  });
+
+  window.addEventListener("scroll", hide, { passive: true });
+  window.addEventListener("wheel", hide, { passive: true });
+  window.addEventListener("resize", hide);
+};
+
 // Initialization
 // The hero is part of the first paint, not an idle background task.
 try {
@@ -1278,6 +1332,7 @@ try {
 }
 setupNavigation();
 setupAccentGlow();
+setupPaperPreviews();
 setupSiteSearch();
 setupReveal();
 setupPlayground();
