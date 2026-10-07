@@ -903,13 +903,14 @@ h3 {
 .publication-paper-preview {
   position: fixed;
   z-index: 40;
-  width: min(420px, 42vw);
+  width: auto;
+  max-width: min(420px, 42vw);
   max-height: min(360px, calc(100vh - 32px));
-  padding: 8px;
+  padding: 0;
   object-fit: contain;
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius);
-  background: rgba(8, 11, 8, 0.94);
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
   box-shadow: var(--shadow);
   opacity: 0;
   visibility: hidden;
@@ -926,7 +927,7 @@ h3 {
 }
 
 @media (max-width: 600px) {
-  .publication-paper-preview { width: min(360px, calc(100vw - 32px)); }
+  .publication-paper-preview { max-width: min(360px, calc(100vw - 32px)); }
 }
 
 @media (prefers-reduced-motion: reduce) {

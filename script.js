@@ -1279,7 +1279,7 @@ const setupPaperPreviews = () => {
   document.body.append(preview);
 
   let activeCard = null;
-  let lastPointer = { x: 0, y: 0 };
+  let lastPointer = { clientX: 0, clientY: 0 };
   const hide = () => {
     activeCard = null;
     preview.classList.remove("is-visible");
@@ -1303,7 +1303,7 @@ const setupPaperPreviews = () => {
         return;
       }
       activeCard = card;
-      lastPointer = { x: event.clientX, y: event.clientY };
+      lastPointer = { clientX: event.clientX, clientY: event.clientY };
       preview.src = card.dataset.paperPreview;
       preview.alt = card.dataset.paperPreviewAlt || "Paper figure preview";
       preview.classList.add("is-visible");
@@ -1311,7 +1311,7 @@ const setupPaperPreviews = () => {
     });
     card.addEventListener("pointermove", (event) => {
       if (activeCard === card) {
-        lastPointer = { x: event.clientX, y: event.clientY };
+        lastPointer = { clientX: event.clientX, clientY: event.clientY };
         position(event);
       }
     }, { passive: true });
