@@ -1122,7 +1122,7 @@
             f.label === "Miss"
               ? "#ff6f7d"
               : f.label === "Perfect"
-                ? "#6fe7d2"
+                ? "#d48a76"
                 : "#e4d7a3";
           ctx.font = "9px Consolas,monospace";
           ctx.fillText(f.label.toUpperCase(), (i + 0.5) * lw, line - 35);

@@ -406,7 +406,7 @@ const setupCursorField = () => {
 
       context.beginPath();
       context.arc(ripple.x, ripple.y, radius, 0, Math.PI * 2);
-      context.strokeStyle = `rgba(118, 185, 0, ${opacity})`;
+      context.strokeStyle = `rgba(185, 71, 44, ${opacity})`;
       context.lineWidth = 1.9;
       context.stroke();
     });
@@ -751,7 +751,7 @@ const setupHeroPolyhedron = () => {
         context.beginPath();
         context.moveTo(a.x + (b.x - a.x) * t0, a.y + (b.y - a.y) * t0);
         context.lineTo(a.x + (b.x - a.x) * t1, a.y + (b.y - a.y) * t1);
-        context.strokeStyle = `rgba(180, 255, 84, ${pulseOpacity})`;
+        context.strokeStyle = `rgba(219, 138, 120, ${pulseOpacity})`;
         context.stroke();
       }
     });
@@ -801,7 +801,7 @@ const setupHeroPolyhedron = () => {
       );
 
       context.beginPath();
-      context.strokeStyle = `rgba(118, 185, 0, ${edgeOpacity})`;
+      context.strokeStyle = `rgba(185, 71, 44, ${edgeOpacity})`;
       context.moveTo(a.x, a.y);
       context.lineTo(b.x, b.y);
       context.stroke();

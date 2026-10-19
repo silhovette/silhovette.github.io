@@ -1,0 +1,181 @@
+/* Timeline extends the homepage's shared paper, type and content grid. */
+.timeline-page {
+  min-width: 0;
+}
+.timeline-page #main {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+.timeline-section {
+  padding-top: 64px;
+  padding-bottom: 64px;
+}
+.timeline-section .section-top {
+  margin-bottom: 42px;
+}
+.timeline-title {
+  font: 400 clamp(32px, 3.7vw, 48px)/1.12 var(--font-display);
+  letter-spacing: -0.055em;
+}
+.personal-timeline {
+  --timeline-date-width: 140px;
+  --timeline-gap: 64px;
+  --timeline-axis-left: calc(var(--timeline-date-width) + var(--timeline-gap) / 2);
+  --timeline-node-top: 47px;
+  position: relative;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.personal-timeline::before {
+  content: "";
+  position: absolute;
+  left: var(--timeline-axis-left);
+  top: var(--timeline-node-top);
+  width: 1px;
+  height: var(--timeline-axis-height, calc(100% - 94px));
+  background: var(--line);
+  pointer-events: none;
+}
+.personal-timeline > li {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--timeline-date-width) minmax(0, 1fr);
+  column-gap: var(--timeline-gap);
+  padding-block: 32px;
+  border-top: 1px solid var(--line);
+  transition: opacity 480ms ease-out, transform 480ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.personal-timeline > li::after {
+  content: "";
+  position: absolute;
+  left: var(--timeline-axis-left);
+  top: var(--timeline-node-top);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #b9b0ac;
+  transform: translate(-50%, -50%);
+  transition: background-color 250ms ease-out;
+}
+.personal-timeline > li.is-current::after,
+.personal-timeline > li:focus-visible::after {
+  background: var(--red);
+}
+.personal-timeline > li:focus-visible {
+  outline: 1px solid var(--red);
+  outline-offset: 5px;
+}
+.personal-timeline > li.timeline-reveal-pending {
+  opacity: 0;
+  transform: translateY(10px);
+}
+.timeline-date {
+  padding-top: 4px;
+  font: 400 13px/1.8 var(--font-mono);
+  text-align: right;
+  color: var(--muted);
+}
+.timeline-event {
+  min-width: 0;
+  max-width: 820px;
+  overflow-wrap: break-word;
+}
+.timeline-event h3 {
+  margin: 0;
+  font: 500 22px/1.45 var(--font-display);
+  letter-spacing: -0.025em;
+  color: var(--ink);
+}
+.timeline-event p {
+  margin-top: 10px;
+  font: 400 15px/1.8 var(--font-body);
+  color: var(--muted);
+}
+.timeline-event .timeline-result {
+  font: 400 14px/1.8 var(--font-mono);
+  color: var(--ink);
+}
+.timeline-rank {
+  white-space: nowrap;
+}
+.timeline-event strong {
+  font-weight: 600;
+}
+.timeline-footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  border-top: 1px solid var(--line);
+  padding-block: 28px 44px;
+  color: var(--muted);
+  font: 400 12px/1.6 var(--font-mono);
+}
+.timeline-footer .text-link {
+  font: inherit;
+  color: var(--ink);
+}
+.timeline-footer .text-link:hover {
+  color: var(--red);
+}
+@media (max-width: 1100px) {
+  .personal-timeline {
+    --timeline-date-width: 120px;
+    --timeline-gap: 48px;
+  }
+}
+@media (max-width: 760px) {
+  .timeline-section {
+    padding-top: 40px;
+    padding-bottom: 40px;
+  }
+  .timeline-section .section-top {
+    margin-bottom: 32px;
+  }
+  .personal-timeline {
+    --timeline-date-width: 88px;
+    --timeline-gap: 30px;
+    --timeline-node-top: 38px;
+  }
+  .personal-timeline > li {
+    padding-block: 24px;
+  }
+  .timeline-date {
+    font-size: 12px;
+    line-height: 1.8;
+    padding-top: 3px;
+  }
+  .timeline-event h3 {
+    font-size: 18px;
+    line-height: 1.5;
+    letter-spacing: -0.02em;
+  }
+  .timeline-event p,
+  .timeline-event .timeline-result {
+    font-size: 14px;
+    line-height: 1.7;
+    margin-top: 8px;
+  }
+  .timeline-footer-inner {
+    flex-wrap: wrap;
+    gap: 12px 24px;
+    padding-block: 24px 32px;
+    font-size: 11px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .personal-timeline > li,
+  .personal-timeline > li::after {
+    transition: none;
+  }
+  .personal-timeline > li.timeline-reveal-pending {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media print {
+  .timeline-section { padding-block: 16px; }
+  .personal-timeline > li { break-inside: avoid; }
+}

@@ -6,11 +6,11 @@
   --line: rgba(255, 255, 255, 0.11);
   --text: #eef2f6;
   --muted: #8d98a7;
-  --accent: #45d0b5;
+  --accent: #cf765f;
   --accent-2: #ffb35c;
   --danger: #ff5d73;
   --lane: rgba(255, 255, 255, 0.045);
-  --lane-active: rgba(69, 208, 181, 0.18);
+  --lane-active: rgba(207, 118, 95, 0.18);
   --shadow: rgba(0, 0, 0, 0.36);
   font-family: "Segoe UI Variable Text", "Segoe UI", "Helvetica Neue", Arial, "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", "Noto Sans SC", "Microsoft JhengHei", "Heiti SC", sans-serif;
 }
@@ -28,7 +28,7 @@ body {
 body {
   margin: 0;
   background:
-    radial-gradient(circle at 50% 0%, rgba(69, 208, 181, 0.1), transparent 34rem),
+    radial-gradient(circle at 50% 0%, rgba(207, 118, 95, 0.1), transparent 34rem),
     linear-gradient(145deg, #08090b 0%, #10151b 54%, #090b0f 100%);
   color: var(--text);
   overflow: hidden;
@@ -85,7 +85,7 @@ input {
   text-decoration: none;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 6px;
-  background: rgba(22, 26, 22, 0.78);
+  background: rgba(26, 23, 22, 0.78);
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.24);
   backdrop-filter: blur(10px);
   transition: color 160ms ease, border-color 160ms ease, background 160ms ease;
@@ -94,8 +94,8 @@ input {
 .site-return:hover,
 .site-return:focus-visible {
   color: #fff;
-  border-color: rgba(69, 208, 181, 0.42);
-  background: rgba(34, 40, 34, 0.86);
+  border-color: rgba(207, 118, 95, 0.42);
+  background: rgba(40, 35, 34, 0.86);
   outline: 0;
 }
 
@@ -139,7 +139,7 @@ input {
   height: 100%;
   border-radius: inherit;
   background: linear-gradient(90deg, var(--accent), var(--accent-2));
-  box-shadow: 0 0 22px rgba(69, 208, 181, 0.28);
+  box-shadow: 0 0 22px rgba(207, 118, 95, 0.28);
   transform: scaleX(0);
   transform-origin: left center;
 }
@@ -248,7 +248,7 @@ body.is-loaded .loading-screen {
   overflow: hidden;
   border: 0;
   border-radius: 8px;
-  background: linear-gradient(135deg, rgba(69, 208, 181, 0.28), rgba(255, 179, 92, 0.24));
+  background: linear-gradient(135deg, rgba(207, 118, 95, 0.28), rgba(255, 179, 92, 0.24));
   color: var(--text);
   cursor: pointer;
   font-weight: 800;
@@ -338,12 +338,12 @@ h1 {
 .brand h1 {
   font-size: clamp(1.9rem, 4vw, 3.55rem);
   color: transparent;
-  background: linear-gradient(105deg, #eef2f6 18%, #bff7ec 34%, #ffffff 50%, #ffd7a8 66%, #eef2f6 82%);
+  background: linear-gradient(105deg, #eef2f6 18%, #f0cec6 34%, #ffffff 50%, #ffd7a8 66%, #eef2f6 82%);
   background-size: 260% 100%;
   background-clip: text;
   -webkit-background-clip: text;
   text-shadow:
-    0 0 16px rgba(69, 208, 181, 0.16),
+    0 0 16px rgba(207, 118, 95, 0.16),
     0 0 34px rgba(255, 179, 92, 0.08);
   display: inline-block;
   padding-bottom: 0.08em;
@@ -354,7 +354,7 @@ h1 {
   0%,
   100% {
     background-position: 0% 50%;
-    filter: drop-shadow(0 0 6px rgba(69, 208, 181, 0.08));
+    filter: drop-shadow(0 0 6px rgba(207, 118, 95, 0.08));
   }
 
   50% {
@@ -398,22 +398,22 @@ h1 {
 }
 
 .field input[type="number"]:focus {
-  border-color: rgba(69, 208, 181, 0.68);
+  border-color: rgba(207, 118, 95, 0.68);
   animation: inputFocusIn 140ms ease-out both;
 }
 
 @keyframes inputFocusIn {
   from {
-    box-shadow: 0 0 0 3px rgba(69, 208, 181, 0);
+    box-shadow: 0 0 0 3px rgba(207, 118, 95, 0);
   }
 
   to {
-    box-shadow: 0 0 0 3px rgba(69, 208, 181, 0.13);
+    box-shadow: 0 0 0 3px rgba(207, 118, 95, 0.13);
   }
 }
 
 .field input[type="number"]:focus-visible {
-  box-shadow: 0 0 0 3px rgba(69, 208, 181, 0.13);
+  box-shadow: 0 0 0 3px rgba(207, 118, 95, 0.13);
 }
 
 .timing-field {
@@ -469,18 +469,18 @@ h1 {
 
 .timing-options input:checked + span,
 .segmented input:checked + span {
-  background: rgba(69, 208, 181, 0.18);
-  color: #cffff5;
+  background: rgba(207, 118, 95, 0.18);
+  color: #f5ded9;
   animation: optionSelectIn 120ms ease-out both;
 }
 
 @keyframes optionSelectIn {
   from {
-    background: rgba(69, 208, 181, 0);
+    background: rgba(207, 118, 95, 0);
   }
 
   to {
-    background: rgba(69, 208, 181, 0.18);
+    background: rgba(207, 118, 95, 0.18);
   }
 }
 
@@ -516,9 +516,9 @@ h1 {
 }
 
 .button.primary {
-  border-color: rgba(69, 208, 181, 0.62);
+  border-color: rgba(207, 118, 95, 0.62);
   background: linear-gradient(135deg, var(--accent), #2c9ec3);
-  color: #061211;
+  color: #120806;
   font-weight: 740;
 }
 
@@ -593,19 +593,19 @@ h1 {
 }
 
 .setting-toggle.active {
-  border-color: rgba(69, 208, 181, 0.62);
-  color: #cffff5;
-  background: rgba(69, 208, 181, 0.12);
+  border-color: rgba(207, 118, 95, 0.62);
+  color: #f5ded9;
+  background: rgba(207, 118, 95, 0.12);
 }
 
 .setting-toggle.active .toggle-indicator {
-  border-color: rgba(69, 208, 181, 0.76);
-  background: rgba(69, 208, 181, 0.24);
+  border-color: rgba(207, 118, 95, 0.76);
+  background: rgba(207, 118, 95, 0.24);
 }
 
 .setting-toggle.active .toggle-indicator::after {
   transform: translateX(12px);
-  background: #45d0b5;
+  background: #cf765f;
 }
 
 .settings-group {
@@ -672,19 +672,19 @@ h1 {
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: #45d0b5;
+  background: #cf765f;
   cursor: pointer;
-  box-shadow: 0 0 8px rgba(69, 208, 181, 0.4);
+  box-shadow: 0 0 8px rgba(207, 118, 95, 0.4);
 }
 
 #offsetSlider::-moz-range-thumb {
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: #45d0b5;
+  background: #cf765f;
   cursor: pointer;
   border: none;
-  box-shadow: 0 0 8px rgba(69, 208, 181, 0.4);
+  box-shadow: 0 0 8px rgba(207, 118, 95, 0.4);
 }
 
 .offset-input {
@@ -702,7 +702,7 @@ h1 {
 }
 
 .offset-input:focus {
-  border-color: rgba(69, 208, 181, 0.62);
+  border-color: rgba(207, 118, 95, 0.62);
 }
 
 .offset-unit {
@@ -799,7 +799,7 @@ h1 {
   overflow: hidden;
   border-left: 1px solid rgba(255, 255, 255, 0.06);
   background:
-    radial-gradient(circle at 48% 50%, rgba(69, 208, 181, 0.08), transparent 34%),
+    radial-gradient(circle at 48% 50%, rgba(207, 118, 95, 0.08), transparent 34%),
     radial-gradient(circle at 64% 44%, rgba(255, 179, 92, 0.06), transparent 26%);
 }
 
@@ -811,10 +811,10 @@ h1 {
   width: 13px;
   height: 13px;
   border-radius: 50%;
-  background: #45d0b5;
+  background: #cf765f;
   opacity: 0.35;
   transform: scale(0.84);
-  box-shadow: 0 0 10px rgba(69, 208, 181, 0.22);
+  box-shadow: 0 0 10px rgba(207, 118, 95, 0.22);
   will-change: opacity, transform, box-shadow;
 }
 
@@ -1147,9 +1147,9 @@ h1 {
   position: relative;
   overflow: hidden;
   border-radius: 6px;
-  color: #cffff5;
+  color: #f5ded9;
   background:
-    linear-gradient(135deg, rgba(69, 208, 181, 0.2), rgba(255, 179, 92, 0.14)),
+    linear-gradient(135deg, rgba(207, 118, 95, 0.2), rgba(255, 179, 92, 0.14)),
     rgba(255, 255, 255, 0.04);
 }
 
@@ -1237,7 +1237,7 @@ h1 {
   height: 0;
   border-top: 8px solid transparent;
   border-bottom: 8px solid transparent;
-  border-left: 13px solid #cffff5;
+  border-left: 13px solid #f5ded9;
   transform: translateX(2px);
 }
 
@@ -1256,7 +1256,7 @@ h1 {
 .icon-rating-5::before {
   width: 16px;
   height: 16px;
-  border: 2px solid #cffff5;
+  border: 2px solid #f5ded9;
   transform: rotate(45deg);
 }
 
@@ -1271,7 +1271,7 @@ h1 {
 }
 
 .icon-rating-3::before {
-  background: rgba(69, 208, 181, 0.26);
+  background: rgba(207, 118, 95, 0.26);
 }
 
 .icon-rating-4::before {
@@ -1286,14 +1286,14 @@ h1 {
 }
 
 .achievement-icon.premium-glow.icon-rating-5::after {
-  border-color: rgba(207, 255, 245, 0.5);
+  border-color: rgba(245, 222, 217, 0.5);
   box-shadow: none;
 }
 
 .icon-perfect::before {
   width: 25px;
   height: 25px;
-  border: 2px solid #cffff5;
+  border: 2px solid #f5ded9;
   border-radius: 50%;
 }
 
@@ -1309,7 +1309,7 @@ h1 {
 .icon-secret-great::before {
   width: 25px;
   height: 25px;
-  border: 2px solid #cffff5;
+  border: 2px solid #f5ded9;
   border-radius: 50%;
 }
 
@@ -1338,7 +1338,7 @@ h1 {
   width: 5px;
   height: 11px;
   border-radius: 2px 2px 0 0;
-  background: #cffff5;
+  background: #f5ded9;
   box-shadow: 8px -5px 0 #8fc8ff;
 }
 
@@ -1347,11 +1347,11 @@ h1 {
 }
 
 .icon-density-3::before {
-  box-shadow: 8px -8px 0 #8fc8ff, 16px -14px 0 #ffb35c, 24px -5px 0 #cffff5;
+  box-shadow: 8px -8px 0 #8fc8ff, 16px -14px 0 #ffb35c, 24px -5px 0 #f5ded9;
 }
 
 .icon-density-4::before {
-  box-shadow: 8px -11px 0 #8fc8ff, 16px -17px 0 #ffb35c, 24px -8px 0 #cffff5;
+  box-shadow: 8px -11px 0 #8fc8ff, 16px -17px 0 #ffb35c, 24px -8px 0 #f5ded9;
 }
 
 .achievement-toast {
@@ -1380,7 +1380,7 @@ h1 {
 
 .achievement-toast-title {
   margin-bottom: 10px;
-  color: #cffff5;
+  color: #f5ded9;
   font-size: 0.78rem;
   font-weight: 800;
 }

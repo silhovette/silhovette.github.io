@@ -53,9 +53,9 @@
   background: transparent;
   cursor: pointer;
 }
-.photo-card img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 4px; background: #080b07; transition: opacity 200ms ease; }
+.photo-card img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 4px; background: #0b0807; transition: opacity 200ms ease; }
 .photo-card:hover img { opacity: 0.86; }
-.photo-card.is-broken::before { content: attr(data-error-label); display: grid; place-items: center; width: 100%; aspect-ratio: 4 / 3; background: #080b07; color: var(--text-soft); font: 0.8rem var(--font-mono); }
+.photo-card.is-broken::before { content: attr(data-error-label); display: grid; place-items: center; width: 100%; aspect-ratio: 4 / 3; background: #0b0807; color: var(--text-soft); font: 0.8rem var(--font-mono); }
 .photo-dialog {
   width: min(1280px, calc(100% - 40px));
   height: 90vh;
@@ -66,7 +66,7 @@
   margin: auto;
   overflow: hidden;
   color: var(--text);
-  background: #080b08;
+  background: #0a0909;
   border: 1px solid var(--border-strong);
   border-radius: 8px;
   box-shadow: var(--shadow);

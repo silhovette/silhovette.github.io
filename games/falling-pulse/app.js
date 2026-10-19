@@ -86,7 +86,7 @@ const DEFAULT_BINDS = {
   6: ["KeyS", "KeyD", "KeyF", "KeyJ", "KeyK", "KeyL"],
 };
 const JUDGE_WINDOWS = [
-  { name: "PERFECT", ms: 60, score: 1000, weight: 1, color: "#45d0b5" },
+  { name: "PERFECT", ms: 60, score: 1000, weight: 1, color: "#cf765f" },
   { name: "GREAT", ms: 100, score: 700, weight: 0.7, color: "#8fc8ff" },
   { name: "GOOD", ms: 160, score: 420, weight: 0.42, color: "#ffb35c" },
 ];
@@ -522,7 +522,7 @@ function createParticles(count) {
           ? [255, 179, 92]
           : index % 5 === 1
             ? [143, 200, 255]
-            : [69, 208, 181],
+            : [207, 118, 95],
     };
   });
 }
@@ -569,9 +569,9 @@ function drawParticleSet({
   const glowRadius = baseScale * (1.34 + pulse * 0.35);
 
   const glow = context.createRadialGradient(centerX, centerY, 0, centerX, centerY, glowRadius);
-  glow.addColorStop(0, `rgba(69, 208, 181, ${(0.12 + pulse * 0.18) * alphaScale})`);
+  glow.addColorStop(0, `rgba(207, 118, 95, ${(0.12 + pulse * 0.18) * alphaScale})`);
   glow.addColorStop(0.38, `rgba(143, 200, 255, ${(0.05 + pulse * 0.1) * alphaScale})`);
-  glow.addColorStop(1, "rgba(69, 208, 181, 0)");
+  glow.addColorStop(1, "rgba(207, 118, 95, 0)");
   context.fillStyle = glow;
   context.fillRect(0, 0, width, height);
 
@@ -668,7 +668,7 @@ function updateBeatIndicator(songTime) {
     if (beatIndicator) {
       beatIndicator.style.opacity = "0.28";
       beatIndicator.style.transform = "scale(0.84)";
-      beatIndicator.style.boxShadow = "0 0 10px rgba(69, 208, 181, 0.22)";
+      beatIndicator.style.boxShadow = "0 0 10px rgba(207, 118, 95, 0.22)";
     }
     return;
   }
@@ -682,7 +682,7 @@ function updateBeatIndicator(songTime) {
 
   beatIndicator.style.opacity = opacity.toFixed(3);
   beatIndicator.style.transform = `scale(${scale.toFixed(3)})`;
-  beatIndicator.style.boxShadow = `0 0 ${glow.toFixed(1)}px rgba(69, 208, 181, ${(
+  beatIndicator.style.boxShadow = `0 0 ${glow.toFixed(1)}px rgba(207, 118, 95, ${(
     0.22 + pulse * 0.58
   ).toFixed(3)})`;
 }
@@ -1233,7 +1233,7 @@ function drawResultsChart() {
     const x = pad.left + index * barW;
     const y = pad.top + plotH - h;
     resultCtx.fillStyle =
-      index === hotIndex ? "rgba(105,255,218,0.78)" : "rgba(31,126,102,0.52)";
+      index === hotIndex ? "rgba(223,152,137,0.78)" : "rgba(124,50,33,0.52)";
     roundRect(resultCtx, x + 1, y, Math.max(1, barW - 2), h, 3);
     resultCtx.fill();
   });
@@ -1256,7 +1256,7 @@ function drawResultsChart() {
       return { x, y };
     });
 
-    resultCtx.strokeStyle = "rgba(238,255,250,0.88)";
+    resultCtx.strokeStyle = "rgba(251,243,242,0.88)";
     resultCtx.lineWidth = 2.2;
     drawMonotoneCurve(resultCtx, points);
     resultCtx.stroke();
@@ -1324,7 +1324,7 @@ function draw(songTime) {
 
   const gradient = ctx.createLinearGradient(0, 0, 0, height);
   gradient.addColorStop(0, "rgba(255,255,255,0.04)");
-  gradient.addColorStop(0.72, "rgba(69,208,181,0.03)");
+  gradient.addColorStop(0.72, "rgba(207,118,95,0.03)");
   gradient.addColorStop(1, "rgba(255,179,92,0.05)");
   ctx.fillStyle = gradient;
   ctx.fillRect(0, 0, width, height);
@@ -1333,7 +1333,7 @@ function draw(songTime) {
     const x = lane * laneWidth;
     const flash = state.laneFlash[lane] / LANE_FLASH_MS;
     ctx.fillStyle = flash > 0
-      ? `rgba(69, 208, 181, ${LANE_FLASH_BASE_ALPHA + flash * LANE_FLASH_EXTRA_ALPHA})`
+      ? `rgba(207, 118, 95, ${LANE_FLASH_BASE_ALPHA + flash * LANE_FLASH_EXTRA_ALPHA})`
       : "rgba(255,255,255,0.035)";
     ctx.fillRect(x + 1, 0, laneWidth - 2, height);
 
@@ -1355,14 +1355,14 @@ function draw(songTime) {
     ctx.restore();
   }
 
-  ctx.strokeStyle = "rgba(69, 208, 181, 0.88)";
+  ctx.strokeStyle = "rgba(207, 118, 95, 0.88)";
   ctx.lineWidth = 2;
   ctx.beginPath();
   ctx.moveTo(0, hitY);
   ctx.lineTo(width, hitY);
   ctx.stroke();
 
-  ctx.fillStyle = "rgba(69, 208, 181, 0.16)";
+  ctx.fillStyle = "rgba(207, 118, 95, 0.16)";
   ctx.fillRect(0, hitY - 12, width, 24);
 
   ctx.save();
@@ -1375,7 +1375,7 @@ function draw(songTime) {
     const glow = ctx.createRadialGradient(x, hitY, 0, x, hitY, radius);
     glow.addColorStop(0, `rgba(255, 255, 255, ${0.68 * ease})`);
     glow.addColorStop(0.32, `${effect.color}${Math.round(230 * ease).toString(16).padStart(2, "0")}`);
-    glow.addColorStop(1, "rgba(69, 208, 181, 0)");
+    glow.addColorStop(1, "rgba(207, 118, 95, 0)");
     ctx.fillStyle = glow;
     ctx.beginPath();
     ctx.arc(x, hitY, radius, 0, fullCircle);
@@ -1422,12 +1422,12 @@ function draw(songTime) {
       noteGradient.addColorStop(0, `rgba(255, 93, 115, ${alpha})`);
       noteGradient.addColorStop(1, `rgba(255, 179, 92, ${alpha})`);
     } else {
-      noteGradient.addColorStop(0, `rgba(67, 255, 218, ${alpha})`);
+      noteGradient.addColorStop(0, `rgba(216, 126, 106, ${alpha})`);
       noteGradient.addColorStop(0.45, `rgba(255, 255, 255, ${alpha})`);
       noteGradient.addColorStop(1, `rgba(91, 185, 255, ${alpha})`);
     }
 
-    ctx.fillStyle = note.missed ? `rgba(255, 93, 115, ${0.2 * alpha})` : `rgba(69, 208, 181, ${0.28 * alpha})`;
+    ctx.fillStyle = note.missed ? `rgba(255, 93, 115, ${0.2 * alpha})` : `rgba(207, 118, 95, ${0.28 * alpha})`;
     roundRect(ctx, x - 4, y - noteHeight / 2 - 4, w + 8, noteHeight + 8, radius + 4);
     ctx.fill();
 

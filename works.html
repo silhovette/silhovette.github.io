@@ -1,7 +1,43 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-page-fade="complete">
 <head>
   <meta charset="UTF-8" />
+    <style id="page-fade-style">
+      html[data-page-fade] { background: #f5f3ec; }
+      html[data-page-fade="pending"] body,
+      html[data-page-fade="revealing"] body {
+        transition: opacity 700ms cubic-bezier(0.22, 1, 0.36, 1) !important;
+      }
+      html[data-page-fade="pending"] body { opacity: 0 !important; }
+      html[data-page-fade="revealing"] body { opacity: 1 !important; }
+      /* Replace legacy per-main load fades; scroll reveals remain independent. */
+      html[data-page-fade] body > main { animation: none !important; }
+      @media (prefers-reduced-motion: reduce) {
+        html[data-page-fade] body { opacity: 1 !important; transition: none !important; }
+      }
+    </style>
+    <script id="page-fade-init">
+      (() => {
+        const root = document.documentElement;
+        const motion = matchMedia("(prefers-reduced-motion: reduce)");
+        if (motion.matches) return;
+        let shown = false;
+        const reveal = (immediate = false) => {
+          if (shown && !immediate) return;
+          shown = true;
+          clearTimeout(deadline);
+          root.setAttribute("data-page-fade", immediate ? "complete" : "revealing");
+          if (!immediate) setTimeout(() => root.setAttribute("data-page-fade", "complete"), 700);
+        };
+        // Set the fallback before hiding: a missing or broken external script is safe.
+        const deadline = setTimeout(() => reveal(), 1800);
+        document.addEventListener("page-fade-ready", () => reveal(), { once: true });
+        addEventListener("pageshow", event => { if (event.persisted) reveal(true); });
+        motion.addEventListener("change", event => { if (event.matches) reveal(true); });
+        root.setAttribute("data-page-fade", "pending");
+      })();
+    </script>
+    <script src="page-fade.js?v=1" defer></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta
     name="description"
@@ -10,30 +46,18 @@
   <title data-i18n="featured_work_yuhua_luo">Featured Work | Yuhua Luo</title>
   <link rel="stylesheet" href="style.css?v=44" />
   <link rel="preload" href="assets/fonts/IBMPlexSans-Regular.woff2" as="font" type="font/woff2" crossorigin />
-  <script src="languages.js?v=15" defer></script>
+  <script src="languages.js?v=22" defer></script>
   <script src="script.js?v=12" defer></script>
+  <link rel="stylesheet" href="portfolio.css?v=1" />
+  <link rel="icon" href="assets/icons/portfolio.svg" type="image/svg+xml" />
+  <script src="portfolio.js?v=1" defer></script>
 </head>
 <body class="works-page">
   <a class="skip-link" href="#main" data-i18n="skip_to_content">Skip to content</a>
   <canvas id="cursor-field" class="cursor-field" aria-hidden="true"></canvas>
 
-  <header class="site-header" translate="no">
-    <nav class="nav nav--languages" aria-label="Primary navigation" data-i18n-aria-label="primary_navigation">
-      <div class="site-search" data-site-search role="search">
-        <label class="sr-only" for="site-search-input" data-i18n="search_this_page">Search this page</label>
-        <input id="site-search-input" type="search" placeholder="Search" autocomplete="off" />
-        <div class="site-search__results" role="listbox" aria-label="Search results" data-i18n-aria-label="search_results"></div>
-      </div>
-      <div class="language-switcher" data-language-switcher role="group" aria-label="Language" data-i18n-aria-label="language">
-        <button type="button" data-language="en" lang="en" aria-label="English" aria-pressed="true">EN</button>
-        <button type="button" data-language="zh-Hans" lang="zh-Hans" aria-label="简体中文" aria-pressed="false">简</button>
-        <button type="button" data-language="zh-Hant" lang="zh-Hant" aria-label="繁體中文" aria-pressed="false">繁</button>
-      </div>
-      <div class="nav-links">
-        <a href="index.html" data-i18n="home">Home</a>
-      </div>
-    </nav>
-  </header>
+  <header class="portfolio-header"><div class="header-inner wrap"><div class="site-search header-search" data-site-search role="search"><svg class="header-search-icon" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M16 16L21 21" stroke="currentColor" stroke-width="1.5"/></svg><label class="sr-only" for="site-search-input" data-i18n="search_this_page">Search this page</label><input id="site-search-input" type="search" placeholder="Search" data-i18n-placeholder="search" autocomplete="off"/><div class="site-search__results" role="listbox" aria-label="Search results"></div></div><span class="header-clock mono" aria-label="Shanghai local time">SHANGHAI, CN <span data-shanghai-time>—:—</span></span>
+        <nav class="portfolio-nav" id="portfolio-nav" aria-label="Primary navigation"><a href="index.html#about" data-i18n="about">About</a><a href="index.html#projects" data-i18n="portfolio_work">Selected work</a><a href="index.html#publications" data-i18n="publications">Publications</a><a href="index.html#playground" data-i18n="playground">Playground</a></nav><div class="header-controls"><div class="language-switcher" data-language-switcher role="group" aria-label="Language"><button type="button" data-language="en" aria-pressed="true" lang="en">EN</button><button type="button" data-language="zh-Hans" aria-pressed="false" lang="zh-Hans">简</button><button type="button" data-language="zh-Hant" aria-pressed="false" lang="zh-Hant">繁</button></div><a class="contact-link" href="index.html#contact"><span data-i18n="portfolio_contact">Let&#x27;s talk</span> <span aria-hidden="true">↗</span></a><button class="menu-toggle" type="button" aria-expanded="false" aria-controls="portfolio-nav" data-i18n="portfolio_menu">Menu</button></div></div></header>
 
   <main id="main">
     <section class="section works-hero">
@@ -48,7 +72,7 @@
         <h2 id="selected-research-title" data-i18n="selected_research_major_projects">Selected Research / Major Projects</h2>
       </div>
       <div class="works-list">
-        <article class="work-detail">
+        <article class="work-detail" id="octonest">
           <div class="card-header">
             <h3>OctoNest: Adaptive Cross-Device Execution through Stateful Control</h3>
             <span class="status">Agent Systems</span>
@@ -73,7 +97,7 @@
           </div>
         </article>
 
-        <article class="work-detail">
+        <article class="work-detail" id="chainlora">
           <div class="card-header">
             <h3>ChainLoRA: Geometry-Preserving Task Vector Merging for Continual Learning in LLMs</h3>
             <span class="status">Continual Learning</span>
@@ -97,54 +121,9 @@
           </div>
         </article>
 
-        <article class="work-detail">
-          <div class="card-header">
-            <h3>Dynamic Network Widening for Continual Reinforcement Learning</h3>
-            <span class="status">RL Research</span>
-          </div>
-          <p>
-            Conducted a reproducible continual-control study on network capacity and mid-training
-            model expansion under hidden environment drift. Designed matched PPO experiments across
-            multiple network widths, implemented controlled dynamic widening, and evaluated learning
-            efficiency and held-out robustness under equal interaction budgets.
-          </p>
-          <ul class="work-points">
-            <li>Constructed a continually changing CartPole environment with hidden gravity, mass, pole length, force, and friction perturbations.</li>
-            <li>Matched PPO configurations and interaction budgets across network widths, using multiple training seeds and held-out evaluation panels.</li>
-            <li>Compared fixed-width policies with 64→128 mid-training widening under default and literal all-zero initialization.</li>
-            <li>Built a reproducibility pipeline that preserved configurations, checkpoints, RNG and environment states, selection records, plots, and evaluation tables.</li>
-          </ul>
-          <div class="keywords">
-            <span>Continual Learning</span>
-            <span>PPO</span>
-            <span>Dynamic Network Growth</span>
-            <span>Robustness Evaluation</span>
-          </div>
-        </article>
+        <article class="work-detail" id="communication-fragility"><div class="card-header"><h3>When Coordination Comes at a Cost: Training-Induced Fragility in Multi-Agent Communication</h3><span class="status">Multi-Agent Research</span></div><p data-i18n="portfolio_sict_desc">Studies how joint training can improve coordination while increasing sensitivity to meaning-preserving message changes. SICT improves robustness by aligning receiver actions across equivalent messages.</p><ul class="work-points"><li>Separates joint versus independent updating from fixed versus rotating partner exposure in matched comparisons.</li><li>Measures robustness to meaning-preserving message changes alongside canonical task success.</li><li>Uses receiver task-action consistency to reduce paraphrase fragility, including on held-out paraphrase generators.</li></ul><div class="keywords"><span>Multi-agent communication</span><span>Semantic invariance</span><span>SICT</span></div></article>
 
-        <article class="work-detail">
-          <div class="card-header">
-            <h3>Multi-Device Agent Orchestration &amp; Verified Execution</h3>
-            <span class="status">Agent Systems</span>
-          </div>
-          <p>
-            Developed a multi-device agent system for capability-aware task orchestration and
-            reliable execution across heterogeneous devices, combining interface abstraction,
-            execution evidence, and explicit verification of real-world task outcomes.
-          </p>
-          <ul class="work-points">
-            <li>Designed capability-aware orchestration for assigning tasks to devices and execution interfaces suited to each environment.</li>
-            <li>Unified API, CLI, and GUI operations behind structured execution interfaces with device-adaptive tool selection.</li>
-            <li>Defined execution contracts that connect expected outputs, collected evidence, and postconditions instead of treating raw tool success as task completion.</li>
-            <li>Built system-evaluation workflows for cross-device execution, tracking interface behavior, completion evidence, and end-state correctness.</li>
-          </ul>
-          <div class="keywords">
-            <span>Multi-Agent Systems</span>
-            <span>Agent Orchestration</span>
-            <span>Tool Use</span>
-            <span>Verified Execution</span>
-          </div>
-        </article>
+        <article class="work-detail" id="capability-preservation"><div class="card-header"><h3>What Team Success Hides: Compensation-Masked Capability Loss in Multi-Agent Language Systems</h3><span class="status">Multi-Agent Research</span></div><p data-i18n="portfolio_racp_desc">Reveals individual capability loss hidden by teammate compensation. RACP tracks responsibility shifts and disuse to selectively rehearse at-risk skills while retaining team utility.</p><ul class="work-points"><li>Evaluates retained individual competence alongside aggregate team performance during specialization.</li><li>Uses teammate and practice interventions to distinguish compensation from retained focal-agent ability.</li><li>Combines responsibility decline and disuse into an online risk signal that guides selective capability rehearsal.</li></ul><div class="keywords"><span>Multi-agent learning</span><span>Capability retention</span><span>RACP</span></div></article>
 
         <article class="work-detail">
           <div class="card-header">

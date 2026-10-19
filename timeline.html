@@ -1,46 +1,73 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-page-fade="complete">
 <head>
   <meta charset="UTF-8" />
+    <style id="page-fade-style">
+      html[data-page-fade] { background: #f5f3ec; }
+      html[data-page-fade="pending"] body,
+      html[data-page-fade="revealing"] body {
+        transition: opacity 700ms cubic-bezier(0.22, 1, 0.36, 1) !important;
+      }
+      html[data-page-fade="pending"] body { opacity: 0 !important; }
+      html[data-page-fade="revealing"] body { opacity: 1 !important; }
+      /* Replace legacy per-main load fades; scroll reveals remain independent. */
+      html[data-page-fade] body > main { animation: none !important; }
+      @media (prefers-reduced-motion: reduce) {
+        html[data-page-fade] body { opacity: 1 !important; transition: none !important; }
+      }
+    </style>
+    <script id="page-fade-init">
+      (() => {
+        const root = document.documentElement;
+        const motion = matchMedia("(prefers-reduced-motion: reduce)");
+        if (motion.matches) return;
+        let shown = false;
+        const reveal = (immediate = false) => {
+          if (shown && !immediate) return;
+          shown = true;
+          clearTimeout(deadline);
+          root.setAttribute("data-page-fade", immediate ? "complete" : "revealing");
+          if (!immediate) setTimeout(() => root.setAttribute("data-page-fade", "complete"), 700);
+        };
+        // Set the fallback before hiding: a missing or broken external script is safe.
+        const deadline = setTimeout(() => reveal(), 1800);
+        document.addEventListener("page-fade-ready", () => reveal(), { once: true });
+        addEventListener("pageshow", event => { if (event.persisted) reveal(true); });
+        motion.addEventListener("change", event => { if (event.matches) reveal(true); });
+        root.setAttribute("data-page-fade", "pending");
+      })();
+    </script>
+    <script src="page-fade.js?v=1" defer></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta
     name="description"
     content="Personal timeline of Yuhua Luo."
    data-i18n-content="timeline_description"/>
-  <title>On My Way | Yuhua Luo</title>
-  <link rel="stylesheet" href="style.css?v=50" />
+  <title data-i18n="timeline_title">Timeline | Yuhua Luo</title>
+  <link rel="stylesheet" href="style.css?v=51" />
   <link rel="preload" href="assets/fonts/IBMPlexSans-Regular.woff2" as="font" type="font/woff2" crossorigin />
-  <script src="languages.js?v=16" defer></script>
+  <script src="languages.js?v=27" defer></script>
   <script src="script.js?v=12" defer></script>
-  <script src="timeline.js?v=11" defer></script>
+  <script src="timeline.js?v=12" defer></script>
+  <link rel="stylesheet" href="portfolio.css?v=7" />
+  <link rel="stylesheet" href="timeline.css?v=2" />
+  <link rel="icon" href="assets/icons/portfolio.svg" type="image/svg+xml" />
+  <script src="portfolio.js?v=1" defer></script>
 </head>
 <body class="timeline-page">
   <a class="skip-link" href="#main" data-i18n="skip_to_content">Skip to content</a>
   <canvas id="cursor-field" class="cursor-field" aria-hidden="true"></canvas>
 
-  <header class="site-header" translate="no">
-    <nav class="nav nav--languages" aria-label="Primary navigation" data-i18n-aria-label="primary_navigation">
-      <div class="site-search" data-site-search role="search">
-        <label class="sr-only" for="site-search-input" data-i18n="search_this_page">Search this page</label>
-        <input id="site-search-input" type="search" placeholder="Search" autocomplete="off" />
-        <div class="site-search__results" role="listbox" aria-label="Search results" data-i18n-aria-label="search_results"></div>
-      </div>
-      <div class="language-switcher" data-language-switcher role="group" aria-label="Language" data-i18n-aria-label="language">
-        <button type="button" data-language="en" lang="en" aria-label="English" aria-pressed="true">EN</button>
-        <button type="button" data-language="zh-Hans" lang="zh-Hans" aria-label="简体中文" aria-pressed="false">简</button>
-        <button type="button" data-language="zh-Hant" lang="zh-Hant" aria-label="繁體中文" aria-pressed="false">繁</button>
-      </div>
-      <div class="nav-links">
-        <a href="index.html#about" data-i18n="home">Home</a>
-      </div>
-    </nav>
-  </header>
+  <header class="portfolio-header"><div class="header-inner wrap"><div class="site-search header-search" data-site-search role="search"><svg class="header-search-icon" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M16 16L21 21" stroke="currentColor" stroke-width="1.5"/></svg><label class="sr-only" for="site-search-input" data-i18n="search_this_page">Search this page</label><input id="site-search-input" type="search" placeholder="Search" data-i18n-placeholder="search" autocomplete="off"/><div class="site-search__results" role="listbox" aria-label="Search results"></div></div><span class="header-clock mono" aria-label="Shanghai local time">SHANGHAI, CN <span data-shanghai-time>—:—</span></span>
+        <nav class="portfolio-nav" id="portfolio-nav" aria-label="Primary navigation"><a href="index.html#about" data-i18n="about">About</a><a href="index.html#projects" data-i18n="portfolio_work">Selected work</a><a href="index.html#publications" data-i18n="publications">Publications</a><a href="index.html#playground" data-i18n="playground">Playground</a></nav><div class="header-controls"><div class="language-switcher" data-language-switcher role="group" aria-label="Language"><button type="button" data-language="en" aria-pressed="true" lang="en">EN</button><button type="button" data-language="zh-Hans" aria-pressed="false" lang="zh-Hans">简</button><button type="button" data-language="zh-Hant" aria-pressed="false" lang="zh-Hant">繁</button></div><a class="contact-link" href="index.html#contact"><span data-i18n="portfolio_contact">Let&#x27;s talk</span> <span aria-hidden="true">↗</span></a><button class="menu-toggle" type="button" aria-expanded="false" aria-controls="portfolio-nav" data-i18n="portfolio_menu">Menu</button></div></div></header>
 
   <main id="main">
-    <section id="timeline" class="section works-hero">
-      <div class="section-heading">
-        <p class="eyebrow">Timeline</p>
-        <h1>On My Way</h1>
+    <section id="timeline" class="timeline-section wrap" aria-labelledby="timeline-heading">
+      <div class="section-top">
+        <div>
+          <p class="section-kicker mono" data-i18n="portfolio_journey">BACKGROUND</p>
+          <h1 class="timeline-title" id="timeline-heading" data-i18n="timeline_heading">Timeline</h1>
+        </div>
       </div>
       <ol class="personal-timeline" role="list">
         <li>
@@ -120,7 +147,7 @@
           </div>
         </li>
         <li class="timeline-present">
-          <span class="timeline-date">Present</span>
+          <span class="timeline-date" data-i18n="timeline_present">Present</span>
           <div class="timeline-event">
             <h3 data-i18n="timeline_exploration">Endless exploration, endless growth.</h3>
           </div>
@@ -129,8 +156,11 @@
     </section>
   </main>
 
-  <footer class="footer">
-    <p>&copy; <span id="year"></span> Yuhua Luo.</p>
+  <footer class="timeline-footer wrap">
+    <div class="timeline-footer-inner">
+      <p>&copy; <span id="year"></span> Yuhua Luo.</p>
+      <a class="text-link" href="index.html#hero"><span data-i18n="timeline_back_home">Back to home</span> <span aria-hidden="true">↗</span></a>
+    </div>
   </footer>
 </body>
 </html>

@@ -136,11 +136,11 @@ CF.GuideIntro = class {
       this.geometryKey = settledGeometry ? geometryKey : null;
     }
     const flash = this.reduced ? 0 : Math.exp(-Math.pow((t - 4.47) / 0.16, 2));
-    const blue = this.ease((t - 4.55) / 0.45);
+    const colorShift = this.ease((t - 4.55) / 0.45);
     const color = [
-      Math.round((105 + 6 * blue) * (1 - flash) + 255 * flash),
-      Math.round((229 + 2 * blue) * (1 - flash) + 255 * flash),
-      Math.round((219 - 9 * blue) * (1 - flash) + 255 * flash),
+      Math.round((207 + 5 * colorShift) * (1 - flash) + 255 * flash),
+      Math.round((118 + 20 * colorShift) * (1 - flash) + 255 * flash),
+      Math.round((95 + 23 * colorShift) * (1 - flash) + 255 * flash),
     ];
     const glow = this.reduced
       ? 0.5

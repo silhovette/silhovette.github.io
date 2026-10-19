@@ -1,44 +1,68 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-page-fade="complete">
 <head>
   <meta charset="UTF-8" />
+    <style id="page-fade-style">
+      html[data-page-fade] { background: #f5f3ec; }
+      html[data-page-fade="pending"] body,
+      html[data-page-fade="revealing"] body {
+        transition: opacity 700ms cubic-bezier(0.22, 1, 0.36, 1) !important;
+      }
+      html[data-page-fade="pending"] body { opacity: 0 !important; }
+      html[data-page-fade="revealing"] body { opacity: 1 !important; }
+      /* Replace legacy per-main load fades; scroll reveals remain independent. */
+      html[data-page-fade] body > main { animation: none !important; }
+      @media (prefers-reduced-motion: reduce) {
+        html[data-page-fade] body { opacity: 1 !important; transition: none !important; }
+      }
+    </style>
+    <script id="page-fade-init">
+      (() => {
+        const root = document.documentElement;
+        const motion = matchMedia("(prefers-reduced-motion: reduce)");
+        if (motion.matches) return;
+        let shown = false;
+        const reveal = (immediate = false) => {
+          if (shown && !immediate) return;
+          shown = true;
+          clearTimeout(deadline);
+          root.setAttribute("data-page-fade", immediate ? "complete" : "revealing");
+          if (!immediate) setTimeout(() => root.setAttribute("data-page-fade", "complete"), 700);
+        };
+        // Set the fallback before hiding: a missing or broken external script is safe.
+        const deadline = setTimeout(() => reveal(), 1800);
+        document.addEventListener("page-fade-ready", () => reveal(), { once: true });
+        addEventListener("pageshow", event => { if (event.persisted) reveal(true); });
+        motion.addEventListener("change", event => { if (event.matches) reveal(true); });
+        root.setAttribute("data-page-fade", "pending");
+      })();
+    </script>
+    <script src="page-fade.js?v=1" defer></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta
     name="description"
-    content="Photography, Night Runners mods, games and apps by Yuhua Luo."
-   data-i18n-content="games_night_runners_mods_and_side_projects_by_yuhua_luo"/>
+    content="Photography, games and apps by Yuhua Luo."
+   data-i18n-content="playground_active_description"/>
   <title data-i18n="playground_yuhua_luo">Playground | Yuhua Luo</title>
   <link rel="stylesheet" href="style.css?v=44" />
   <link rel="stylesheet" href="photos.css?v=3" />
-  <link rel="stylesheet" href="miniatures.css?v=3" />
-  <noscript><style>.miniature-card img { opacity: 1; }</style></noscript>
+  <!-- Temporarily paused: <link rel="stylesheet" href="miniatures.css?v=3" /> -->
+  <!-- Temporarily paused: <noscript><style>.miniature-card img { opacity: 1; }</style></noscript> -->
   <link rel="preload" href="assets/fonts/IBMPlexSans-Regular.woff2" as="font" type="font/woff2" crossorigin />
-  <script src="languages.js?v=21" defer></script>
+  <script src="languages.js?v=22" defer></script>
   <script src="script.js?v=12" defer></script>
   <script src="photos.js?v=8" defer></script>
-  <script src="miniatures.js?v=4" defer></script>
+  <!-- Temporarily paused: <script src="miniatures.js?v=4" defer></script> -->
+  <link rel="stylesheet" href="portfolio.css?v=1" />
+  <link rel="icon" href="assets/icons/portfolio.svg" type="image/svg+xml" />
+  <script src="portfolio.js?v=1" defer></script>
 </head>
 <body class="playground-page">
   <a class="skip-link" href="#main" data-i18n="skip_to_content">Skip to content</a>
   <canvas id="cursor-field" class="cursor-field" aria-hidden="true"></canvas>
 
-  <header class="site-header" translate="no">
-    <nav class="nav nav--languages" aria-label="Primary navigation" data-i18n-aria-label="primary_navigation">
-      <div class="site-search" data-site-search role="search">
-        <label class="sr-only" for="site-search-input" data-i18n="search_this_page">Search this page</label>
-        <input id="site-search-input" type="search" placeholder="Search" autocomplete="off" />
-        <div class="site-search__results" role="listbox" aria-label="Search results" data-i18n-aria-label="search_results"></div>
-      </div>
-      <div class="language-switcher" data-language-switcher role="group" aria-label="Language" data-i18n-aria-label="language">
-        <button type="button" data-language="en" lang="en" aria-label="English" aria-pressed="true">EN</button>
-        <button type="button" data-language="zh-Hans" lang="zh-Hans" aria-label="简体中文" aria-pressed="false">简</button>
-        <button type="button" data-language="zh-Hant" lang="zh-Hant" aria-label="繁體中文" aria-pressed="false">繁</button>
-      </div>
-      <div class="nav-links">
-        <a href="index.html#playground" data-i18n="home">Home</a>
-      </div>
-    </nav>
-  </header>
+  <header class="portfolio-header"><div class="header-inner wrap"><div class="site-search header-search" data-site-search role="search"><svg class="header-search-icon" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M16 16L21 21" stroke="currentColor" stroke-width="1.5"/></svg><label class="sr-only" for="site-search-input" data-i18n="search_this_page">Search this page</label><input id="site-search-input" type="search" placeholder="Search" data-i18n-placeholder="search" autocomplete="off"/><div class="site-search__results" role="listbox" aria-label="Search results"></div></div><span class="header-clock mono" aria-label="Shanghai local time">SHANGHAI, CN <span data-shanghai-time>—:—</span></span>
+        <nav class="portfolio-nav" id="portfolio-nav" aria-label="Primary navigation"><a href="index.html#about" data-i18n="about">About</a><a href="index.html#projects" data-i18n="portfolio_work">Selected work</a><a href="index.html#publications" data-i18n="publications">Publications</a><a href="index.html#playground" data-i18n="playground">Playground</a></nav><div class="header-controls"><div class="language-switcher" data-language-switcher role="group" aria-label="Language"><button type="button" data-language="en" aria-pressed="true" lang="en">EN</button><button type="button" data-language="zh-Hans" aria-pressed="false" lang="zh-Hans">简</button><button type="button" data-language="zh-Hant" aria-pressed="false" lang="zh-Hant">繁</button></div><a class="contact-link" href="index.html#contact"><span data-i18n="portfolio_contact">Let&#x27;s talk</span> <span aria-hidden="true">↗</span></a><button class="menu-toggle" type="button" aria-expanded="false" aria-controls="portfolio-nav" data-i18n="portfolio_menu">Menu</button></div></div></header>
 
   <main id="main">
     <section id="playground-intro" class="section works-hero">
@@ -47,6 +71,8 @@
         <h1 data-i18n="beyond">Beyond Research</h1>
       </div>
     </section>
+
+    <!-- Miniature models and mods remain inert; photography stays active. -->
 
     <section id="photography" class="section">
       <details class="playground-disclosure" open>
@@ -69,6 +95,7 @@
             </div>
             <div class="photo-strip" data-photo-strip role="region" aria-label="Photo slideshow" hidden data-i18n-aria-label="photo_slideshow"></div>
           </div>
+    <template id="paused-miniature-models">
     <section id="miniature-models" class="playground-subsection">
       <details class="playground-disclosure" open>
         <summary class="section-heading playground-summary">
@@ -126,10 +153,12 @@
         </div>
       </details>
     </section>
+    </template>
         </div>
       </details>
     </section>
 
+    <template id="paused-night-runners-mods">
     <section id="mods" class="section">
       <details class="playground-disclosure" open>
         <summary class="section-heading playground-summary">
@@ -201,6 +230,10 @@
         </div>
       </details>
     </section>
+
+
+
+    </template>
 
     <section id="games-and-more" class="section">
       <details class="playground-disclosure" open>
@@ -287,7 +320,9 @@
     </section>
   </main>
 
-  <dialog id="miniature-dialog" class="miniature-dialog" aria-labelledby="miniature-dialog-title">
+
+  <template id="paused-miniature-dialog">
+<dialog id="miniature-dialog" class="miniature-dialog" aria-labelledby="miniature-dialog-title">
     <header class="miniature-dialog__header">
       <h2 id="miniature-dialog-title">Miniature Models</h2>
       <button class="photo-icon-button" type="button" data-miniature-close aria-label="Close photo viewer" data-i18n-aria-label="close_photo_viewer" autofocus><svg aria-hidden="true"><use href="assets/icons/gallery.svg#x"></use></svg></button>
@@ -298,6 +333,7 @@
       <button class="photo-icon-button" type="button" data-miniature-next aria-label="Next photo" data-i18n-aria-label="next_photo"><svg aria-hidden="true"><use href="assets/icons/gallery.svg#chevron-right"></use></svg></button>
     </div>
   </dialog>
+  </template>
   <dialog id="photo-dialog" class="photo-dialog" aria-labelledby="photo-dialog-title">
     <header class="photo-dialog__header">
       <h2 id="photo-dialog-title" data-i18n="photo_collection">Photo Collection</h2>
@@ -316,6 +352,8 @@
     </div>
   </dialog>
 
+
+
   <div id="falling-pulse-gate" class="game-gate" aria-hidden="true">
     <div class="game-gate__backdrop" data-game-gate-close></div>
     <section class="game-gate__panel" role="dialog" aria-modal="true" aria-labelledby="falling-pulse-gate-title">
@@ -326,7 +364,7 @@
         <div class="game-gate__mark thinking-visual is-animated" aria-hidden="true">
           <svg class="thinking-line-mark" viewBox="0 0 1254 1254" xmlns="http://www.w3.org/2000/svg">
             <defs>
-              <filter id="game-gate-green-glow" x="-35%" y="-35%" width="170%" height="170%">
+              <filter id="game-gate-rust-glow" x="-35%" y="-35%" width="170%" height="170%">
                 <feGaussianBlur stdDeviation="5" result="blur" />
                 <feMerge>
                   <feMergeNode in="blur" />

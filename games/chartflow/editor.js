@@ -563,10 +563,10 @@ CF.Editor = class {
         major = tick % 384 === 0,
         measure = tick % 1536 === 0;
       ctx.strokeStyle = measure
-        ? "#8dacac30"
+        ? "#a6989330"
         : major
-          ? "#8dacac19"
-          : "#8dacac09";
+          ? "#a6989319"
+          : "#a6989309";
       ctx.beginPath();
       ctx.moveTo(this.left, y);
       ctx.lineTo(w - 22, y);
@@ -622,20 +622,20 @@ CF.Editor = class {
     ctx.fill();
     if (this.drag?.type === "box") {
       const { p, end } = this.drag;
-      ctx.fillStyle = "#6fe7d213";
-      ctx.strokeStyle = "#6fe7d280";
+      ctx.fillStyle = "#d48a7613";
+      ctx.strokeStyle = "#d48a7680";
       ctx.fillRect(p.x, p.y, end.x - p.x, end.y - p.y);
       ctx.strokeRect(p.x, p.y, end.x - p.x, end.y - p.y);
     }
     ctx.restore();
     // The fixed judgement line belongs to the editor in both idle and preview.
-    ctx.strokeStyle = "#6fe7d28c";
+    ctx.strokeStyle = "#d48a768c";
     ctx.beginPath();
     ctx.moveTo(this.left, this.line);
     ctx.lineTo(w - 22, this.line);
     ctx.stroke();
     for (let lane = 0; lane < this.chart.keyCount; lane++) {
-      ctx.fillStyle = "#8ec5bca0";
+      ctx.fillStyle = "#c5988ea0";
       ctx.fillRect(
         this.left + lane * this.laneWidth + 10,
         this.line - 1,

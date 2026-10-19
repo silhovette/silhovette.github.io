@@ -1,58 +1,69 @@
 (() => {
+  "use strict";
   const timeline = document.querySelector(".personal-timeline");
   if (!timeline) return;
   const items = [...timeline.children];
-  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  if (!items.length) return;
+  const motion = matchMedia("(prefers-reduced-motion: reduce)");
   let frame = null;
-  const rank = timeline.querySelector(".timeline-rank");
-  let rankAnimations = [];
-  rank?.addEventListener("pointerenter", event => {
-    if (event.pointerType === "touch" || reducedMotion.matches ||
-        rankAnimations.some(animation => animation.playState === "running")) return;
-    rankAnimations = [...rank.children].map((digit, index) => {
-      const direction = index === 0 ? -1 : 1;
-      // One continuous wave avoids pausing each time the digits cross their baseline.
-      const keyframes = Array.from({ length: 151 }, (_, step) => {
-        const progress = step / 150;
-        const ramp = Math.min(1, progress / 0.12, (1 - progress) / 0.12);
-        const envelope = ramp * ramp * (3 - 2 * ramp);
-        const distance = 3 * Math.sin(progress * Math.PI * 5) * envelope * direction;
-        return { transform: `translateY(${distance}px)`, offset: progress };
-      });
-      return digit.animate(keyframes, { duration: 1750, easing: "linear" });
-    });
-  });
-  reducedMotion.addEventListener("change", () => {
-    if (reducedMotion.matches) rankAnimations.forEach(animation => animation.cancel());
-  });
 
-  // Focus gives keyboard and touch users the same gentle emphasis as hovering.
-  items.forEach(item => { item.tabIndex = 0; });
-
+  // Scroll and resize events share one scheduled update; there is no continuous loop.
   const update = () => {
     frame = null;
+    // offsetTop stays in CSS pixels, including with the site's desktop zoom: 0.9.
+    const height = items.at(-1).offsetTop - items[0].offsetTop;
+    timeline.style.setProperty("--timeline-axis-height", height + "px");
     const positions = items.map(item => item.getBoundingClientRect());
-    timeline.style.setProperty("--timeline-axis-height", `${positions.at(-1).top - positions[0].top}px`);
-    timeline.classList.toggle("timeline-animated", !reducedMotion.matches);
-    if (reducedMotion.matches) {
-      items.forEach(item => item.classList.remove("is-current"));
-      return;
-    }
-    const readingLine = window.innerHeight * 0.45;
+    const zoom = timeline.getBoundingClientRect().width / timeline.offsetWidth;
+    const nodeOffset = parseFloat(getComputedStyle(timeline).getPropertyValue("--timeline-node-top")) * zoom;
+    const readingLine = innerHeight * 0.45;
     let current = -1;
     positions.forEach((rect, index) => {
-      if (rect.top + 10 <= readingLine) current = index;
+      if (rect.top + nodeOffset <= readingLine) current = index;
     });
-    // Stop the pulse when the timeline has left the viewport.
-    if (positions.at(-1).bottom < 0 || positions[0].top > window.innerHeight) current = -1;
-    items.forEach((item, index) => item.classList.toggle("is-current", index === current));
+    if (positions.at(-1).bottom < 0 || positions[0].top > innerHeight) current = -1;
+    items.forEach((item, index) => {
+      const active = index === current;
+      item.classList.toggle("is-current", active);
+      if (active) item.setAttribute("aria-current", "true");
+      else item.removeAttribute("aria-current");
+    });
   };
   const schedule = () => {
-    if (frame === null) frame = window.requestAnimationFrame(update);
+    if (frame === null) frame = requestAnimationFrame(update);
   };
-  window.addEventListener("scroll", () => { if (!reducedMotion.matches) schedule(); }, { passive: true });
-  window.addEventListener("resize", schedule);
-  reducedMotion.addEventListener("change", schedule);
+
+  // Only entries below the initial viewport receive a restrained, one-time reveal.
+  // Without JavaScript, or under reduced motion, every event is already visible.
+  const reveal = item => {
+    item.classList.remove("timeline-reveal-pending");
+    observer?.unobserve(item);
+  };
+  const observer = !motion.matches && "IntersectionObserver" in window
+    ? new IntersectionObserver(entries => {
+      entries.forEach(entry => { if (entry.isIntersecting) reveal(entry.target); });
+    }, { threshold: 0.12 }) : null;
+  items.forEach(item => {
+    item.tabIndex = 0;
+    if (observer && item.getBoundingClientRect().top > innerHeight) {
+      item.classList.add("timeline-reveal-pending");
+      observer.observe(item);
+    }
+  });
+  timeline.addEventListener("focusin", event => {
+    const item = event.target.closest("li");
+    if (item && timeline.contains(item)) reveal(item);
+  });
+  motion.addEventListener("change", () => {
+    if (motion.matches) {
+      items.forEach(reveal);
+      observer?.disconnect();
+    }
+    schedule();
+  });
+  addEventListener("scroll", schedule, { passive: true });
+  addEventListener("resize", schedule);
+  addEventListener("pageshow", schedule);
   document.addEventListener("site-language-change", schedule);
   new ResizeObserver(schedule).observe(timeline);
   schedule();
