@@ -49,8 +49,8 @@
   <link rel="preload" href="assets/fonts/IBMPlexSans-Regular.woff2" as="font" type="font/woff2" crossorigin />
   <script src="languages.js?v=32" defer></script>
   <script src="script.js?v=12" defer></script>
-  <link rel="stylesheet" href="portfolio.css?v=12" />
-  <link rel="stylesheet" href="works.css?v=2" />
+  <link rel="stylesheet" href="portfolio.css?v=15" />
+  <link rel="stylesheet" href="works.css?v=5" />
   <link rel="icon" href="assets/icons/portfolio.svg" type="image/svg+xml" />
   <script src="portfolio.js?v=5" defer></script>
 </head>
@@ -88,13 +88,13 @@
     </header>
 
   <main id="main" class="work-archive"><header class="archive-heading wrap"><p class="section-kicker mono"><span data-i18n="works_kicker">WORK</span></p><h1 data-i18n="portfolio_work_title">Selected Work</h1></header>
-<section id="selected-research" class="archive-research wrap" aria-labelledby="selected-research-title"><h2 id="selected-research-title" class="archive-section-title"><span data-i18n="works_research">Selected Research</span></h2>
+<section id="selected-research" class="archive-research wrap" aria-labelledby="octonest-title">
 <article class="research-entry" id="octonest" aria-labelledby="octonest-title">
  <div class="research-copy"><div class="research-meta"><span>01</span><span><span data-i18n="works_1_category">Agent Systems</span></span></div>
  <h3 id="octonest-title">OctoNest: Adaptive Cross-Device Execution through Stateful Control</h3>
  <div class="research-intro"><p data-i18n="works_1_intro">OctoNest is a stateful framework for executing tasks across heterogeneous devices. Device Agents refine subtasks and select execution modalities as conditions emerge during interaction, while an Orchestrator uses execution feedback to revise plans and device assignments. The work connects local modality control with task-level revision and evaluates cross-device execution through CAPEBench, covering cross-device seed tasks and the controlled perturbations introduced during evaluation.</p></div>
  <ul class="research-contributions"><li><span data-i18n="works_1_point_1">Coordinates device-local modality refinement with feedback-driven plan and device reassignment.</span></li><li><span data-i18n="works_1_point_2">Introduces CAPEBench: 158 instances from 23 cross-device seed tasks with controlled perturbations.</span></li><li><span data-i18n="works_1_point_3">Improves Perfect Pass by 18.35 percentage points over the strongest baseline; reduces token cost per Perfect Pass by 39.8%.</span></li></ul><div class="research-links"><a href="https://arxiv.org/abs/2606.20487" target="_blank" rel="noreferrer">arXiv ↗</a></div>
- <div class="research-keywords"><span>Stateful control</span><span>Modality switching</span><span>CAPEBench</span></div></div>
+ </div>
  <figure class="research-figure"><a href="assets/projects/octonest-overview.png" target="_blank" rel="noreferrer" aria-label="OctoNest: Adaptive Cross-Device Execution through Stateful Control: full-size figure"><img class="research-image" src="assets/projects/octonest-overview.png" width="1860" height="804" alt="OctoNest: Adaptive Cross-Device Execution through Stateful Control: method overview" loading="eager" decoding="async"/></a></figure>
  </article>
 <article class="research-entry" id="chainlora" aria-labelledby="chainlora-title">
@@ -102,7 +102,7 @@
  <h3 id="chainlora-title">ChainLoRA: Geometry-Preserving Task Vector Merging for Continual Learning in LLMs</h3>
  <div class="research-intro"><p data-i18n="works_2_intro">ChainLoRA studies replay-free continual parameter-efficient fine-tuning by treating forgetting as geometric interference between task updates. It combines chain-updated training with adaptive SVD merging after the task stream, maintaining constant historical-state overhead. Procrustes adaptation aligns a shared carrier with the latest task, while shared and task-specific components are separated during merging. A one-sided orthogonality proxy and effective-rank penalty regularize interference and task-subspace use.</p></div>
  <ul class="research-contributions"><li><span data-i18n="works_2_point_1">Combines chain-updated training and adaptive SVD merging with constant historical-state overhead.</span></li><li><span data-i18n="works_2_point_2">Separates shared and task-specific components through Procrustes alignment and geometric regularization.</span></li><li><span data-i18n="works_2_point_3">Reports strong replay-free results on Large and SuperNI, with competitive results on Standard CL.</span></li></ul><div class="research-links"><a href="https://arxiv.org/abs/2610.00431" target="_blank" rel="noreferrer">arXiv ↗</a></div>
- <div class="research-keywords"><span>Replay-free PEFT</span><span>Adaptive SVD</span><span>Procrustes</span></div></div>
+ </div>
  <figure class="research-figure"><a href="assets/projects/chainlora-overview.png" target="_blank" rel="noreferrer" aria-label="ChainLoRA: Geometry-Preserving Task Vector Merging for Continual Learning in LLMs: full-size figure"><img class="research-image" src="assets/projects/chainlora-overview.png" width="2205" height="900" alt="ChainLoRA: Geometry-Preserving Task Vector Merging for Continual Learning in LLMs: method overview" loading="lazy" decoding="async"/></a></figure>
  </article>
 <article class="research-entry" id="communication-fragility" aria-labelledby="communication-fragility-title">
@@ -110,7 +110,7 @@
  <h3 id="communication-fragility-title">When Coordination Comes at a Cost: Training-Induced Fragility in Multi-Agent Communication</h3>
  <div class="research-intro"><p data-i18n="works_3_intro">This study examines how joint training can improve coordination while making agents more sensitive to meaning-preserving changes in messages. Matched comparisons separate joint versus independent updating from fixed versus rotating partner exposure, evaluating paraphrase robustness alongside canonical task success. Semantic-Invariant Communication Training (SICT) addresses this fragility by aligning receiver task-action policies across equivalent messages, with robustness evaluated on held-out paraphrase generators as well.</p></div>
  <ul class="research-contributions"><li><span data-i18n="works_3_point_1">Separates update coupling from partner exposure through matched training comparisons.</span></li><li><span data-i18n="works_3_point_2">Measures robustness to meaning-preserving message changes alongside canonical task success.</span></li><li><span data-i18n="works_3_point_3">Uses receiver task-action consistency to reduce fragility, including on held-out paraphrase generators.</span></li></ul>
- <div class="research-keywords"><span>Semantic invariance</span><span>SICT</span></div></div>
+ </div>
  <figure class="research-figure"><a href="assets/projects/sict-overview.png" target="_blank" rel="noreferrer" aria-label="When Coordination Comes at a Cost: Training-Induced Fragility in Multi-Agent Communication: full-size figure"><img class="research-image research-image--muted" src="assets/projects/sict-overview.png" width="1782" height="946" alt="When Coordination Comes at a Cost: Training-Induced Fragility in Multi-Agent Communication: method overview" loading="lazy" decoding="async"/></a></figure>
  </article>
 <article class="research-entry" id="capability-preservation" aria-labelledby="capability-preservation-title">
@@ -118,7 +118,7 @@
  <h3 id="capability-preservation-title">What Team Success Hides: Compensation-Masked Capability Loss in Multi-Agent Language Systems</h3>
  <div class="research-intro"><p data-i18n="works_4_intro">This work examines individual capability loss that aggregate team performance can hide when teammates compensate during specialization. It evaluates retained competence alongside team utility and uses teammate and practice interventions to distinguish compensation from preserved focal-agent ability. RACP combines responsibility decline and skill disuse into an online risk signal, directing selective rehearsal toward endangered capabilities while retaining the utility of team collaboration.</p></div>
  <ul class="research-contributions"><li><span data-i18n="works_4_point_1">Evaluates retained individual competence alongside team performance during specialization.</span></li><li><span data-i18n="works_4_point_2">Uses teammate and practice interventions to distinguish compensation from retained agent ability.</span></li><li><span data-i18n="works_4_point_3">Tracks responsibility decline and disuse to guide selective rehearsal of at-risk capabilities.</span></li></ul>
- <div class="research-keywords"><span>Capability retention</span><span>RACP</span></div></div>
+ </div>
  <figure class="research-figure"><a href="assets/projects/racp-overview.png" target="_blank" rel="noreferrer" aria-label="What Team Success Hides: Compensation-Masked Capability Loss in Multi-Agent Language Systems: full-size figure"><img class="research-image research-image--muted" src="assets/projects/racp-overview.png" width="1832" height="958" alt="What Team Success Hides: Compensation-Masked Capability Loss in Multi-Agent Language Systems: method overview" loading="lazy" decoding="async"/></a></figure>
  </article>
 </section>

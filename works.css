@@ -1,7 +1,7 @@
 /* Research archive: shared navigation and tokens live in portfolio.css. */
 .works-page { min-width: 0; }
 .works-page #main { width: 100%; margin: 0; padding: 0; }
-.archive-heading { padding-top: 64px; padding-bottom: 48px; }
+.archive-heading { padding-top: 64px; padding-bottom: 20px; }
 .archive-heading .section-kicker { margin-bottom: 16px; }
 .archive-heading h1 {
   font: 400 clamp(32px, 3.7vw, 48px)/1.12 var(--font-display);
@@ -21,6 +21,7 @@
   border-top: 1px solid var(--line);
   scroll-margin-top: 100px;
 }
+.archive-research > .research-entry:first-child { border-top: 0; padding-top: 8px; }
 .research-copy { min-width: 0; }
 .research-meta {
   display: flex;
@@ -49,22 +50,16 @@
   margin: 22px 0;
   padding: 0;
 }
+.research-copy > .research-contributions:last-child { margin-bottom: 0; }
 .research-contributions li {
   border-left: 1px solid var(--line);
   padding-left: 13px;
   font: 400 13.5px/1.7 var(--font-body);
   color: var(--ink);
 }
-.research-links { display: flex; gap: 20px; margin-bottom: 14px; }
+.research-links { display: flex; gap: 20px; margin-bottom: 0; }
 .research-links a { font: 13px/1.6 var(--font-body); border-bottom: 1px solid var(--line); }
 .research-links a:hover { color: var(--red); border-color: var(--red); }
-.research-keywords {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 16px;
-  color: var(--muted);
-  font: 11px/1.7 var(--font-body);
-}
 .research-figure {
   min-width: 0;
   margin: 0;
@@ -106,7 +101,7 @@
   .research-figure { width: 100%; }
 }
 @media (max-width: 600px) {
-  .archive-heading { padding-top: 40px; padding-bottom: 36px; }
+  .archive-heading { padding-top: 40px; padding-bottom: 18px; }
   .archive-section-title { font-size: 20px; margin-bottom: 18px; }
   .research-entry { padding-block: 28px 34px; }
   .research-entry h3 { font-size: 22px; line-height: 1.4; }

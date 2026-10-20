@@ -264,8 +264,8 @@ button {
   padding: 10px;
 }
 /* Compact, shared navigation and search shell. */
-.portfolio-header .header-search { display: flex; align-items: center; position: relative; width: 190px; margin: 0; }
-.portfolio-nav { transform: translateX(-28px); }
+.portfolio-header .header-search { display: flex; align-items: center; position: relative; width: 430px; margin: 0; }
+.portfolio-nav { transform: translateX(-256px); }
 .search-toggle, .menu-toggle {
   width: 32px;
   height: 36px;
@@ -337,7 +337,7 @@ button {
 .portfolio-header .search-matches a:hover { color: var(--red); background: none; }
 a, button { transition: color 180ms ease-out, background-color 180ms ease-out, border-color 180ms ease-out; }
 @media (max-width: 1250px) {
-  .portfolio-header .header-search { width: 145px; }
+  .portfolio-header .header-search { width: 165px; }
   .header-controls { gap: 12px; }
 }
 @media (max-width: 1000px) {
