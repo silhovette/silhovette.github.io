@@ -47,6 +47,7 @@ html:has(.header-search:focus-within) {
 }
 body {
   margin: 0;
+  isolation: isolate;
   background: var(--paper);
   color: var(--ink);
   font-family: var(--font-body);
@@ -55,6 +56,35 @@ body {
 body::before,
 body::after {
   display: none;
+}
+/* Viewport-sized paint layer; the grid origin follows document scrolling. */
+.page-grid {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+}
+.page-grid::before,
+.page-grid::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(#8b807d 1px, transparent 1px),
+    linear-gradient(90deg, #8b807d 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-position: 0 var(--grid-scroll-y, 0px);
+}
+.page-grid::before { opacity: 0.018; }
+.page-grid::after {
+  opacity: 0;
+  mask-image: radial-gradient(ellipse 280px 280px at var(--grid-x, -500px) var(--grid-y, -500px), #000 0%, #0009 30%, transparent 100%);
+  transition: opacity 220ms ease-out;
+}
+.page-grid.is-active::after { opacity: 0.09; }
+@media (prefers-reduced-motion: reduce), (hover: none), (pointer: coarse) {
+  .page-grid::after { display: none; transition: none; }
 }
 ::selection {
   background: #b9472c;
@@ -346,7 +376,7 @@ a, button { transition: color 180ms ease-out, background-color 180ms ease-out, b
   .portfolio-header .header-search { width: 165px; }
   .header-controls { gap: 12px; }
 }
-@media (max-width: 1000px) {
+@media (max-width: 1200px) {
   .header-inner { grid-template-columns: minmax(0, 1fr) auto; min-height: 62px; gap: 14px; }
   .header-controls { gap: 12px; }
   .menu-toggle { display: flex; }
@@ -507,20 +537,13 @@ a, button { transition: color 180ms ease-out, background-color 180ms ease-out, b
     left: -24px;
   }
 }
-.orbital-art::before {
-  content: "";
-  pointer-events: none;
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(#8b807d10 1px, transparent 1px),
-    linear-gradient(90deg, #8b807d10 1px, transparent 1px);
-  background-size: 40px 40px;
-  mask-image: radial-gradient(ellipse, black 20%, transparent 70%);
-}
 #agent-orbit {
-  width: 100%;
-  height: 100%;
+  /* Transparent drawing margin keeps the enlarged sculpture clear of clipping. */
+  position: absolute;
+  left: -12.5%;
+  top: -12.5%;
+  width: 125%;
+  height: 125%;
   display: block;
   cursor: pointer;
 }
@@ -1298,6 +1321,23 @@ a, button { transition: color 180ms ease-out, background-color 180ms ease-out, b
   background: var(--red);
   z-index: 60;
 }
+/* One quiet footer shared by the three archive pages. */
+.secondary-footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  border-top: 1px solid var(--line);
+  padding-block: 28px 40px;
+  font: 400 12px/1.7 var(--font-body);
+  color: var(--muted);
+}
+.secondary-footer-inner a { color: var(--ink); }
+.secondary-footer-inner a:hover { color: var(--red); }
+@media (max-width: 600px) {
+  .secondary-footer-inner { padding-block: 24px 32px; padding-right: 44px; }
+}
 /* The detailed archives share the cover's paper, typography and navigation. */
 body:not(.portfolio-home) .cursor-field {
   display: none;
@@ -1315,12 +1355,6 @@ body:not(.portfolio-home) .works-hero h1 {
 body:not(.portfolio-home) .section-heading {
   margin-bottom: 32px;
 }
-body:not(.portfolio-home) .work-detail {
-  border-top: 1px solid var(--line);
-  background: transparent;
-  box-shadow: none;
-  padding: 30px 0;
-}
 body:not(.portfolio-home) .card-header h3 {
   font-family: var(--font-display);
   letter-spacing: -0.025em;
@@ -1328,10 +1362,6 @@ body:not(.portfolio-home) .card-header h3 {
 body:not(.portfolio-home) .keywords span {
   background: none;
   border: 0;
-  color: var(--muted);
-}
-body:not(.portfolio-home) .footer {
-  border-color: var(--line);
   color: var(--muted);
 }
 body:not(.portfolio-home) .status {
@@ -1348,6 +1378,7 @@ body:not(.portfolio-home) .status {
   color: var(--red);
 }
 body:not(.portfolio-home) .work-detail {
+  background: transparent;
   border: 1px solid var(--line);
   border-radius: var(--radius-card);
   padding: 26px;

@@ -11,7 +11,8 @@ const SCULPTURE_SETTINGS = {
   rotationPerSecond: 0.105,
   radius: 1.3,
   scatterRadius: 1.2,
-  viewScale: 0.30,
+  viewScale: 0.3315,
+  canvasOverscan: 1.25,
   hoverExpansion: 1.06,
   hoverDurationMs: 500,
   driftMinRadius: 0.03,
@@ -218,7 +219,7 @@ const SCULPTURE_SHAPES = [
   { id: "hopf", name: "Hopf Fibration", generate: hopf },
   { id: "harmonics", name: "Spherical Harmonics", generate: harmonics },
   { id: "lorenz", name: "Lorenz Attractor", generate: lorenz },
-  { id: "mobius", name: "Möbius Strip", generate: mobius },
+  { id: "mobius", name: "Möbius Strip", generate: mobius, displayScale: 1.2 },
   { id: "enneper", name: "Enneper Surface", generate: enneper },
   { id: "dini", name: "Dini's Surface", generate: dini },
   { id: "klein", name: "Klein Bottle", generate: klein },
@@ -377,7 +378,7 @@ class ParticleSculpture {
     this.count = matchMedia("(max-width: 760px)").matches
       ? SCULPTURE_SETTINGS.mobileParticles : SCULPTURE_SETTINGS.desktopParticles;
     this.shapes = createShapeLibrary(this.count);
-    this.current = Math.floor(Math.random() * this.shapes.length);
+    this.current = this.shapes.findIndex((shape) => shape.id === "mobius");
     this.target = this.current;
     this.points = this.shapes[this.current].points.slice();
     this.drift = createParticleDrift(this.count);
@@ -540,7 +541,12 @@ class ParticleSculpture {
     const rx = 0.88, ry = this.angle;
     const cx = Math.cos(rx), sx = Math.sin(rx), cy = Math.cos(ry), sy = Math.sin(ry);
     const breathing = 1 + 0.006 * Math.sin(this.elapsed * 0.00045);
-    const scale = Math.min(width, height) * SCULPTURE_SETTINGS.viewScale;
+    const sourceScale = this.shapes[this.current].displayScale || 1;
+    const targetScale = this.shapes[this.target].displayScale || 1;
+    const shapeScale = this.transition
+      ? sourceScale + (targetScale - sourceScale) * smooth(this.transition.elapsed / this.transition.duration)
+      : sourceScale;
+    const scale = Math.min(width, height) / SCULPTURE_SETTINGS.canvasOverscan * SCULPTURE_SETTINGS.viewScale * shapeScale;
     const expansion = this.hover.factor;
     for (let i = 0; i < this.count; i++) {
       const offset = i * 3;
@@ -556,19 +562,20 @@ class ParticleSculpture {
       projected[offset + 2] = depth;
     }
     this.depthOrder.sort((a, b) => projected[a * 3 + 2] - projected[b * 3 + 2]);
-    const pointScale = Math.min(1, width / 440);
+    const pointScale = Math.min(1, width / SCULPTURE_SETTINGS.canvasOverscan / 440);
     for (const index of this.depthOrder) {
       const offset = index * 3;
       const depth = Math.max(0, Math.min(1, (projected[offset + 2] + 1.65) / 3.3));
       ctx.fillStyle = `rgba(161,62,35,${0.19 + depth * 0.62})`;
       ctx.beginPath();
-      ctx.arc(projected[offset], projected[offset + 1], (0.65 + depth * 0.65) * pointScale * 0.8, 0, TAU);
+      ctx.arc(projected[offset], projected[offset + 1], (0.65 + depth * 0.65) * pointScale * 0.912, 0, TAU);
       ctx.fill();
     }
     // Two quiet registration marks keep the editorial composition familiar.
     ctx.strokeStyle = "#95888440";
     ctx.lineWidth = 0.7;
-    for (const [x, y] of [[20, 78], [width - 20, height - 60]]) {
+    const insetX = width * 0.1, insetY = height * 0.1;
+    for (const [x, y] of [[insetX + 20, insetY + 78], [width - insetX - 20, height - insetY - 60]]) {
       ctx.beginPath();
       ctx.moveTo(x - 5, y); ctx.lineTo(x + 5, y);
       ctx.moveTo(x, y - 5); ctx.lineTo(x, y + 5);

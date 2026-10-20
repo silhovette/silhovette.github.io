@@ -87,7 +87,8 @@ test("scatter and reform are continuous, end exactly on the target, and stay ins
           + settings.radius * settings.driftMaxRadius) * 1.006;
         // Worst-case perspective silhouette at any rotation, including breathing.
         const expandedRadius = radius * settings.hoverExpansion;
-        const screenRadius = settings.viewScale * expandedRadius / Math.sqrt(1 - (expandedRadius / 4.8) ** 2);
+        const displayScale = Math.max(library[shape].displayScale || 1, library[(shape + 1) % library.length].displayScale || 1);
+        const screenRadius = settings.viewScale * displayScale / settings.canvasOverscan * expandedRadius / Math.sqrt(1 - (expandedRadius / 4.8) ** 2);
         assert.ok(screenRadius < 0.495, `${library[shape].name} clips during transition`);
       }
     }

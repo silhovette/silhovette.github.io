@@ -89,8 +89,6 @@
 .other-project-header h3 { font: 400 20px/1.4 var(--font-display); letter-spacing: -0.025em; }
 .other-project-category { flex-shrink: 0; }
 .other-projects-list p { max-width: 800px; font: 400 14px/1.8 var(--font-body); color: var(--muted); margin-top: 10px; }
-.archive-footer { padding-block: 0 36px; color: var(--muted); font: 11px/1.7 var(--font-body); }
-.archive-footer p { padding-top: 24px; border-top: 1px solid var(--line); }
 @media (max-width: 1100px) {
   .research-entry { gap: 32px; }
   .research-entry h3 { font-size: 23px; }

@@ -1,5 +1,55 @@
 (() => {
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+  // Paint only a viewport of the document-aligned grid; keep the mask near the pointer.
+  const grid = document.createElement("div");
+  grid.className = "page-grid";
+  grid.setAttribute("aria-hidden", "true");
+  document.body.prepend(grid);
+  const gridPointer = matchMedia("(hover: hover) and (pointer: fine)");
+  let gridFrame = null;
+  let gridBounds = null;
+  let gridPosition = null;
+  let gridTarget = null;
+  const measureGrid = () => {
+    const rect = grid.getBoundingClientRect();
+    gridBounds = { left: rect.left, top: rect.top, x: grid.clientWidth / rect.width, y: grid.clientHeight / rect.height };
+  };
+  const scrollGrid = () => {
+    if (!gridBounds) measureGrid();
+    grid.style.setProperty("--grid-scroll-y", `${-window.scrollY * gridBounds.y}px`);
+  };
+  scrollGrid();
+  window.addEventListener("scroll", scrollGrid, { passive: true });
+  const clearGrid = () => {
+    grid.classList.remove("is-active");
+    if (gridFrame !== null) cancelAnimationFrame(gridFrame);
+    gridFrame = null;
+    gridPosition = gridTarget = null;
+  };
+  const drawGrid = () => {
+    gridFrame = null;
+    if (!gridTarget) return;
+    gridPosition.x += (gridTarget.x - gridPosition.x) * 0.2;
+    gridPosition.y += (gridTarget.y - gridPosition.y) * 0.2;
+    grid.style.setProperty("--grid-x", `${gridPosition.x}px`);
+    grid.style.setProperty("--grid-y", `${gridPosition.y}px`);
+    if (Math.hypot(gridTarget.x - gridPosition.x, gridTarget.y - gridPosition.y) > 0.2)
+      gridFrame = requestAnimationFrame(drawGrid);
+  };
+  window.addEventListener("pointermove", (event) => {
+    if (event.pointerType !== "mouse" || reducedMotion.matches || !gridPointer.matches || document.hidden) return;
+    if (!gridBounds) measureGrid();
+    gridTarget = { x: (event.clientX - gridBounds.left) * gridBounds.x, y: (event.clientY - gridBounds.top) * gridBounds.y };
+    if (!gridPosition) gridPosition = { ...gridTarget };
+    grid.classList.add("is-active");
+    if (gridFrame === null) gridFrame = requestAnimationFrame(drawGrid);
+  }, { passive: true });
+  document.documentElement.addEventListener("pointerleave", clearGrid);
+  window.addEventListener("blur", clearGrid);
+  window.addEventListener("resize", () => { gridBounds = null; clearGrid(); scrollGrid(); }, { passive: true });
+  document.addEventListener("visibilitychange", () => { if (document.hidden) clearGrid(); });
+  reducedMotion.addEventListener("change", clearGrid);
+  gridPointer.addEventListener("change", clearGrid);
   const menu = document.querySelector(".menu-toggle");
   const nav = document.querySelector(".portfolio-nav");
   const closeMenu = () => {

@@ -106,23 +106,6 @@
   font-weight: 600;
   font-family: var(--font-body);
 }
-.timeline-footer-inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-  border-top: 1px solid var(--line);
-  padding-block: 28px 44px;
-  color: var(--muted);
-  font: 400 12px/1.6 var(--font-body);
-}
-.timeline-footer .text-link {
-  font: inherit;
-  color: var(--ink);
-}
-.timeline-footer .text-link:hover {
-  color: var(--red);
-}
 @media (max-width: 1100px) {
   .personal-timeline {
     --timeline-date-width: 108px;
@@ -160,12 +143,6 @@
     font-size: 14px;
     line-height: 1.7;
     margin-top: 8px;
-  }
-  .timeline-footer-inner {
-    flex-wrap: wrap;
-    gap: 12px 24px;
-    padding-block: 24px 32px;
-    font-size: 11px;
   }
 }
 @media (prefers-reduced-motion: reduce) {

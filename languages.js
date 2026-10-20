@@ -1,6 +1,8 @@
 (() => {
   // Shared copy: English fallback, Simplified Chinese, Traditional Chinese.
   const translations = {
+    "portfolio_personal_interests": ["PERSONAL INTERESTS", "个人兴趣", "個人興趣"],
+    "portfolio_playground_heading": ["Playground", "Playground", "Playground"],
     "works_kicker": ["WORK", "作品", "作品"],
     "works_research": ["Selected Research", "精选研究", "精選研究"],
     "works_other": ["Other Projects", "其他项目", "其他專案"],
