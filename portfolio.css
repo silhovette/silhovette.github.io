@@ -860,20 +860,8 @@ a, button { transition: color 180ms ease-out, background-color 180ms ease-out, b
   font-size: 15.5px;
   color: var(--muted);
   line-height: 1.7;
-  margin: 9px 0 14px;
+  margin: 9px 0 0;
   max-width: 440px;
-}
-.project-tags {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  font: 13px var(--font-body);
-  color: var(--muted);
-}
-.project-tags span + span::before {
-  content: " / ";
-  padding-right: 8px;
-  color: #aaa;
 }
 .all-work {
   margin-top: 28px;
