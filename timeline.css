@@ -73,7 +73,7 @@
 }
 .timeline-date {
   padding-top: 4px;
-  font: 400 12px/1.8 var(--font-body);
+  font: 400 13.5px/1.8 var(--font-body);
   text-align: right;
   color: var(--muted);
 }
@@ -91,11 +91,11 @@
 }
 .timeline-event p {
   margin-top: 8px;
-  font: 400 15px/1.8 var(--font-body);
+  font: 400 15.5px/1.8 var(--font-body);
   color: var(--muted);
 }
 .timeline-event .timeline-result {
-  font: 400 15px/1.8 var(--font-body);
+  font: 400 15.5px/1.8 var(--font-body);
   color: var(--ink);
 }
 .timeline-rank {
@@ -129,7 +129,7 @@
     padding-block: 24px;
   }
   .timeline-date {
-    font-size: 11px;
+    font-size: 13.5px;
     line-height: 1.8;
     padding-top: 3px;
   }
@@ -140,7 +140,7 @@
   }
   .timeline-event p,
   .timeline-event .timeline-result {
-    font-size: 14px;
+    font-size: 15.5px;
     line-height: 1.7;
     margin-top: 8px;
   }

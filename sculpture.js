@@ -219,7 +219,7 @@ const SCULPTURE_SHAPES = [
   { id: "hopf", name: "Hopf Fibration", generate: hopf },
   { id: "harmonics", name: "Spherical Harmonics", generate: harmonics },
   { id: "lorenz", name: "Lorenz Attractor", generate: lorenz },
-  { id: "mobius", name: "Möbius Strip", generate: mobius, displayScale: 1.2 },
+  { id: "mobius", name: "Möbius Strip", generate: mobius, displayScale: 1.08 },
   { id: "enneper", name: "Enneper Surface", generate: enneper },
   { id: "dini", name: "Dini's Surface", generate: dini },
   { id: "klein", name: "Klein Bottle", generate: klein },
