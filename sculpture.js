@@ -698,7 +698,6 @@ function setupGallery(canvas, sculpture, dialog) {
     if (clicks.length >= 3) { clicks = []; open(); }
   });
   dialog.addEventListener("cancel", event => { event.preventDefault(); close(); });
-  dialog.querySelector("[data-gallery-close]").addEventListener("click", close);
   let backdropDown = false;
   const outside = event => {
     const rect = dialog.getBoundingClientRect();
