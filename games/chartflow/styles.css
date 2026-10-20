@@ -6,12 +6,12 @@
   --surface: #151c25;
   --text: #f4f7fa;
   --secondary: #949da8;
-  --muted: #626c78;
+  --muted: #8b96a3;
   --rust: #d48a76;
   --blue: #7fa8ff;
   --red: #ff6f7d;
   --border: rgba(255, 255, 255, 0.08);
-  font-family: Inter, "Segoe UI Variable", "Segoe UI", sans-serif;
+  font-family: var(--font-body);
   font-size: 14px;
   font-synthesis: none;
 }
@@ -96,7 +96,7 @@ small {
 .section-kicker,
 .workspace-label,
 .app-footer {
-  font-family: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+  font-family: var(--font-body);
 }
 .ambient {
   position: fixed;
@@ -149,8 +149,8 @@ small {
   }
 }
 .workspace-label {
-  font-size: 9px;
-  letter-spacing: 1.8px;
+  font-size: 11px;
+  letter-spacing: normal;
   color: #65717d;
   margin: 29px 12px 12px;
 }
@@ -194,7 +194,7 @@ small {
 }
 .nav-count {
   margin-left: auto;
-  font-size: 10px;
+  font-size: 11px;
   background: #d48a7611;
   padding: 2px 6px;
   border-radius: 4px;
@@ -213,7 +213,7 @@ small {
 }
 .local-status small {
   display: block;
-  font-size: 10px;
+  font-size: 11px;
   margin-top: 9px;
   margin-left: 13px;
 }
@@ -255,12 +255,12 @@ small {
 .topbar-right {
   display: flex;
   align-items: center;
-  font-size: 10px;
+  font-size: 11px;
   color: var(--muted);
 }
 .topbar-right .mono {
-  font-size: 9px;
-  letter-spacing: 1px;
+  font-size: 11px;
+  letter-spacing: normal;
 }
 .divider {
   width: 1px;
@@ -276,8 +276,8 @@ main {
   margin: 0 auto;
 }
 .app-footer {
-  font-size: 8px;
-  letter-spacing: 1px;
+  font-size: 11px;
+  letter-spacing: normal;
   color: #46535e;
   display: flex;
   justify-content: space-between;
@@ -307,8 +307,8 @@ main {
   line-height: 1.7;
 }
 .eyebrow {
-  font-size: 9px;
-  letter-spacing: 2px;
+  font-size: 11px;
+  letter-spacing: normal;
   color: var(--rust);
   margin-bottom: 13px;
 }
@@ -500,8 +500,8 @@ main {
   position: absolute;
   bottom: 23px;
   right: 28px;
-  font-size: 8px;
-  letter-spacing: 2px;
+  font-size: 11px;
+  letter-spacing: normal;
   color: #8d7a74;
 }
 .section-bar {
@@ -519,7 +519,7 @@ main {
   font-weight: 500;
 }
 .pill {
-  font-size: 10px;
+  font-size: 11px;
   border: 1px solid #ffffff10;
   background: #ffffff03;
   border-radius: 5px;
@@ -567,8 +567,8 @@ input::placeholder {
   grid-template-columns: minmax(180px, 1fr) 170px 110px 150px;
   gap: 20px;
   padding: 12px 22px;
-  font-size: 8px;
-  letter-spacing: 1.4px;
+  font-size: 11px;
+  letter-spacing: normal;
   color: var(--muted);
 }
 .chart-list {
@@ -612,7 +612,7 @@ input::placeholder {
   flex-shrink: 0;
   color: #ba978f;
   font-size: 11px;
-  letter-spacing: 1px;
+  letter-spacing: normal;
 }
 .chart-row h3 {
   font-size: 13px;
@@ -627,7 +627,7 @@ input::placeholder {
   align-items: center;
   margin-top: 8px;
   color: #74818f;
-  font-size: 10px;
+  font-size: 11px;
   white-space: nowrap;
 }
 .chart-meta b {
@@ -635,7 +635,7 @@ input::placeholder {
   color: #3e4b59;
 }
 .chart-row .edited {
-  font-size: 10px;
+  font-size: 11px;
   color: #798592;
 }
 .row-actions {
@@ -645,7 +645,7 @@ input::placeholder {
   gap: 4px;
 }
 .row-actions .button {
-  font-size: 10px;
+  font-size: 11px;
   padding: 7px 11px;
 }
 .row-actions .play {
@@ -684,11 +684,11 @@ input::placeholder {
   justify-content: space-between;
   align-items: center;
   color: var(--muted);
-  font-size: 10px;
+  font-size: 11px;
   margin: 18px 3px;
 }
 .library-note kbd {
-  font-size: 9px;
+  font-size: 11px;
 }
 .workflow {
   margin-top: 38px;
@@ -704,8 +704,8 @@ input::placeholder {
   align-items: flex-start;
 }
 .step-number {
-  font-family: Consolas, monospace;
-  font-size: 10px;
+  font-family: var(--font-body);
+  font-size: 11px;
   color: #5e514d;
   margin-top: 2px;
 }
@@ -714,7 +714,7 @@ input::placeholder {
   color: #a8b4be;
 }
 .workflow p {
-  font-size: 10px;
+  font-size: 11px;
   color: #606f7e;
   line-height: 1.8;
   margin-top: 6px;
@@ -752,8 +752,8 @@ input::placeholder {
   padding: 30px;
 }
 .section-kicker {
-  font-size: 9px;
-  letter-spacing: 1.5px;
+  font-size: 11px;
+  letter-spacing: normal;
   color: var(--muted);
   margin-bottom: 25px;
 }
@@ -770,7 +770,7 @@ input::placeholder {
   padding: 13px;
 }
 .field small {
-  font-size: 10px;
+  font-size: 11px;
   line-height: 1.7;
 }
 .field-row {
@@ -878,9 +878,7 @@ input::placeholder {
 }
 kbd {
   display: inline-block;
-  font:
-    10px Consolas,
-    monospace;
+  font: 11px var(--font-body);
   color: #a9b4c1;
   padding: 3px 6px;
   border: 1px solid #ffffff18;
@@ -925,8 +923,8 @@ kbd {
 .stat small {
   display: block;
   margin-top: 8px;
-  font-size: 9px;
-  letter-spacing: 1px;
+  font-size: 11px;
+  letter-spacing: normal;
   text-transform: uppercase;
 }
 .detail-density {
@@ -1013,7 +1011,7 @@ kbd {
 }
 .stage-overlay h2 {
   font-size: 28px;
-  letter-spacing: 3px;
+  letter-spacing: normal;
   font-weight: 400;
 }
 .stage-overlay p {
@@ -1026,10 +1024,8 @@ kbd {
   align-items: center;
   gap: 8px;
   color: var(--red);
-  font:
-    10px Consolas,
-    monospace;
-  letter-spacing: 1.5px;
+  font: 11px var(--font-body);
+  letter-spacing: normal;
   margin: 22px 0;
 }
 .stage-status.paused {
@@ -1048,9 +1044,7 @@ kbd {
   height: 23px;
   display: grid;
   place-items: center;
-  font:
-    10px Consolas,
-    monospace;
+  font: 11px var(--font-body);
   border: 1px solid #ffffff09;
   border-radius: 50%;
   color: var(--muted);
@@ -1065,7 +1059,7 @@ kbd {
   justify-content: center;
   gap: 32px;
   margin-top: 21px;
-  font-size: 10px;
+  font-size: 11px;
   color: var(--secondary);
 }
 .stage-hints kbd {
@@ -1078,9 +1072,7 @@ kbd {
   }
 }
 .live-time {
-  font:
-    24px Consolas,
-    monospace;
+  font: 24px var(--font-body);
   color: #c9d4df;
   margin-top: 30px;
 }
@@ -1110,7 +1102,7 @@ kbd {
   flex-wrap: wrap;
 }
 .editor-toolbar label {
-  font-size: 10px;
+  font-size: 11px;
   color: var(--secondary);
   display: flex;
   align-items: center;
@@ -1152,7 +1144,7 @@ kbd {
   margin-top: 9px;
 }
 .editor-inspector p {
-  font-size: 10px;
+  font-size: 11px;
   color: var(--muted);
   line-height: 1.9;
 }
@@ -1162,7 +1154,7 @@ kbd {
   gap: 9px;
   align-items: center;
   margin: 12px 0;
-  font-size: 10px;
+  font-size: 11px;
   color: var(--secondary);
 }
 .editor-statusbar {
@@ -1171,9 +1163,7 @@ kbd {
   display: flex;
   gap: 25px;
   align-items: center;
-  font:
-    10px Consolas,
-    monospace;
+  font: 11px var(--font-body);
   color: var(--secondary);
 }
 .editor-statusbar .right {
@@ -1324,10 +1314,8 @@ dialog::backdrop {
   }
 }
 .dialog-eyebrow {
-  font:
-    8px Consolas,
-    monospace;
-  letter-spacing: 2px;
+  font: 11px var(--font-body);
+  letter-spacing: normal;
   color: var(--muted);
   margin-bottom: 16px;
 }
@@ -1480,7 +1468,7 @@ dialog::backdrop {
 .settings-volume-heading .settings-volume-test {
   flex: none;
   padding: 2px 7px;
-  font-size: 10px;
+  font-size: 11px;
   line-height: 1.4;
   border-radius: 5px;
 }
@@ -1593,7 +1581,7 @@ body[data-screen="results"] #toast {
     gap: 14px;
   }
   .chart-meta {
-    font-size: 9px;
+    font-size: 11px;
   }
   .hero-copy {
     padding: 28px;
@@ -1716,10 +1704,10 @@ body[data-screen="results"] #toast {
   .topbar {
     height: 51px;
     padding: 0 22px;
-    font-size: 10px;
+    font-size: 11px;
   }
   .topbar-right {
-    font-size: 9px;
+    font-size: 11px;
   }
   main {
     padding: 28px 20px;
@@ -1737,7 +1725,7 @@ body[data-screen="results"] #toast {
   }
   .page-heading .button {
     padding: 9px 12px;
-    font-size: 10px;
+    font-size: 11px;
   }
   .hero {
     min-height: 235px;
@@ -1775,7 +1763,7 @@ body[data-screen="results"] #toast {
   .chart-icon {
     width: 34px;
     height: 40px;
-    font-size: 10px;
+    font-size: 11px;
   }
   .chart-identity {
     gap: 11px;
@@ -1785,7 +1773,7 @@ body[data-screen="results"] #toast {
     max-width: 180px;
   }
   .chart-meta {
-    font-size: 9px;
+    font-size: 11px;
     gap: 5px;
   }
   .section-bar {
@@ -1818,8 +1806,8 @@ body[data-screen="results"] #toast {
   }
   .app-footer {
     padding: 17px 20px;
-    font-size: 7px;
-    letter-spacing: 0.6px;
+    font-size: 11px;
+    letter-spacing: normal;
   }
   .app-footer span:last-child {
     display: none;
@@ -1834,7 +1822,7 @@ body[data-screen="results"] #toast {
     font-size: 23px;
   }
   .stat small {
-    font-size: 8px;
+    font-size: 11px;
   }
   .detail-subgrid {
     grid-template-columns: 1fr;
@@ -1868,20 +1856,20 @@ body[data-screen="results"] #toast {
     gap: 6px;
   }
   .editor-toolbar .button {
-    font-size: 10px;
+    font-size: 11px;
     padding: 7px;
   }
   .editor-statusbar {
     gap: 13px;
     padding: 12px;
-    font-size: 9px;
+    font-size: 11px;
   }
   .editor-workspace {
     height: calc(100vh - 365px);
     min-height: 400px;
   }
   .editor-heading .button {
-    font-size: 10px;
+    font-size: 11px;
   }
   .editor-heading h1 {
     font-size: 22px;
@@ -2107,7 +2095,7 @@ body[data-screen="editor"] .page-heading {
 }
 .user-chip small {
   display: block;
-  font-size: 9px;
+  font-size: 11px;
   color: var(--secondary);
   margin-top: 5px;
 }
@@ -2273,7 +2261,7 @@ body[data-screen="editor"] .page-heading {
 .session-row .session-deleted {
   display: inline-block;
   margin: 0 0 0 7px;
-  font-size: 10px;
+  font-size: 11px;
   color: var(--muted);
 }
 .sessions-more {
@@ -2521,7 +2509,7 @@ body.guide-open {
   padding: 28px clamp(24px, 6vw, 100px);
 }
 .guide-top .eyebrow {
-  font-size: 10px;
+  font-size: 11px;
   margin: 0;
   color: #aa847c;
 }
@@ -2577,9 +2565,9 @@ body.guide-open {
   flex-shrink: 0;
 }
 .guide-body .section-kicker {
-  letter-spacing: 3px;
+  letter-spacing: normal;
   color: #a67c72;
-  font-size: 10px;
+  font-size: 11px;
 }
 .guide-body h2 {
   font-size: clamp(32px, 4.5vw, 62px);
@@ -2717,7 +2705,7 @@ body.guide-open {
 }
 #guide[data-finale="true"] h2 {
   font-size: clamp(30px, 4.6vw, 64px);
-  letter-spacing: 0.035em;
+  letter-spacing: normal;
 }
 .guide-body .guide-signoff {
   max-width: none;
@@ -2763,8 +2751,8 @@ body.guide-open {
     padding: 18px 24px;
   }
   .guide-top .eyebrow {
-    font-size: 8px;
-    letter-spacing: 1.5px;
+    font-size: 11px;
+    letter-spacing: normal;
   }
   .guide-top .guide-nav {
     font-size: 11px;
@@ -2987,7 +2975,7 @@ body.guide-open {
     gap: 8px;
   }
   .guide-top .eyebrow {
-    font-size: 7px;
+    font-size: 11px;
   }
   .guide-footer .actions {
     gap: 16px;
@@ -3055,10 +3043,10 @@ body.guide-open {
     font-size: 11px;
   }
   .guide-position {
-    font-size: 10px;
+    font-size: 11px;
   }
   .guide-intro-title {
-    font-size: clamp(10px, 6.7vw, 16px);
+    font-size: clamp(11px, 6.7vw, 16px);
   }
 }
 

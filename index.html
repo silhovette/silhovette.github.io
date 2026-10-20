@@ -53,9 +53,10 @@
       type="font/ttf"
       crossorigin
     />
-    <link rel="stylesheet" href="portfolio.css?v=6" />
-    <script src="languages.js?v=28" defer></script>
-    <script src="portfolio.js?v=2" defer></script>
+    <link rel="stylesheet" href="fonts.css?v=1" />
+  <link rel="stylesheet" href="portfolio.css?v=12" />
+    <script src="languages.js?v=31" defer></script>
+    <script src="portfolio.js?v=5" defer></script>
     <script src="sculpture.js?v=16" defer></script>
   </head>
   <body class="portfolio-home">
@@ -65,101 +66,29 @@
     <div class="page-progress" aria-hidden="true"></div>
     <header class="portfolio-header">
       <div class="header-inner wrap">
-        <div class="site-search header-search" role="search">
-          <svg
-            class="header-search-icon"
-            viewBox="0 0 24 24"
-            width="16"
-            height="16"
-            aria-hidden="true"
-          >
-            <circle
-              cx="10.5"
-              cy="10.5"
-              r="6.5"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.5"
-            />
-            <path
-              d="M16 16L21 21"
-              stroke="currentColor"
-              stroke-width="1.5"
-            /></svg
-          ><label
-            class="sr-only"
-            for="portfolio-search"
-            data-i18n="search_this_page"
-            >Search this page</label
-          ><input
-            id="portfolio-search"
-            type="search"
-            aria-controls="portfolio-search-results"
-            aria-expanded="false"
-            placeholder="Search"
-            data-i18n-placeholder="search"
-            autocomplete="off"
-          />
-          <div
-            class="search-matches site-search__results"
-            id="portfolio-search-results"
-            aria-live="polite"
-            hidden
-          ></div>
-        </div>
-        <span class="header-clock mono" aria-label="Shanghai local time">SHANGHAI, CN <span data-shanghai-time>—:—</span></span>
-        <nav
-          class="portfolio-nav"
-          id="portfolio-nav"
-          aria-label="Primary navigation"
-        >
-          <a href="#about" data-i18n="about">About</a
-          ><a href="#projects" data-i18n="portfolio_work">Selected work</a
-          ><a href="#publications" data-i18n="publications">Publications</a
-          ><a href="#playground" data-i18n="playground">Playground</a>
+        <span class="header-clock mono" aria-label="Shanghai local time">SHANGHAI <span data-shanghai-time>—:—</span></span>
+        <nav class="portfolio-nav" id="portfolio-nav" aria-label="Primary navigation">
+          <a href="#about" data-i18n="about">About</a>
+          <a href="#projects" data-i18n="portfolio_work">Selected Work</a>
+          <a href="#publications" data-i18n="publications">Publications</a>
+          <a href="#playground" data-i18n="playground">Playground</a>
         </nav>
         <div class="header-controls">
-          <div
-            class="language-switcher"
-            data-language-switcher
-            role="group"
-            aria-label="Language"
-          >
-            <button
-              type="button"
-              data-language="en"
-              aria-pressed="true"
-              lang="en"
-            >
-              EN</button
-            ><button
-              type="button"
-              data-language="zh-Hans"
-              aria-pressed="false"
-              lang="zh-Hans"
-            >
-              简</button
-            ><button
-              type="button"
-              data-language="zh-Hant"
-              aria-pressed="false"
-              lang="zh-Hant"
-            >
-              繁
-            </button>
+          <div class="site-search header-search"  role="search">
+            <div class="header-search-panel" id="header-search-panel">
+              <label class="sr-only" for="portfolio-search" data-i18n="search_this_page">Search this page</label>
+              <input id="portfolio-search" type="search" aria-controls="portfolio-search-results" aria-expanded="false" autocomplete="off"/>
+              <div class="search-matches site-search__results" id="portfolio-search-results" aria-live="polite" hidden></div>
+            </div>
+            <button type="button" class="search-toggle" aria-label="Search this page" data-i18n-aria-label="search_this_page" aria-expanded="false" aria-controls="header-search-panel"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M16 16l5 5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
           </div>
-          <a class="contact-link" href="#contact"
-            ><span data-i18n="portfolio_contact">Let&#x27;s talk</span>
-            <span aria-hidden="true">↗</span></a
-          ><button
-            class="menu-toggle"
-            type="button"
-            aria-expanded="false"
-            aria-controls="portfolio-nav"
-            data-i18n="portfolio_menu"
-          >
-            Menu
-          </button>
+          <div class="language-switcher" data-language-switcher role="group" aria-label="Language">
+            <button type="button" data-language="en" aria-pressed="true" lang="en">EN</button>
+            <button type="button" data-language="zh-Hans" aria-pressed="false" lang="zh-Hans">简</button>
+            <button type="button" data-language="zh-Hant" aria-pressed="false" lang="zh-Hant">繁</button>
+          </div>
+          <a class="contact-link" href="#contact"><span data-i18n="portfolio_contact">Contact</span> <span aria-hidden="true">↗</span></a>
+          <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="portfolio-nav" aria-label="Menu" data-i18n-aria-label="portfolio_menu"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 8h16M4 16h16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
         </div>
       </div>
     </header>
@@ -208,14 +137,12 @@
         </div>
         <div class="cover-bottom">
           <div>
-            <span class="mini-icon" aria-hidden="true">⌖</span>
             <div>
               <span class="mono" data-i18n="portfolio_based">BASED IN</span
               ><strong data-i18n="portfolio_shanghai">Shanghai, China</strong>
             </div>
           </div>
           <div>
-            <span class="mini-icon" aria-hidden="true">↗</span>
             <div>
               <span class="mono" data-i18n="portfolio_education">EDUCATION</span
               ><strong data-i18n="portfolio_ai"
@@ -224,7 +151,6 @@
             </div>
           </div>
           <div>
-            <span class="mini-icon" aria-hidden="true">✳</span>
             <div>
               <span class="mono" data-i18n="portfolio_focus">CURRENT FOCUS</span
               ><strong data-i18n="portfolio_systems"
@@ -247,11 +173,8 @@
         <div class="about-grid">
           <div>
             <p class="about-statement">
-              <span data-i18n="portfolio_belief"
-                >I’m interested in the space between what a model knows and what
-                a system can</span
-              >
-              <em><span data-i18n="portfolio_do">actually do.</span></em>
+              <span data-i18n="portfolio_belief">Understanding</span>
+              <em><span data-i18n="portfolio_intelligence">intelligence</span></em><span data-i18n="portfolio_do">, in theory and in practice.</span>
             </p>
             <div class="about-signature">
               <img
@@ -739,19 +662,10 @@
           <div class="contact-top">
             <span class="mono" data-i18n="portfolio_next"
               >CONTACT</span
-            ><a class="mono" href="#hero" data-i18n="portfolio_top"
-              >Back to top ↑</a
             >
           </div>
-          <h2 class="contact-heading">
-            <span data-i18n="portfolio_connect">Get in</span><br /><em
-              ><span data-i18n="portfolio_something"
-                >Touch</span
-              ></em
-            >
-          </h2>
           <div class="contact-main">
-            <div>
+            <div class="contact-email-row">
               <a class="email-link" href="mailto:silhovette@sjtu.edu.cn"
                 >silhovette@sjtu.edu.cn ↗</a
               ><button
@@ -761,7 +675,7 @@
                 aria-label="Copy email address"
                 data-i18n-aria-label="portfolio_copy"
               >
-                ⧉
+                <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M15 8V4H4v11h4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
               </button>
             </div>
             <div class="social-links">
@@ -781,8 +695,6 @@
           </div>
           <footer class="contact-bottom">
             <span>© <span id="year">2026</span> Yuhua Luo</span
-            ><span data-i18n="portfolio_footer"
-              >Made with curiosity. Built for the web.</span
             ><span>SHANGHAI, CHINA / 31.23° N, 121.47° E</span>
           </footer>
         </div>
@@ -801,7 +713,7 @@
           aria-label="Close figure"
           data-i18n-aria-label="portfolio_close"
         >
-          ×
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
         </button>
       </div>
       <img alt="" />

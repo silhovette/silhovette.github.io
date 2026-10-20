@@ -1,81 +1,7 @@
-@font-face {
-  font-family: "IBM Plex Sans";
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url("assets/fonts/IBMPlexSans-Regular.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: "IBM Plex Sans";
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url("assets/fonts/IBMPlexSans-Medium.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: "IBM Plex Sans";
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-  src: url("assets/fonts/IBMPlexSans-SemiBold.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: "IBM Plex Sans";
-  font-style: normal;
-  font-weight: 700 800;
-  font-display: swap;
-  src: url("assets/fonts/IBMPlexSans-Bold.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: "Space Grotesk";
-  font-style: normal;
-  font-weight: 300 700;
-  font-display: swap;
-  src: url("assets/fonts/SpaceGrotesk-Variable.ttf") format("truetype");
-}
-
-@font-face {
-  font-family: "IBM Plex Mono";
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url("assets/fonts/IBMPlexMono-Regular.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: "IBM Plex Mono";
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url("assets/fonts/IBMPlexMono-Medium.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: "IBM Plex Mono";
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-  src: url("assets/fonts/IBMPlexMono-SemiBold.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: "IBM Plex Mono";
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url("assets/fonts/IBMPlexMono-Bold.woff2") format("woff2");
-}
-
 :root {
-  --font-cjk: "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", "Noto Sans SC", "Microsoft JhengHei", "Heiti SC";
-  --font-body: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, var(--font-cjk), sans-serif;
-  --font-display: "Space Grotesk", "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", var(--font-cjk), sans-serif;
-  --font-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, "Liberation Mono", var(--font-cjk), monospace;
-  --font-code: Consolas, "SFMono-Regular", "Liberation Mono", "IBM Plex Mono", var(--font-cjk), monospace;
+
+
+
   --bg: #0b0d10;
   --bg-soft: #131110;
   --surface: rgba(21, 19, 18, 0.78);
@@ -96,7 +22,7 @@
 }
 
 :root:lang(zh-Hant) {
-  --font-cjk: "Microsoft JhengHei", "PingFang TC", "Noto Sans CJK TC", "Noto Sans TC", "Microsoft YaHei", "Heiti TC";
+
 }
 
 * {
@@ -389,10 +315,10 @@ main {
 .eyebrow {
   margin-bottom: 10px;
   color: var(--accent);
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 0.78rem;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: normal;
   text-transform: uppercase;
   animation: accentBreath 6.8s ease-in-out 1s infinite backwards;
 }
@@ -666,7 +592,7 @@ h3 {
   min-height: 30px;
   padding: 5px 10px;
   color: var(--text-muted);
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 0.76rem;
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -802,7 +728,7 @@ h3 {
 .section-link a {
   position: relative;
   color: var(--text-muted);
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 0.84rem;
   transition: color 180ms ease;
 }
@@ -856,17 +782,17 @@ h3 {
 .publication-year-heading {
   margin: 0 0 12px;
   color: var(--accent);
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 0.88rem;
-  letter-spacing: 0.04em;
+  letter-spacing: normal;
 }
 
 .publication-year {
   padding-top: 3px;
   color: var(--accent);
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 0.82rem;
-  letter-spacing: 0.04em;
+  letter-spacing: normal;
 }
 
 .publication-content h3 {
@@ -888,7 +814,7 @@ h3 {
 .publication-venue {
   margin-top: 3px;
   color: var(--accent);
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 0.82rem;
 }
 
@@ -946,7 +872,7 @@ h3 {
 .publication-links {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 16px;
   margin-top: 14px;
 }
 
@@ -955,13 +881,12 @@ h3 {
   display: inline-flex;
   align-items: center;
   min-height: 28px;
-  padding: 4px 9px;
+  padding: 4px 0;
   color: var(--accent);
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  border: 1px solid rgba(185, 71, 44, 0.3);
-  border-radius: var(--radius);
-  background: var(--accent-soft);
+  font: 13px var(--font-body);
+  border: 0;
+  border-radius: 0;
+  background: none;
 }
 
 .publication-links a {
@@ -972,15 +897,14 @@ h3 {
 .publication-links a:focus-visible {
   color: var(--text);
   border-color: var(--border-strong);
-  background: rgba(185, 71, 44, 0.16);
+  background: none;
 }
 
 .status {
   flex: 0 0 auto;
   color: var(--accent);
   border-color: rgba(185, 71, 44, 0.3);
-  background: var(--accent-soft);
-  animation: accentBreath 6.8s ease-in-out 1s infinite backwards;
+  background: none;
 }
 
 .keywords {
@@ -1168,7 +1092,7 @@ h3 {
   min-height: 36px;
   padding: 8px 14px;
   color: var(--text-muted);
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 0.84rem;
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -1242,12 +1166,12 @@ h3 {
   align-items: center;
   gap: 8px;
   min-height: 28px;
-  padding: 4px 9px;
+  padding: 4px 0;
   color: var(--accent);
-  font: 0.78rem var(--font-mono);
-  border: 1px solid rgba(185, 71, 44, 0.3);
-  border-radius: var(--radius);
-  background: var(--accent-soft);
+  font: 13px var(--font-body);
+  border: 0;
+  border-radius: 0;
+  background: none;
   cursor: pointer;
   transition: color 180ms ease, border-color 180ms ease, background 180ms ease;
 }
@@ -1255,10 +1179,8 @@ h3 {
 .playground-list .publication-links button:hover {
   color: var(--text);
   border-color: var(--border-strong);
-  background: rgba(185, 71, 44, 0.16);
+  background: none;
 }
-
-
 
 .mods-dialog {
   width: min(980px, calc(100% - 40px));
@@ -1381,14 +1303,14 @@ h3 {
 
 .mod-entry__content .mod-entry__category {
   color: var(--accent);
-  font: 0.7rem var(--font-mono);
+  font: 0.7rem var(--font-body);
 }
 
 .mod-entry__link,
 .mods-dialog__footer a {
   display: inline-block;
   color: var(--accent);
-  font: 0.76rem var(--font-mono);
+  font: 0.76rem var(--font-body);
 }
 
 .mod-entry__link {
@@ -1422,7 +1344,7 @@ h3 {
 .playground-profile-link {
   margin: 0 0 22px;
   color: var(--accent);
-  font: 0.8rem var(--font-mono);
+  font: 0.8rem var(--font-body);
 }
 
 .playground-summary {
@@ -1795,17 +1717,10 @@ h3 {
   transform: translateY(-3px);
 }
 
-.work-detail h2,
-.works-page .work-detail h3 {
+.work-detail h2 {
   font-size: 1.55rem;
 }
 
-.works-page .section-heading h2 { font-size: 1.45rem; }
-.works-secondary .section-heading h2 { color: var(--text-muted); }
-.works-secondary .works-list { gap: 14px; }
-.works-secondary .work-detail { padding: 22px; border-left-color: var(--border); box-shadow: none; }
-.works-secondary .work-detail h3 { font-size: 1.2rem; }
-.works-secondary .work-detail:hover { border-left-color: var(--accent); }
 
 .work-detail p,
 .work-points {
@@ -1987,7 +1902,7 @@ h3 {
   .nav--languages .site-search { width: 100%; min-width: 0; }
   .nav--languages .nav-links { grid-column: 1 / -1; scrollbar-width: none; }
   .nav--languages .nav-links::-webkit-scrollbar { display: none; }
-  .home-page main, .works-page main { padding-top: 124px; }
+  .home-page main { padding-top: 124px; }
   .home-page .section { scroll-margin-top: 40px; }
 
   .nav-links {
@@ -2209,7 +2124,7 @@ h3 {
 .site-search.has-results .site-search__results { display: grid; gap: 3px; }
 .site-search__result { display: grid; gap: 2px; padding: 9px 10px; color: var(--text); text-align: left; border: 0; border-radius: 5px; background: transparent; cursor: pointer; }
 .site-search__result:hover, .site-search__result:focus-visible { background: var(--accent-soft); outline: 0; }
-.site-search__result span, .site-search__empty { color: var(--accent); font: 0.7rem var(--font-mono); }
+.site-search__result span, .site-search__empty { color: var(--accent); font: 0.7rem var(--font-body); }
 .site-search__empty { margin: 8px 10px; }
 .search-highlight { padding: 0; color: inherit; background: rgba(185, 71, 44, 0.34); border-radius: 2px; box-shadow: inset 0 -0.08em 0 rgba(185, 71, 44, 0.72); }
 

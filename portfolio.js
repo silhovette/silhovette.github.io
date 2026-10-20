@@ -41,11 +41,89 @@
   updateTime();
   if (clock) setInterval(updateTime, 60000);
 
+  // Shared search shell; each page keeps its existing result index and navigation.
+  const searchShell = document.querySelector(".header-search");
+  const searchToggle = searchShell?.querySelector(".search-toggle");
+  const searchPanel = searchShell?.querySelector(".header-search-panel");
+  const panelInput = searchPanel?.querySelector("input");
+  const compactSearch = matchMedia("(max-width: 600px)");
+  const closeSearchPanel = (restoreFocus = false) => {
+    if (!searchPanel) return;
+    if (restoreFocus) (compactSearch.matches ? searchToggle : panelInput).focus();
+    searchPanel.classList.remove("is-open");
+    searchShell.classList.remove("is-searching");
+    searchToggle.setAttribute("aria-expanded", "false");
+    panelInput.setAttribute("aria-expanded", "false");
+  };
+  const openSearchPanel = () => {
+    if (!searchPanel) return;
+    closeMenu();
+    searchPanel.classList.add("is-open");
+    searchShell.classList.add("is-searching");
+    searchToggle.setAttribute("aria-expanded", "true");
+    if (document.activeElement === panelInput) panelInput.dispatchEvent(new Event("input", { bubbles: true }));
+    else panelInput.focus();
+  };
+  searchToggle?.addEventListener("click", () => {
+    if (compactSearch.matches && searchPanel.classList.contains("is-open")) closeSearchPanel(true);
+    else openSearchPanel();
+  });
+  panelInput?.addEventListener("focus", () => {
+    searchShell.classList.add("is-searching");
+    panelInput.dispatchEvent(new Event("input", { bubbles: true }));
+  });
+  panelInput?.addEventListener("input", () => searchShell.classList.add("is-searching"));
+  compactSearch.addEventListener("change", () => closeSearchPanel(searchShell.contains(document.activeElement)));
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && searchShell?.classList.contains("is-searching")) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      closeSearchPanel(true);
+    } else if ((event.key === "/" && !event.ctrlKey && !event.metaKey && !event.altKey &&
+      !event.target.matches('input,textarea,[contenteditable="true"]')) ||
+      (event.key.toLowerCase() === "k" && (event.ctrlKey || event.metaKey))) {
+      if (!searchPanel || document.querySelector("dialog[open]")) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      openSearchPanel();
+    }
+  }, true);
+  document.addEventListener("click", (event) => {
+    if (!searchShell?.contains(event.target)) closeSearchPanel();
+    else if (event.target.closest(".site-search__result, .search-matches a")) closeSearchPanel();
+  });
+  searchShell?.addEventListener("focusout", (event) => {
+    if (!searchShell.contains(event.relatedTarget)) closeSearchPanel();
+  });
+  searchShell?.addEventListener("keydown", (event) => {
+    if (!searchShell.classList.contains("is-searching") || (event.key !== "ArrowDown" && event.key !== "ArrowUp")) return;
+    const items = [...searchShell.querySelectorAll(".site-search__result, .search-matches a")];
+    if (!items.length) return;
+    const index = items.indexOf(document.activeElement);
+    const next = event.key === "ArrowDown" ? Math.min(index + 1, items.length - 1) : index - 1;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    (next < 0 ? panelInput : items[next]).focus();
+  });
+
   const progress = document.querySelector(".page-progress");
+  const backToTop = document.createElement("button");
+  backToTop.type = "button";
+  backToTop.className = "back-to-top";
+  backToTop.setAttribute("aria-label", "Back to top");
+  backToTop.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d="M6 12l6-6 6 6M12 6v13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  document.body.append(backToTop);
+  window.siteI18n?.setAttribute(backToTop, "aria-label", "back_to_top");
+  backToTop.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: reducedMotion.matches ? "instant" : "smooth" });
+  });
   const links = [...document.querySelectorAll('.portfolio-nav a[href^="#"]')];
   let scrollFrame = 0;
   const updateScroll = () => {
     scrollFrame = 0;
+    const showBackToTop = scrollY > 400;
+    backToTop.classList.toggle("is-visible", showBackToTop);
+    backToTop.inert = !showBackToTop;
     const length = document.documentElement.scrollHeight - innerHeight;
     if (progress)
       progress.style.transform = `scaleX(${length > 0 ? scrollY / length : 0})`;
@@ -67,6 +145,7 @@
     { passive: true },
   );
   updateScroll();
+  addEventListener("pageshow", updateScroll);
   const reveal = new IntersectionObserver(
     (entries) =>
       entries.forEach((entry) => {
@@ -186,25 +265,8 @@
       results.append(empty);
     }
   };
-  const openSearch = () => {
-    renderSearch();
-    searchInput.focus();
-  };
   searchInput?.addEventListener("input", renderSearch);
   searchInput?.addEventListener("focus", renderSearch);
-  searchField?.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") {
-      closeSearch();
-      searchInput.focus();
-    }
-    if (event.key === "ArrowDown" && event.target === searchInput) {
-      const first = results.querySelector("a");
-      if (!results.hidden && first) {
-        event.preventDefault();
-        first.focus();
-      }
-    }
-  });
   document.addEventListener("click", (event) => {
     if (searchField && !searchField.contains(event.target)) closeSearch();
   });
@@ -212,19 +274,6 @@
     if (!searchField.contains(event.relatedTarget)) closeSearch();
   });
   document.addEventListener("site-language-change", renderSearch);
-  document.addEventListener("keydown", (event) => {
-    if (
-      searchInput &&
-      event.key === "/" &&
-      !event.ctrlKey &&
-      !event.metaKey &&
-      !event.altKey &&
-      !event.target.matches('input,textarea,[contenteditable="true"]') &&
-      !document.querySelector("dialog[open]")
-    ) {
-      event.preventDefault();
-      openSearch();
-    }
-  });
+
 
 })();

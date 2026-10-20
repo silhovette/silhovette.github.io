@@ -573,7 +573,7 @@ CF.Editor = class {
       ctx.stroke();
       if (major) {
         ctx.fillStyle = measure ? "#a5b5bd" : "#536575";
-        ctx.font = "9px Consolas,monospace";
+        ctx.font = '11px "IBM Plex Sans", sans-serif';
         ctx.textAlign = "right";
         ctx.fillText(
           `${Math.floor(tick / 1536) + 1}.${((tick / 384) % 4) + 1}`,
@@ -652,7 +652,7 @@ CF.Editor = class {
           this.laneWidth - 20,
           performance.now() - hit.at,
         );
-    ctx.font = "9px Consolas,monospace";
+    ctx.font = '11px "IBM Plex Sans", sans-serif';
     ctx.textAlign = "left";
     ctx.fillStyle = "#708c94";
     ctx.fillText(
@@ -671,7 +671,7 @@ CF.Editor = class {
     ctx.moveTo(0, this.top);
     ctx.lineTo(w, this.top);
     ctx.stroke();
-    ctx.font = "10px Consolas,monospace";
+    ctx.font = '11px "IBM Plex Sans", sans-serif';
     ctx.textAlign = "center";
     ctx.fillStyle = "#8c9dac";
     const bindings = CF.app.settings.bindings[this.chart.keyCount];
@@ -683,7 +683,7 @@ CF.Editor = class {
       );
     ctx.textAlign = "left";
     ctx.fillStyle = "#485d6b";
-    ctx.font = "8px Consolas,monospace";
+    ctx.font = '11px "IBM Plex Sans", sans-serif';
     ctx.fillText("BAR", 12, 26);
   }
   advancePreview(audio) {

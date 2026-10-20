@@ -44,25 +44,52 @@
     content="Photography, games and apps by Yuhua Luo."
    data-i18n-content="playground_active_description"/>
   <title data-i18n="playground_yuhua_luo">Playground | Yuhua Luo</title>
-  <link rel="stylesheet" href="style.css?v=44" />
-  <link rel="stylesheet" href="photos.css?v=3" />
+  <link rel="stylesheet" href="fonts.css?v=1" />
+  <link rel="stylesheet" href="style.css?v=54" />
+  <link rel="stylesheet" href="photos.css?v=10" />
   <!-- Temporarily paused: <link rel="stylesheet" href="miniatures.css?v=3" /> -->
   <!-- Temporarily paused: <noscript><style>.miniature-card img { opacity: 1; }</style></noscript> -->
   <link rel="preload" href="assets/fonts/IBMPlexSans-Regular.woff2" as="font" type="font/woff2" crossorigin />
-  <script src="languages.js?v=22" defer></script>
+  <script src="languages.js?v=31" defer></script>
   <script src="script.js?v=12" defer></script>
   <script src="photos.js?v=8" defer></script>
   <!-- Temporarily paused: <script src="miniatures.js?v=4" defer></script> -->
-  <link rel="stylesheet" href="portfolio.css?v=1" />
+  <link rel="stylesheet" href="portfolio.css?v=12" />
   <link rel="icon" href="assets/icons/portfolio.svg" type="image/svg+xml" />
-  <script src="portfolio.js?v=1" defer></script>
+  <script src="portfolio.js?v=5" defer></script>
 </head>
 <body class="playground-page">
   <a class="skip-link" href="#main" data-i18n="skip_to_content">Skip to content</a>
   <canvas id="cursor-field" class="cursor-field" aria-hidden="true"></canvas>
 
-  <header class="portfolio-header"><div class="header-inner wrap"><div class="site-search header-search" data-site-search role="search"><svg class="header-search-icon" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M16 16L21 21" stroke="currentColor" stroke-width="1.5"/></svg><label class="sr-only" for="site-search-input" data-i18n="search_this_page">Search this page</label><input id="site-search-input" type="search" placeholder="Search" data-i18n-placeholder="search" autocomplete="off"/><div class="site-search__results" role="listbox" aria-label="Search results"></div></div><span class="header-clock mono" aria-label="Shanghai local time">SHANGHAI, CN <span data-shanghai-time>—:—</span></span>
-        <nav class="portfolio-nav" id="portfolio-nav" aria-label="Primary navigation"><a href="index.html#about" data-i18n="about">About</a><a href="index.html#projects" data-i18n="portfolio_work">Selected work</a><a href="index.html#publications" data-i18n="publications">Publications</a><a href="index.html#playground" data-i18n="playground">Playground</a></nav><div class="header-controls"><div class="language-switcher" data-language-switcher role="group" aria-label="Language"><button type="button" data-language="en" aria-pressed="true" lang="en">EN</button><button type="button" data-language="zh-Hans" aria-pressed="false" lang="zh-Hans">简</button><button type="button" data-language="zh-Hant" aria-pressed="false" lang="zh-Hant">繁</button></div><a class="contact-link" href="index.html#contact"><span data-i18n="portfolio_contact">Let&#x27;s talk</span> <span aria-hidden="true">↗</span></a><button class="menu-toggle" type="button" aria-expanded="false" aria-controls="portfolio-nav" data-i18n="portfolio_menu">Menu</button></div></div></header>
+  <header class="portfolio-header">
+      <div class="header-inner wrap">
+        <span class="header-clock mono" aria-label="Shanghai local time">SHANGHAI <span data-shanghai-time>—:—</span></span>
+        <nav class="portfolio-nav" id="portfolio-nav" aria-label="Primary navigation">
+          <a href="index.html#about" data-i18n="about">About</a>
+          <a href="index.html#projects" data-i18n="portfolio_work">Selected Work</a>
+          <a href="index.html#publications" data-i18n="publications">Publications</a>
+          <a href="index.html#playground" data-i18n="playground">Playground</a>
+        </nav>
+        <div class="header-controls">
+          <div class="site-search header-search" data-site-search role="search">
+            <div class="header-search-panel" id="header-search-panel">
+              <label class="sr-only" for="site-search-input" data-i18n="search_this_page">Search this page</label>
+              <input id="site-search-input" type="search" aria-controls="site-search-results" aria-expanded="false" autocomplete="off"/>
+              <div class="site-search__results" id="site-search-results" role="listbox" aria-label="Search results"></div>
+            </div>
+            <button type="button" class="search-toggle" aria-label="Search this page" data-i18n-aria-label="search_this_page" aria-expanded="false" aria-controls="header-search-panel"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M16 16l5 5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+          </div>
+          <div class="language-switcher" data-language-switcher role="group" aria-label="Language">
+            <button type="button" data-language="en" aria-pressed="true" lang="en">EN</button>
+            <button type="button" data-language="zh-Hans" aria-pressed="false" lang="zh-Hans">简</button>
+            <button type="button" data-language="zh-Hant" aria-pressed="false" lang="zh-Hant">繁</button>
+          </div>
+          <a class="contact-link" href="index.html#contact"><span data-i18n="portfolio_contact">Contact</span> <span aria-hidden="true">↗</span></a>
+          <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="portfolio-nav" aria-label="Menu" data-i18n-aria-label="portfolio_menu"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 8h16M4 16h16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+        </div>
+      </div>
+    </header>
 
   <main id="main">
     <section id="playground-intro" class="section works-hero">

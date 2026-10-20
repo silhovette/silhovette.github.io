@@ -12,7 +12,7 @@
   --lane: rgba(255, 255, 255, 0.045);
   --lane-active: rgba(207, 118, 95, 0.18);
   --shadow: rgba(0, 0, 0, 0.36);
-  font-family: "Segoe UI Variable Text", "Segoe UI", "Helvetica Neue", Arial, "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", "Noto Sans SC", "Microsoft JhengHei", "Heiti SC", sans-serif;
+  font-family: var(--font-body);
 }
 
 * {
@@ -297,7 +297,7 @@ body.is-loaded .loading-screen {
   text-align: right;
   font-size: 1.3rem;
   font-weight: 600;
-  letter-spacing: 0.3px;
+  letter-spacing: normal;
 }
 
 #nicknameInput:focus {
@@ -309,7 +309,7 @@ body.is-loaded .loading-screen {
   font-size: 0.82rem;
   line-height: 1;
   font-weight: 600;
-  letter-spacing: 0.5px;
+  letter-spacing: normal;
   margin-top: 0;
 }
 
@@ -1432,7 +1432,7 @@ h1 {
     left: 50%;
     bottom: auto;
     top: 52%;
-    width: min(520px, 118vw);
+    width: min(520px, 100%);
     height: min(760px, 172vw);
     transform: translate(-50%, -50%);
     opacity: 0.36;

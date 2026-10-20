@@ -110,7 +110,7 @@ CF.highway = {
       ctx.fillStyle = held || flash > 0 ? "#d48a76" : "#455763";
       ctx.fillRect(lane * lw + 11, line - 2, lw - 22, 3);
       ctx.fillStyle = held ? "#f0cec7" : "#8d9ba7";
-      ctx.font = "13px Consolas,monospace";
+      ctx.font = '13px "IBM Plex Sans", sans-serif';
       ctx.textAlign = "center";
       if (showBindings)
         ctx.fillText(bindings[lane].toUpperCase(), (lane + 0.5) * lw, h - 29);

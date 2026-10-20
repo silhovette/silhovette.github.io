@@ -44,243 +44,93 @@
     content="Selected academic and applied AI work by Yuhua Luo."
    data-i18n-content="selected_academic_and_applied_ai_work_by_yuhua_luo"/>
   <title data-i18n="featured_work_yuhua_luo">Featured Work | Yuhua Luo</title>
-  <link rel="stylesheet" href="style.css?v=44" />
+  <link rel="stylesheet" href="fonts.css?v=1" />
+  <link rel="stylesheet" href="style.css?v=54" />
   <link rel="preload" href="assets/fonts/IBMPlexSans-Regular.woff2" as="font" type="font/woff2" crossorigin />
-  <script src="languages.js?v=22" defer></script>
+  <script src="languages.js?v=32" defer></script>
   <script src="script.js?v=12" defer></script>
-  <link rel="stylesheet" href="portfolio.css?v=1" />
+  <link rel="stylesheet" href="portfolio.css?v=12" />
+  <link rel="stylesheet" href="works.css?v=2" />
   <link rel="icon" href="assets/icons/portfolio.svg" type="image/svg+xml" />
-  <script src="portfolio.js?v=1" defer></script>
+  <script src="portfolio.js?v=5" defer></script>
 </head>
 <body class="works-page">
   <a class="skip-link" href="#main" data-i18n="skip_to_content">Skip to content</a>
   <canvas id="cursor-field" class="cursor-field" aria-hidden="true"></canvas>
 
-  <header class="portfolio-header"><div class="header-inner wrap"><div class="site-search header-search" data-site-search role="search"><svg class="header-search-icon" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M16 16L21 21" stroke="currentColor" stroke-width="1.5"/></svg><label class="sr-only" for="site-search-input" data-i18n="search_this_page">Search this page</label><input id="site-search-input" type="search" placeholder="Search" data-i18n-placeholder="search" autocomplete="off"/><div class="site-search__results" role="listbox" aria-label="Search results"></div></div><span class="header-clock mono" aria-label="Shanghai local time">SHANGHAI, CN <span data-shanghai-time>—:—</span></span>
-        <nav class="portfolio-nav" id="portfolio-nav" aria-label="Primary navigation"><a href="index.html#about" data-i18n="about">About</a><a href="index.html#projects" data-i18n="portfolio_work">Selected work</a><a href="index.html#publications" data-i18n="publications">Publications</a><a href="index.html#playground" data-i18n="playground">Playground</a></nav><div class="header-controls"><div class="language-switcher" data-language-switcher role="group" aria-label="Language"><button type="button" data-language="en" aria-pressed="true" lang="en">EN</button><button type="button" data-language="zh-Hans" aria-pressed="false" lang="zh-Hans">简</button><button type="button" data-language="zh-Hant" aria-pressed="false" lang="zh-Hant">繁</button></div><a class="contact-link" href="index.html#contact"><span data-i18n="portfolio_contact">Let&#x27;s talk</span> <span aria-hidden="true">↗</span></a><button class="menu-toggle" type="button" aria-expanded="false" aria-controls="portfolio-nav" data-i18n="portfolio_menu">Menu</button></div></div></header>
-
-  <main id="main">
-    <section class="section works-hero">
-      <div class="section-heading">
-        <p class="eyebrow">Featured Work</p>
-        <h1 data-i18n="projects_and_research">Projects and Research</h1>
+  <header class="portfolio-header">
+      <div class="header-inner wrap">
+        <span class="header-clock mono" aria-label="Shanghai local time">SHANGHAI <span data-shanghai-time>—:—</span></span>
+        <nav class="portfolio-nav" id="portfolio-nav" aria-label="Primary navigation">
+          <a href="index.html#about" data-i18n="about">About</a>
+          <a href="index.html#projects" data-i18n="portfolio_work">Selected Work</a>
+          <a href="index.html#publications" data-i18n="publications">Publications</a>
+          <a href="index.html#playground" data-i18n="playground">Playground</a>
+        </nav>
+        <div class="header-controls">
+          <div class="site-search header-search" data-site-search role="search">
+            <div class="header-search-panel" id="header-search-panel">
+              <label class="sr-only" for="site-search-input" data-i18n="search_this_page">Search this page</label>
+              <input id="site-search-input" type="search" aria-controls="site-search-results" aria-expanded="false" autocomplete="off"/>
+              <div class="site-search__results" id="site-search-results" role="listbox" aria-label="Search results"></div>
+            </div>
+            <button type="button" class="search-toggle" aria-label="Search this page" data-i18n-aria-label="search_this_page" aria-expanded="false" aria-controls="header-search-panel"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M16 16l5 5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+          </div>
+          <div class="language-switcher" data-language-switcher role="group" aria-label="Language">
+            <button type="button" data-language="en" aria-pressed="true" lang="en">EN</button>
+            <button type="button" data-language="zh-Hans" aria-pressed="false" lang="zh-Hans">简</button>
+            <button type="button" data-language="zh-Hant" aria-pressed="false" lang="zh-Hant">繁</button>
+          </div>
+          <a class="contact-link" href="index.html#contact"><span data-i18n="portfolio_contact">Contact</span> <span aria-hidden="true">↗</span></a>
+          <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="portfolio-nav" aria-label="Menu" data-i18n-aria-label="portfolio_menu"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 8h16M4 16h16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+        </div>
       </div>
-    </section>
+    </header>
 
-    <section id="selected-research" class="section" aria-labelledby="selected-research-title">
-      <div class="section-heading">
-        <h2 id="selected-research-title" data-i18n="selected_research_major_projects">Selected Research / Major Projects</h2>
-      </div>
-      <div class="works-list">
-        <article class="work-detail" id="octonest">
-          <div class="card-header">
-            <h3>OctoNest: Adaptive Cross-Device Execution through Stateful Control</h3>
-            <span class="status">Agent Systems</span>
-          </div>
-          <p>
-            Proposed OctoNest, a stateful cross-device execution framework that coordinates
-            device-local modality control with orchestrator-level plan and device revision.
-          </p>
-          <ul class="work-points">
-            <li>Uses Device Agents to refine subtasks and select execution modalities as changing conditions are revealed during interaction.</li>
-            <li>Uses an Orchestrator to revise task plans and device assignments from execution feedback.</li>
-            <li>Introduced CAPEBench with 158 instances from 23 cross-device seed tasks and controlled perturbations.</li>
-            <li>Improved Perfect Pass by 18.35 percentage points over the strongest baseline and reduced token cost per Perfect Pass by 39.8%.</li>
-          </ul>
-          <div class="keywords">
-            <span>Agent Systems</span>
-            <span>Cross-Device</span>
-            <span>Stateful Control</span>
-            <span>Modality Switching</span>
-            <span>CAPEBench</span>
-            <a href="https://arxiv.org/abs/2606.20487" target="_blank" rel="noreferrer">Paper</a>
-          </div>
-        </article>
+  <main id="main" class="work-archive"><header class="archive-heading wrap"><p class="section-kicker mono"><span data-i18n="works_kicker">WORK</span></p><h1 data-i18n="portfolio_work_title">Selected Work</h1></header>
+<section id="selected-research" class="archive-research wrap" aria-labelledby="selected-research-title"><h2 id="selected-research-title" class="archive-section-title"><span data-i18n="works_research">Selected Research</span></h2>
+<article class="research-entry" id="octonest" aria-labelledby="octonest-title">
+ <div class="research-copy"><div class="research-meta"><span>01</span><span><span data-i18n="works_1_category">Agent Systems</span></span></div>
+ <h3 id="octonest-title">OctoNest: Adaptive Cross-Device Execution through Stateful Control</h3>
+ <div class="research-intro"><p data-i18n="works_1_intro">OctoNest is a stateful framework for executing tasks across heterogeneous devices. Device Agents refine subtasks and select execution modalities as conditions emerge during interaction, while an Orchestrator uses execution feedback to revise plans and device assignments. The work connects local modality control with task-level revision and evaluates cross-device execution through CAPEBench, covering cross-device seed tasks and the controlled perturbations introduced during evaluation.</p></div>
+ <ul class="research-contributions"><li><span data-i18n="works_1_point_1">Coordinates device-local modality refinement with feedback-driven plan and device reassignment.</span></li><li><span data-i18n="works_1_point_2">Introduces CAPEBench: 158 instances from 23 cross-device seed tasks with controlled perturbations.</span></li><li><span data-i18n="works_1_point_3">Improves Perfect Pass by 18.35 percentage points over the strongest baseline; reduces token cost per Perfect Pass by 39.8%.</span></li></ul><div class="research-links"><a href="https://arxiv.org/abs/2606.20487" target="_blank" rel="noreferrer">arXiv ↗</a></div>
+ <div class="research-keywords"><span>Stateful control</span><span>Modality switching</span><span>CAPEBench</span></div></div>
+ <figure class="research-figure"><a href="assets/projects/octonest-overview.png" target="_blank" rel="noreferrer" aria-label="OctoNest: Adaptive Cross-Device Execution through Stateful Control: full-size figure"><img class="research-image" src="assets/projects/octonest-overview.png" width="1860" height="804" alt="OctoNest: Adaptive Cross-Device Execution through Stateful Control: method overview" loading="eager" decoding="async"/></a></figure>
+ </article>
+<article class="research-entry" id="chainlora" aria-labelledby="chainlora-title">
+ <div class="research-copy"><div class="research-meta"><span>02</span><span><span data-i18n="works_2_category">Continual Learning</span></span></div>
+ <h3 id="chainlora-title">ChainLoRA: Geometry-Preserving Task Vector Merging for Continual Learning in LLMs</h3>
+ <div class="research-intro"><p data-i18n="works_2_intro">ChainLoRA studies replay-free continual parameter-efficient fine-tuning by treating forgetting as geometric interference between task updates. It combines chain-updated training with adaptive SVD merging after the task stream, maintaining constant historical-state overhead. Procrustes adaptation aligns a shared carrier with the latest task, while shared and task-specific components are separated during merging. A one-sided orthogonality proxy and effective-rank penalty regularize interference and task-subspace use.</p></div>
+ <ul class="research-contributions"><li><span data-i18n="works_2_point_1">Combines chain-updated training and adaptive SVD merging with constant historical-state overhead.</span></li><li><span data-i18n="works_2_point_2">Separates shared and task-specific components through Procrustes alignment and geometric regularization.</span></li><li><span data-i18n="works_2_point_3">Reports strong replay-free results on Large and SuperNI, with competitive results on Standard CL.</span></li></ul><div class="research-links"><a href="https://arxiv.org/abs/2610.00431" target="_blank" rel="noreferrer">arXiv ↗</a></div>
+ <div class="research-keywords"><span>Replay-free PEFT</span><span>Adaptive SVD</span><span>Procrustes</span></div></div>
+ <figure class="research-figure"><a href="assets/projects/chainlora-overview.png" target="_blank" rel="noreferrer" aria-label="ChainLoRA: Geometry-Preserving Task Vector Merging for Continual Learning in LLMs: full-size figure"><img class="research-image" src="assets/projects/chainlora-overview.png" width="2205" height="900" alt="ChainLoRA: Geometry-Preserving Task Vector Merging for Continual Learning in LLMs: method overview" loading="lazy" decoding="async"/></a></figure>
+ </article>
+<article class="research-entry" id="communication-fragility" aria-labelledby="communication-fragility-title">
+ <div class="research-copy"><div class="research-meta"><span>03</span><span><span data-i18n="works_3_category">Multi-Agent Communication</span></span></div>
+ <h3 id="communication-fragility-title">When Coordination Comes at a Cost: Training-Induced Fragility in Multi-Agent Communication</h3>
+ <div class="research-intro"><p data-i18n="works_3_intro">This study examines how joint training can improve coordination while making agents more sensitive to meaning-preserving changes in messages. Matched comparisons separate joint versus independent updating from fixed versus rotating partner exposure, evaluating paraphrase robustness alongside canonical task success. Semantic-Invariant Communication Training (SICT) addresses this fragility by aligning receiver task-action policies across equivalent messages, with robustness evaluated on held-out paraphrase generators as well.</p></div>
+ <ul class="research-contributions"><li><span data-i18n="works_3_point_1">Separates update coupling from partner exposure through matched training comparisons.</span></li><li><span data-i18n="works_3_point_2">Measures robustness to meaning-preserving message changes alongside canonical task success.</span></li><li><span data-i18n="works_3_point_3">Uses receiver task-action consistency to reduce fragility, including on held-out paraphrase generators.</span></li></ul>
+ <div class="research-keywords"><span>Semantic invariance</span><span>SICT</span></div></div>
+ <figure class="research-figure"><a href="assets/projects/sict-overview.png" target="_blank" rel="noreferrer" aria-label="When Coordination Comes at a Cost: Training-Induced Fragility in Multi-Agent Communication: full-size figure"><img class="research-image research-image--muted" src="assets/projects/sict-overview.png" width="1782" height="946" alt="When Coordination Comes at a Cost: Training-Induced Fragility in Multi-Agent Communication: method overview" loading="lazy" decoding="async"/></a></figure>
+ </article>
+<article class="research-entry" id="capability-preservation" aria-labelledby="capability-preservation-title">
+ <div class="research-copy"><div class="research-meta"><span>04</span><span><span data-i18n="works_4_category">Multi-Agent Learning</span></span></div>
+ <h3 id="capability-preservation-title">What Team Success Hides: Compensation-Masked Capability Loss in Multi-Agent Language Systems</h3>
+ <div class="research-intro"><p data-i18n="works_4_intro">This work examines individual capability loss that aggregate team performance can hide when teammates compensate during specialization. It evaluates retained competence alongside team utility and uses teammate and practice interventions to distinguish compensation from preserved focal-agent ability. RACP combines responsibility decline and skill disuse into an online risk signal, directing selective rehearsal toward endangered capabilities while retaining the utility of team collaboration.</p></div>
+ <ul class="research-contributions"><li><span data-i18n="works_4_point_1">Evaluates retained individual competence alongside team performance during specialization.</span></li><li><span data-i18n="works_4_point_2">Uses teammate and practice interventions to distinguish compensation from retained agent ability.</span></li><li><span data-i18n="works_4_point_3">Tracks responsibility decline and disuse to guide selective rehearsal of at-risk capabilities.</span></li></ul>
+ <div class="research-keywords"><span>Capability retention</span><span>RACP</span></div></div>
+ <figure class="research-figure"><a href="assets/projects/racp-overview.png" target="_blank" rel="noreferrer" aria-label="What Team Success Hides: Compensation-Masked Capability Loss in Multi-Agent Language Systems: full-size figure"><img class="research-image research-image--muted" src="assets/projects/racp-overview.png" width="1832" height="958" alt="What Team Success Hides: Compensation-Masked Capability Loss in Multi-Agent Language Systems: method overview" loading="lazy" decoding="async"/></a></figure>
+ </article>
+</section>
+<section id="other-projects" class="archive-other wrap" aria-labelledby="other-projects-title"><h2 id="other-projects-title" class="archive-section-title"><span data-i18n="works_other">Other Projects</span></h2><ol class="other-projects-list">
+<li><span class="other-project-number">01</span><div><div class="other-project-header"><h3 data-i18n="telecom_customer_service_intent_recognition">Telecom Customer Service Intent Recognition</h3><span class="other-project-category"><span data-i18n="works_other_1_category">Applied AI Systems</span></span></div><p data-i18n="works_other_1_intro">Developed a dialogue-understanding and plan-prediction pipeline using 1,405 multi-turn telecom sessions. Combined structured plan retrieval and few-shot reasoning with LoRA/SFT experiments on open-source 7B models.</p></div></li>
+<li><span class="other-project-number">02</span><div><div class="other-project-header"><h3 data-i18n="ai4ms_medical_knowledge_graph_rag_system">AI4MS Medical Knowledge Graph &amp; RAG System</h3><span class="other-project-category"><span data-i18n="works_other_2_category">Knowledge Systems</span></span></div><p data-i18n="works_other_2_intro">Built a local, evidence-grounded QA prototype for multiple sclerosis materials using ChromaDB and multilingual MiniLM retrieval. Organized source documents and knowledge-graph-style structures with traceable passages and citations.</p></div></li>
+<li><span class="other-project-number">03</span><div><div class="other-project-header"><h3 data-i18n="style_aware_humanoid_motion_generation">Style-Aware Humanoid Motion Generation</h3><span class="other-project-category"><span data-i18n="works_other_4_category">Embodied AI</span></span></div><p data-i18n="works_other_4_intro">Built a style-aware, language-conditioned motion-generation workflow around MoConVQ and HumanML3D-derived subsets. Packaged generation, adapter training, evaluation, and diagnostic reports with reproducibility notes.</p></div></li>
+<li><span class="other-project-number">04</span><div><div class="other-project-header"><h3 data-i18n="snapkv_kv_cache_compression_reproduction">SnapKV KV Cache Compression Reproduction</h3><span class="other-project-category"><span data-i18n="works_other_5_category">Inference Systems</span></span></div><p data-i18n="works_other_5_intro">Reproduced post-prefill KV cache compression using observation-window scoring and pooling. Compared latency, memory, and perplexity on WikiText and PG-19, with ablations over compression ratio, window size, and pooling kernels.</p></div></li>
+<li><span class="other-project-number">05</span><div><div class="other-project-header"><h3 data-i18n="natdedprop_proof_agent_and_tooling">NatDedProp Proof Agent and Tooling</h3><span class="other-project-category"><span data-i18n="works_other_6_category">Formal Reasoning</span></span></div><p data-i18n="works_other_6_intro">Packaged natural-deduction proof tooling with a command-line checker, VS Code extension, and reusable proof prompts. Added a proof-agent workflow for .mmd files, connective-driven strategies, and JSONL diagnostics.</p></div></li>
+</ol></section></main>
 
-        <article class="work-detail" id="chainlora">
-          <div class="card-header">
-            <h3>ChainLoRA: Geometry-Preserving Task Vector Merging for Continual Learning in LLMs</h3>
-            <span class="status">Continual Learning</span>
-          </div>
-          <p>
-            Studied ChainLoRA, a replay-free continual parameter-efficient fine-tuning framework
-            that treats forgetting as geometric interference between task updates.
-          </p>
-          <ul class="work-points">
-            <li>Combines chain-updated training with post-stream adaptive SVD merging while keeping historical-state overhead constant.</li>
-            <li>Uses Procrustes adaptation to align a shared carrier with the latest task and separate shared from task-specific components.</li>
-            <li>Adds a one-sided orthogonality proxy and effective-rank penalty to limit inter-task interference and use the task subspace efficiently.</li>
-            <li>Reports strong replay-free results on Large and SuperNI and competitive results on Standard CL.</li>
-          </ul>
-          <div class="keywords">
-            <span>Continual Learning</span>
-            <span>Replay-Free PEFT</span>
-            <span>Task Vectors</span>
-            <span>Adaptive SVD</span>
-            <span>Procrustes</span>
-          </div>
-        </article>
-
-        <article class="work-detail" id="communication-fragility"><div class="card-header"><h3>When Coordination Comes at a Cost: Training-Induced Fragility in Multi-Agent Communication</h3><span class="status">Multi-Agent Research</span></div><p data-i18n="portfolio_sict_desc">Studies how joint training can improve coordination while increasing sensitivity to meaning-preserving message changes. SICT improves robustness by aligning receiver actions across equivalent messages.</p><ul class="work-points"><li>Separates joint versus independent updating from fixed versus rotating partner exposure in matched comparisons.</li><li>Measures robustness to meaning-preserving message changes alongside canonical task success.</li><li>Uses receiver task-action consistency to reduce paraphrase fragility, including on held-out paraphrase generators.</li></ul><div class="keywords"><span>Multi-agent communication</span><span>Semantic invariance</span><span>SICT</span></div></article>
-
-        <article class="work-detail" id="capability-preservation"><div class="card-header"><h3>What Team Success Hides: Compensation-Masked Capability Loss in Multi-Agent Language Systems</h3><span class="status">Multi-Agent Research</span></div><p data-i18n="portfolio_racp_desc">Reveals individual capability loss hidden by teammate compensation. RACP tracks responsibility shifts and disuse to selectively rehearse at-risk skills while retaining team utility.</p><ul class="work-points"><li>Evaluates retained individual competence alongside aggregate team performance during specialization.</li><li>Uses teammate and practice interventions to distinguish compensation from retained focal-agent ability.</li><li>Combines responsibility decline and disuse into an online risk signal that guides selective capability rehearsal.</li></ul><div class="keywords"><span>Multi-agent learning</span><span>Capability retention</span><span>RACP</span></div></article>
-
-        <article class="work-detail">
-          <div class="card-header">
-            <h3>Telecom Customer Service Intent Recognition</h3>
-            <span class="status">Applied AI Systems</span>
-          </div>
-          <p>
-            Developed a dialogue-understanding pipeline for long, multi-turn telecom service
-            sessions, combining intent recognition, target-plan prediction, structured plan
-            knowledge, retrieval, and LoRA/SFT experimentation.
-          </p>
-          <ul class="work-points">
-            <li>Cleaned, aggregated, and labeled 1,405 multi-turn customer service sessions for intent and plan-related analysis.</li>
-            <li>Converted telecom plan information into retrievable candidate knowledge for downstream reasoning.</li>
-            <li>Designed a RAG plus few-shot workflow that conditions on user plans, candidate plans, and dialogue context.</li>
-            <li>Ran LoRA/SFT experiments on open-source 7B models and compared them with baseline settings.</li>
-          </ul>
-          <div class="keywords">
-            <span>RAG</span>
-            <span>Few-shot Reasoning</span>
-            <span>LoRA/SFT</span>
-            <span>Dialogue Understanding</span>
-          </div>
-        </article>
-
-        <article class="work-detail">
-          <div class="card-header">
-            <h3>AI4MS Medical Knowledge Graph &amp; RAG System</h3>
-            <span class="status">Knowledge Systems</span>
-          </div>
-          <p>
-            Built a local evidence-grounded QA prototype for multiple sclerosis knowledge
-            organization, combining document parsing, vector retrieval, source traceability,
-            and knowledge-graph style structuring.
-          </p>
-          <ul class="work-points">
-            <li>Parsed and organized multi-source medical materials into searchable knowledge assets.</li>
-            <li>Indexed evidence chunks with ChromaDB and multilingual MiniLM embeddings for local retrieval.</li>
-            <li>Mapped user questions to relevant source passages through source-aware retrieval.</li>
-            <li>Preserved citations and evidence links to reduce unsupported answer generation.</li>
-          </ul>
-          <div class="keywords">
-            <span>Knowledge Graph</span>
-            <span>ChromaDB</span>
-            <span>MiniLM</span>
-            <span>Medical RAG</span>
-          </div>
-        </article>
-
-      </div>
-    </section>
-
-    <section id="other-projects" class="section works-secondary" aria-labelledby="other-projects-title">
-      <div class="section-heading">
-        <h2 id="other-projects-title" data-i18n="other_projects_reproductions">Other Projects &amp; Reproductions</h2>
-      </div>
-      <div class="works-list">
-        <article class="work-detail">
-          <div class="card-header">
-            <h3>Training-aware Agent Research</h3>
-            <span class="status">Agent Systems</span>
-          </div>
-          <p>
-            Studying training-aware agent systems that connect learning signals with planning,
-            memory, tool use, and replanning, with emphasis on long-horizon execution and adaptive
-            behavior.
-          </p>
-          <ul class="work-points">
-            <li>Tracked recent work on self-improving agents, agentic reinforcement learning, and tool-augmented workflows.</li>
-            <li>Studied planning and replanning mechanisms as core components for robust long-horizon execution.</li>
-            <li>Prepared technical notes to organize assumptions, design patterns, and experiment directions.</li>
-            <li>Focused on how training signals could shape agent behavior beyond static prompting.</li>
-          </ul>
-          <div class="keywords">
-            <span>Agentic RL</span>
-            <span>Long-Horizon</span>
-            <span>Tool Use</span>
-            <span>Memory</span>
-          </div>
-        </article>
-
-
-        <article class="work-detail">
-          <div class="card-header">
-            <h3>Style-Aware Humanoid Motion Generation</h3>
-            <span class="status">Embodied AI</span>
-          </div>
-          <p>
-            Built a project layer around MoConVQ for style-aware, language-conditioned humanoid
-            motion generation, emphasizing reproducible generation scripts, structured prompts,
-            and diagnostic reporting.
-          </p>
-          <ul class="work-points">
-            <li>Prepared style lexicons, prompt lists, audit templates, and HumanML3D-derived style subsets.</li>
-            <li>Organized baseline generation, adapter training, evaluation, and report-compilation scripts.</li>
-            <li>Packaged midterm and final deliverables with logs, outputs, and reproducibility notes.</li>
-            <li>Documented runtime asset limitations and avoided unsupported metric claims in the report.</li>
-          </ul>
-          <div class="keywords">
-            <span>MoConVQ</span>
-            <span>HumanML3D</span>
-            <span>Motion Generation</span>
-            <span>Reproducibility</span>
-          </div>
-        </article>
-
-        <article class="work-detail">
-          <div class="card-header">
-            <h3>SnapKV KV Cache Compression Reproduction</h3>
-            <span class="status">Inference Systems</span>
-          </div>
-          <p>
-            Reproduced the SnapKV training-free KV cache compression method and evaluated its
-            latency, memory, and perplexity behavior in small-scale LLM inference settings.
-          </p>
-          <ul class="work-points">
-            <li>Implemented post-prefill KV cache compression with observation-window scoring and pooling.</li>
-            <li>Compared baseline and compressed inference on WikiText and PG-19 workloads.</li>
-            <li>Recorded TTFT, TPOT, throughput, peak memory, FLOPs, and perplexity-related metrics.</li>
-            <li>Ran ablations over compression ratio, observation-window size, and pooling kernel size.</li>
-          </ul>
-          <div class="keywords">
-            <span>KV Cache</span>
-            <span>LLM Inference</span>
-            <span>SnapKV</span>
-            <span>PyTorch</span>
-          </div>
-        </article>
-
-        <article class="work-detail">
-          <div class="card-header">
-            <h3>NatDedProp Proof Agent and Tooling</h3>
-            <span class="status">Formal Reasoning</span>
-          </div>
-          <p>
-            Packaged a natural-deduction proof workflow with command-line checking, VS Code
-            tooling, reusable proof prompts, and logged answer-generation diagnostics.
-          </p>
-          <ul class="work-points">
-            <li>Prepared a self-contained NatDedProp environment with command-line checker and VS Code extension packages.</li>
-            <li>Designed a proof-agent workflow for diagnosing `.mmd` files and replacing proof placeholders.</li>
-            <li>Encoded connective-driven strategies for conjunction, disjunction, implication, equivalence, and classical tautologies.</li>
-            <li>Recorded diagnostics, proof attempts, checker results, and packaging events in JSONL logs.</li>
-          </ul>
-          <div class="keywords">
-            <span>Formal Proof</span>
-            <span>Natural Deduction</span>
-            <span>VS Code Extension</span>
-            <span>Agent Workflow</span>
-          </div>
-        </article>
-
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer">
+  <footer class="archive-footer wrap">
     <p>&copy; <span id="year"></span> Yuhua Luo. </p>
   </footer>
 </body>
