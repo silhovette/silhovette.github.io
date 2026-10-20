@@ -41,6 +41,10 @@ html {
   scroll-padding-top: 100px;
   background: var(--paper);
 }
+/* The sticky search is already visible; reserve scroll offsets for page content. */
+html:has(.header-search:focus-within) {
+  scroll-padding-top: 0;
+}
 body {
   margin: 0;
   background: var(--paper);
@@ -147,6 +151,7 @@ button {
   top: 15px;
 }
 .portfolio-header {
+  overflow-anchor: none;
   position: sticky;
   top: 0;
   z-index: 40;
@@ -302,7 +307,8 @@ button {
 .portfolio-header .header-search .site-search__results {
   position: absolute;
   top: calc(100% + 14px);
-  right: 0;
+  left: 0;
+  right: auto;
   width: min(360px, calc(100vw - 48px));
   max-height: min(420px, 60vh);
   overflow-y: auto;
@@ -629,7 +635,8 @@ a, button { transition: color 180ms ease-out, background-color 180ms ease-out, b
   letter-spacing: -0.03em;
 }
 .about-statement em {
-  font-family: var(--font-body);
+  font-family: Georgia, serif;
+  font-style: italic;
   font-weight: 400;
   color: var(--red);
 }

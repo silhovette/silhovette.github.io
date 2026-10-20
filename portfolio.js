@@ -49,7 +49,7 @@
   const compactSearch = matchMedia("(max-width: 600px)");
   const closeSearchPanel = (restoreFocus = false) => {
     if (!searchPanel) return;
-    if (restoreFocus) (compactSearch.matches ? searchToggle : panelInput).focus();
+    if (restoreFocus) (compactSearch.matches ? searchToggle : panelInput).focus({ preventScroll: true });
     searchPanel.classList.remove("is-open");
     searchShell.classList.remove("is-searching");
     searchToggle.setAttribute("aria-expanded", "false");
@@ -62,7 +62,7 @@
     searchShell.classList.add("is-searching");
     searchToggle.setAttribute("aria-expanded", "true");
     if (document.activeElement === panelInput) panelInput.dispatchEvent(new Event("input", { bubbles: true }));
-    else panelInput.focus();
+    else panelInput.focus({ preventScroll: true });
   };
   searchToggle?.addEventListener("click", () => {
     if (compactSearch.matches && searchPanel.classList.contains("is-open")) closeSearchPanel(true);
@@ -103,7 +103,17 @@
     const next = event.key === "ArrowDown" ? Math.min(index + 1, items.length - 1) : index - 1;
     event.preventDefault();
     event.stopImmediatePropagation();
-    (next < 0 ? panelInput : items[next]).focus();
+    const target = next < 0 ? panelInput : items[next];
+    target.focus({ preventScroll: true });
+    if (next >= 0) {
+      // Reveal the focused result inside its list without scrolling the document.
+      const list = searchShell.querySelector(".site-search__results");
+      const bounds = list.getBoundingClientRect();
+      const itemBounds = target.getBoundingClientRect();
+      const scale = bounds.height / list.offsetHeight || 1;
+      if (itemBounds.top < bounds.top) list.scrollTop += (itemBounds.top - bounds.top) / scale;
+      else if (itemBounds.bottom > bounds.bottom) list.scrollTop += (itemBounds.bottom - bounds.bottom) / scale;
+    }
   });
 
   const progress = document.querySelector(".page-progress");
