@@ -1783,25 +1783,9 @@ h3 {
   30% { opacity: 1; filter: drop-shadow(0 0 5px rgba(185, 71, 44, 0.65)); transform: translateY(4px) rotate(45deg); }
 }
 
-.reveal {
-  opacity: 0;
-  transform: translateY(18px);
-  transition: opacity 560ms ease, transform 560ms ease;
-}
 
-.reveal.is-visible {
-  opacity: 1;
-  transform: translateY(0);
-}
 
-.home-page main > .reveal {
-  transform: none;
-}
 
-.home-page main > .reveal:not(.is-visible) {
-  opacity: 0;
-  pointer-events: none;
-}
 
 @keyframes fadeUp {
   from {
@@ -2064,10 +2048,6 @@ h3 {
     transition-duration: 0.001ms !important;
   }
 
-  .reveal {
-    opacity: 1;
-    transform: none;
-  }
 
   .cursor-field {
     display: none;

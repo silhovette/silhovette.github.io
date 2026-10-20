@@ -55,11 +55,13 @@
     />
     <link rel="preload" href="assets/fonts/InstrumentSans-Latin.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="fonts.css?v=2" />
-  <link rel="stylesheet" href="portfolio.css?v=25" />
-    <script src="languages.js?v=33" defer></script>
-    <script src="portfolio.js?v=8" defer></script>
+  <link rel="stylesheet" href="portfolio.css?v=32" />
+    <script src="languages.js?v=35" defer></script>
+    <script src="portfolio.js?v=10" defer></script>
     <script src="sculpture.js?v=21" defer></script>
-  </head>
+    <script src="scroll-reveal.js?v=2" defer></script>
+    <script src="timeline-preview.js?v=1" defer></script>
+</head>
   <body class="portfolio-home">
     <a class="skip-link" href="#main" data-i18n="skip_to_content"
       >Skip to content</a
@@ -72,7 +74,7 @@
           <a href="#about" data-i18n="about">About</a>
           <a href="#projects" data-i18n="portfolio_work">Selected Work</a>
           <a href="#publications" data-i18n="publications">Publications</a>
-          <a href="#experience" data-i18n="portfolio_journey_title">Experience</a>
+
           <a href="#playground" data-i18n="playground">Playground</a>
         </nav>
         <div class="header-controls">
@@ -162,7 +164,7 @@
           </div>
         </div>
       </section>
-      <section class="portfolio-section wrap reveal-item" id="about">
+      <section class="portfolio-section wrap" id="about">
         <div class="section-top">
           <div>
             <div class="section-kicker mono">
@@ -232,8 +234,36 @@
             </p>
           </article>
         </div>
+        <div class="profile-history">
+          <div class="profile-honors" aria-labelledby="profile-honors-heading">
+            <h3 class="honors-title" id="profile-honors-heading" data-i18n="honors">Selected Honors</h3>
+            <ul class="honors-list">
+              <li class="honor-row"><p data-i18n="scholarship">
+                Zhiyuan Honor Scholarship, Zhiyuan College, Shanghai Jiao Tong
+                University
+              </p></li>
+              <li class="honor-row"><p data-i18n="merit_2025_2026">
+                Merit Student, Shanghai Jiao Tong University, 2025–2026
+              </p></li>
+              <li class="honor-row"><p data-i18n="merit">
+                Merit Student, Shanghai Jiao Tong University, 2024–2025
+              </p></li>
+              <li class="honor-row"><p data-i18n="league">
+                Outstanding League Member, Shanghai Jiao Tong University
+              </p></li>
+            </ul>
+          </div>
+          <div class="profile-timeline" aria-labelledby="profile-timeline-heading">
+            <h3 class="profile-history-title" id="profile-timeline-heading" data-i18n="timeline_heading">Timeline</h3>
+            <div class="timeline-preview-window" data-timeline-preview tabindex="0" role="region" aria-label="Timeline preview" data-i18n-aria-label="timeline_preview_label">
+              <p class="timeline-preview-status" data-i18n="timeline_preview_loading">Loading timeline…</p>
+              <div class="timeline-preview-track"></div>
+            </div>
+            <a class="text-link timeline-preview-link" href="timeline.html"><span data-i18n="view_full_timeline">View full timeline</span> <span aria-hidden="true">↗</span></a>
+          </div>
+        </div>
       </section>
-      <section class="portfolio-section wrap reveal-item" id="projects">
+      <section class="portfolio-section wrap" id="projects">
         <div class="section-top">
           <div>
             <div class="section-kicker mono">
@@ -388,7 +418,7 @@
           >
         </div>
       </section>
-      <section class="portfolio-section wrap reveal-item" id="publications">
+      <section class="portfolio-section wrap" id="publications">
         <div class="section-top">
           <div>
             <div class="section-kicker mono">
@@ -505,119 +535,11 @@
           >
         </p>
       </section>
-      <section class="portfolio-section wrap reveal-item" id="experience">
+      <section class="portfolio-section wrap" id="playground">
         <div class="section-top">
           <div>
             <div class="section-kicker mono">
               <b>04</b
-              ><span data-i18n="portfolio_journey">BACKGROUND</span>
-            </div>
-            <h2 data-i18n="portfolio_journey_title">Experience</h2>
-          </div>
-          <a class="text-link" href="timeline.html"
-            ><span data-i18n="portfolio_timeline">View my timeline</span>
-            <span>↗</span></a
-          >
-        </div>
-        <div class="journey-grid">
-          <div>
-            <article class="education-row">
-              <span>2024 — NOW</span>
-              <div>
-                <h3 data-i18n="timeline_sjtu">Shanghai Jiao Tong University</h3>
-                <p>
-                  <span data-i18n="portfolio_undergrad"
-                    >B.S. studies in Artificial Intelligence</span
-                  ><br /><span data-i18n="portfolio_cohort"
-                    >Class monitor of the first undergraduate cohort</span
-                  >
-                </p>
-              </div>
-            </article>
-            <article class="education-row">
-              <span>2021 — 2024</span>
-              <div>
-                <h3 data-i18n="timeline_high_school">
-                  High School Affiliated to Shanghai Jiao Tong University
-                </h3>
-                <p data-i18n="timeline_high_school_level">High School</p>
-              </div>
-            </article>
-            <article class="education-row">
-              <span>SUMMER 2026</span>
-              <div>
-                <h3 data-i18n="timeline_summer_school">
-                  2026 Summer School on Reinforcement Learning
-                </h3>
-                <p data-i18n="timeline_innovation_institute">
-                  Shanghai Innovation Institute
-                </p>
-              </div>
-            </article>
-          </div>
-          <div>
-            <h3 class="honors-title" data-i18n="honors">Selected Honors</h3>
-            <div class="honor-row">
-              <span>✳</span>
-              <p data-i18n="scholarship">
-                Zhiyuan Honor Scholarship, Zhiyuan College, Shanghai Jiao Tong
-                University
-              </p>
-            </div>
-            <div class="honor-row">
-              <span>✳</span>
-              <p data-i18n="merit_2025_2026">
-                Merit Student, Shanghai Jiao Tong University, 2025–2026
-              </p>
-            </div>
-            <div class="honor-row">
-              <span>✳</span>
-              <p data-i18n="merit">
-                Merit Student, Shanghai Jiao Tong University, 2024–2025
-              </p>
-            </div>
-            <div class="honor-row">
-              <span>✳</span>
-              <p data-i18n="league">
-                Outstanding League Member, Shanghai Jiao Tong University
-              </p>
-            </div>
-          </div>
-        </div>
-        <div class="stack-panel" id="skills">
-          <div>
-            <h3 data-i18n="portfolio_toolbox">My working toolkit</h3>
-            <p data-i18n="portfolio_toolbox_note">
-              From a research idea to a working system.
-            </p>
-          </div>
-          <div class="stack-groups">
-            <div class="stack-group">
-              <h4 class="mono" data-i18n="portfolio_build">
-                BUILD &amp; EXPERIMENT
-              </h4>
-              <p>Python · C++ · PyTorch<br />Transformers · PEFT · PPO</p>
-            </div>
-            <div class="stack-group">
-              <h4 class="mono" data-i18n="portfolio_retrieve">
-                RETRIEVE &amp; EVALUATE
-              </h4>
-              <p>ChromaDB · FAISS · RAG<br />NumPy · Pandas · scikit-learn</p>
-            </div>
-            <div class="stack-group">
-              <h4 class="mono" data-i18n="portfolio_engineer">
-                ENGINEER &amp; SHIP
-              </h4>
-              <p>Linux · Git · CUDA<br />API · CLI · GUI</p>
-            </div>
-          </div>
-        </div>
-      </section>
-      <section class="portfolio-section wrap reveal-item" id="playground">
-        <div class="section-top">
-          <div>
-            <div class="section-kicker mono">
-              <b>05</b
               ><span data-i18n="portfolio_personal_interests">PERSONAL INTERESTS</span>
             </div>
             <h2 data-i18n="portfolio_playground_heading">Playground</h2>

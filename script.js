@@ -151,6 +151,7 @@ const setupSiteSearch = () => {
       button.append(title, label);
       button.addEventListener("click", () => {
         revealPlaygroundTarget(item);
+        window.siteReveal?.show(item);
         item.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "center" });
         highlight(item, query);
         input.value = "";
@@ -187,67 +188,6 @@ const setupSiteSearch = () => {
     }
   });
 };
-// Reveal animation
-const setupReveal = () => {
-  if (document.body.classList.contains("home-page")) {
-    const sections = [...document.querySelectorAll("main > .reveal")];
-    const scrollCue = document.querySelector(".scroll-cue");
-    const revealAll = () => {
-      document.documentElement.classList.remove("home-hero-lowered");
-      sections.forEach(section => section.classList.add("is-visible"));
-      if (scrollCue) {
-        scrollCue.classList.add("is-dismissed");
-        scrollCue.disabled = true;
-      }
-      window.removeEventListener("scroll", revealOnScroll);
-    };
-    const revealOnScroll = () => {
-      if (window.scrollY > 0) revealAll();
-    };
-    const revealHashTarget = () => {
-      if (window.location.hash && window.location.hash !== "#hero") revealAll();
-    };
-
-    window.addEventListener("scroll", revealOnScroll, { passive: true });
-    window.addEventListener("pageshow", revealOnScroll);
-    window.addEventListener("hashchange", revealHashTarget);
-    // Navigation to About can leave the page at scrollY === 0.
-    document.querySelectorAll('a[href^="#"]').forEach(link => {
-      link.addEventListener("click", () => {
-        if (link.getAttribute("href") !== "#hero") revealAll();
-      });
-    });
-    document.addEventListener("focusin", event => {
-      if (sections.some(section => section.contains(event.target))) revealAll();
-    });
-    scrollCue?.addEventListener("click", () => {
-      revealAll();
-      document.getElementById("about").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
-    });
-    revealOnScroll();
-    revealHashTarget();
-    return;
-  }
-
-  if (!reduceMotion && "IntersectionObserver" in window) {
-    const revealObserver = new IntersectionObserver(
-      (entries, observer) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("is-visible");
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.14 }
-    );
-
-    document.querySelectorAll(".reveal").forEach((element) => revealObserver.observe(element));
-  } else {
-    document.querySelectorAll(".reveal").forEach((element) => element.classList.add("is-visible"));
-  }
-};
-
 const setupHoverTooltip = () => {
   const tooltip = document.getElementById("hover-tooltip");
   const triggers = Array.from(document.querySelectorAll("[data-tooltip]"));
@@ -1378,7 +1318,6 @@ setupNavigation();
 setupAccentGlow();
 setupPaperPreviews();
 setupSiteSearch();
-setupReveal();
 setupPlayground();
 setupGameDemoGate();
 setupIndexCodePreview();

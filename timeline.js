@@ -33,34 +33,9 @@
     if (frame === null) frame = requestAnimationFrame(update);
   };
 
-  // Only entries below the initial viewport receive a restrained, one-time reveal.
-  // Without JavaScript, or under reduced motion, every event is already visible.
-  const reveal = item => {
-    item.classList.remove("timeline-reveal-pending");
-    observer?.unobserve(item);
-  };
-  const observer = !motion.matches && "IntersectionObserver" in window
-    ? new IntersectionObserver(entries => {
-      entries.forEach(entry => { if (entry.isIntersecting) reveal(entry.target); });
-    }, { threshold: 0.12 }) : null;
-  items.forEach(item => {
-    item.tabIndex = 0;
-    if (observer && item.getBoundingClientRect().top > innerHeight) {
-      item.classList.add("timeline-reveal-pending");
-      observer.observe(item);
-    }
-  });
-  timeline.addEventListener("focusin", event => {
-    const item = event.target.closest("li");
-    if (item && timeline.contains(item)) reveal(item);
-  });
-  motion.addEventListener("change", () => {
-    if (motion.matches) {
-      items.forEach(reveal);
-      observer?.disconnect();
-    }
-    schedule();
-  });
+  // The shared reveal system owns opacity and transform; this file owns the axis.
+  items.forEach(item => { item.tabIndex = 0; });
+  motion.addEventListener("change", schedule);
   addEventListener("scroll", schedule, { passive: true });
   addEventListener("resize", schedule);
   addEventListener("pageshow", schedule);

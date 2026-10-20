@@ -206,26 +206,6 @@
   );
   updateScroll();
   addEventListener("pageshow", updateScroll);
-  const reveal = new IntersectionObserver(
-    (entries) =>
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.remove("await-reveal");
-          reveal.unobserve(entry.target);
-        }
-      }),
-    { threshold: 0.07 },
-  );
-  document.querySelectorAll(".reveal-item").forEach((item) => {
-    if (
-      !reducedMotion.matches &&
-      item.getBoundingClientRect().top > innerHeight
-    ) {
-      item.classList.add("await-reveal");
-      reveal.observe(item);
-    }
-  });
-
   const figureDialog = document.getElementById("figure-dialog");
   document.querySelectorAll("[data-figure]").forEach((button) =>
     button.addEventListener("click", () => {
@@ -294,7 +274,7 @@
     const matches = searchItems
       .filter(
         (item) =>
-          !item.closest("[hidden]") &&
+          !item.closest("[hidden], [inert], [aria-hidden=\"true\"], [data-timeline-preview]") &&
           (query
             ? item.textContent.toLocaleLowerCase().includes(query)
             : item.tagName === "H2"),
@@ -310,7 +290,7 @@
         searchInput.value = "";
         searchInput.blur();
         history.pushState(null, "", link.getAttribute("href"));
-        item.closest(".reveal-item")?.classList.remove("await-reveal");
+        window.siteReveal?.show(item);
         item.scrollIntoView({
           behavior: reducedMotion.matches ? "instant" : "smooth",
           block: "center",

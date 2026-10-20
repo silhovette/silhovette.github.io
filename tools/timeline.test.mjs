@@ -93,23 +93,12 @@ test("scrolling marks only the current reading node and clears it when the list 
   assert.ok(env.items.every(item => !item.classes.has("is-current")));
 });
 
-test("only below-fold rows reveal, and focus or reduced motion makes them visible immediately", () => {
+test("timeline delegates reveal effects to the shared system while keeping rows keyboard accessible", () => {
   const env = createTimeline(); env.render();
-  assert.equal(env.observed.size, 1);
-  assert.ok(env.items[2].classes.has("timeline-reveal-pending"));
-  assert.equal(env.items[0].classes.has("timeline-reveal-pending"), false);
-  const focus = new Event("focusin");
-  Object.defineProperty(focus, "target", { value: env.items[2] });
-  env.timeline.dispatchEvent(focus);
-  assert.equal(env.items[2].classes.has("timeline-reveal-pending"), false);
-  assert.equal(env.observed.size, 0);
-
-  const reduced = createTimeline({ reduced: true }); reduced.render();
-  assert.equal(reduced.observed.size, 0);
-  assert.ok(reduced.items.every(item => !item.classes.has("timeline-reveal-pending")));
-  const changed = createTimeline(); changed.render();
-  changed.motion.matches = true;
-  changed.emit(changed.motion, "change"); changed.render();
-  assert.equal(changed.disconnected(), true);
-  assert.ok(changed.items.every(item => !item.classes.has("timeline-reveal-pending")));
+  assert.equal(env.observed.size, 0, "no second reveal observer controls timeline rows");
+  assert.ok(env.items.every(item => item.tabIndex === 0));
+  assert.ok(env.items.every(item => !item.classes.has("timeline-reveal-pending")));
+  env.motion.matches = true;
+  env.emit(env.motion, "change"); env.render();
+  assert.equal(env.items[0].attributes.get("aria-current"), "true");
 });

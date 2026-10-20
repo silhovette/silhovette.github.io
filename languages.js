@@ -1,6 +1,10 @@
 (() => {
   // Shared copy: English fallback, Simplified Chinese, Traditional Chinese.
   const translations = {
+    "view_full_timeline": ["View full timeline", "查看完整时间轴", "查看完整時間軸"],
+    "timeline_preview_label": ["Timeline preview", "时间轴预览", "時間軸預覽"],
+    "timeline_preview_loading": ["Loading timeline…", "正在加载时间轴…", "正在載入時間軸…"],
+    "timeline_preview_unavailable": ["Explore all events in the full timeline below.", "请通过下方链接查看完整时间轴。", "請透過下方連結查看完整時間軸。"],
     "portfolio_personal_interests": ["PERSONAL INTERESTS", "个人兴趣", "個人興趣"],
     "portfolio_playground_heading": ["Playground", "Playground", "Playground"],
     "works_kicker": ["WORK", "作品", "作品"],
@@ -85,11 +89,6 @@
     "portfolio_timeline": ["View my timeline", "查看个人时间轴", "查看個人時間軸"],
     "portfolio_undergrad": ["B.S. studies in Artificial Intelligence", "人工智能专业本科学习", "人工智能專業本科學習"],
     "portfolio_cohort": ["Class monitor of the first undergraduate cohort", "人工智能学院首届本科生班长", "人工智能學院首屆本科生班長"],
-    "portfolio_toolbox": ["My working toolkit", "我的工具箱", "我的工具箱"],
-    "portfolio_toolbox_note": ["From a research idea to a working system.", "从研究想法到可运行的系统。", "從研究想法到可運行的系統。"],
-    "portfolio_build": ["BUILD & EXPERIMENT", "构建与实验", "構建與實驗"],
-    "portfolio_retrieve": ["RETRIEVE & EVALUATE", "检索与评估", "檢索與評估"],
-    "portfolio_engineer": ["ENGINEER & SHIP", "工程与实现", "工程與實現"],
     "portfolio_offscreen": ["PERSONAL", "个人生活", "個人生活"],
     "portfolio_play_title": ["Interests", "兴趣爱好", "興趣愛好"],
     "portfolio_play_link": ["Enter the playground", "进入 Playground", "進入 Playground"],
