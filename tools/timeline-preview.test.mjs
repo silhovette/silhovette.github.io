@@ -11,7 +11,6 @@ const markup = shared.window.siteTimelineMarkup;
 async function setup({ reduced = false, missing = false } = {}) {
   let enter, resize, height = 1200;
   const animations = [], appended = [];
-  const region = Object.assign(new EventTarget(), { contains: target => target === viewport || target === link });
   const link = {};
   const status = { hidden: false, textContent: "Loading timeline…" };
   const track = {
@@ -24,10 +23,10 @@ async function setup({ reduced = false, missing = false } = {}) {
       animations.push(animation); return animation;
     },
   };
-  const viewport = {
-    scrollTop: 0, closest: () => region,
+  const viewport = Object.assign(new EventTarget(), {
+    scrollTop: 0, clientHeight: 300,
     querySelector: selector => selector.includes("track") ? track : status,
-  };
+  });
   const sequence = {
     get offsetHeight() { return height; }, querySelectorAll: () => [],
     cloneNode: () => ({ setAttribute(name, value) { this[name] = value; } }),
@@ -55,7 +54,7 @@ async function setup({ reduced = false, missing = false } = {}) {
     for (const [key, value] of Object.entries(values)) Object.defineProperty(event, key, { value });
     target.dispatchEvent(event);
   };
-  return { region, link, status, viewport, track, document, media, window, animations, appended, emit,
+  return { link, status, viewport, track, document, media, window, animations, appended, emit,
     enter: visible => enter([{ isIntersecting: visible }]),
     resize: value => { height = value; resize(); },
   };
@@ -75,22 +74,16 @@ test("the canonical list has one visual clone and stays paused outside the viewp
   env.enter(false); assert.equal(animation.playState, "paused");
 });
 
-test("hover, keyboard focus and page visibility compose without premature resuming", async () => {
+test("hover keeps the preview moving, wheel input stays inside it, and hidden pages pause", async () => {
   const env = await setup(); const animation = env.animations[0];
   env.enter(true);
-  env.emit(env.region, "pointerenter", { pointerType: "mouse" });
-  assert.equal(animation.playState, "paused");
-  env.emit(env.region, "focusin");
-  env.emit(env.region, "pointerleave");
-  assert.equal(animation.playState, "paused", "keyboard focus still holds the pause");
+  assert.equal(animation.playState, "running");
+  env.emit(env.viewport, "wheel", { deltaY: 40, deltaMode: 0, preventDefault() {} });
+  assert.equal(env.viewport.scrollTop, 40);
   env.document.hidden = true; env.emit(env.document, "visibilitychange");
-  env.emit(env.region, "focusout", { relatedTarget: null });
   assert.equal(animation.playState, "paused", "hidden pages never resume");
   env.document.hidden = false; env.emit(env.document, "visibilitychange");
   assert.equal(animation.playState, "running");
-  env.emit(env.region, "focusin");
-  env.emit(env.region, "focusout", { relatedTarget: env.link });
-  assert.equal(animation.playState, "paused", "the full-timeline link is inside the same region");
 });
 
 test("resizing preserves scroll distance and reduced motion exposes static content", async () => {
@@ -115,7 +108,8 @@ test("missing data never displays the removed placeholder sentence", async () =>
   assert.equal(env.animations.length, 0);
   assert.equal(env.status.hidden, true);
   const home = readFileSync(new URL("../index.html", import.meta.url), "utf8");
-  assert.match(home, /class="text-link timeline-preview-link" href="timeline.html"/);
+  assert.match(home, /class="timeline-preview-window"[^>]+href="timeline\.html"/);
+  assert.doesNotMatch(home, /timeline-preview-link/);
 });
 
 test("all 13 events are mounted before standalone timeline interactions and language setup", () => {

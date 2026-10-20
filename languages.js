@@ -474,7 +474,5 @@
     document.dispatchEvent(new Event("site-language-change"));
   };
   buttons.forEach(button => button.addEventListener("click", () => applyLanguage(button.dataset.language)));
-  let initialLanguage = "en";
-  try { initialLanguage = localStorage.getItem("site-language") || "en"; } catch { /* Default to English. */ }
-  applyLanguage(initialLanguage);
+  applyLanguage("en");
 })();

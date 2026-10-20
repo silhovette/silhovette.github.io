@@ -131,11 +131,11 @@ const setupSiteSearch = () => {
 
   const render = () => {
     const query = input.value.trim().toLowerCase();
-    results.replaceChildren();
     if (!query) {
       search.classList.remove("has-results");
       return;
     }
+    results.replaceChildren();
     const matches = searchableItems.filter((item) => item.textContent.toLowerCase().includes(query));
     matches.slice(0, 7).forEach((item) => {
       const button = document.createElement("button");

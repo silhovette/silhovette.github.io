@@ -328,7 +328,7 @@ button {
   height: 36px;
   padding: 0 4px;
   border: 0;
-  border-bottom: 1px solid transparent;
+  border-bottom: 1px solid rgb(98 91 88 / 25%);
   border-radius: 0;
   color: var(--ink);
   background: none;
@@ -342,19 +342,38 @@ button {
   position: absolute;
   top: calc(100% + 14px);
   left: 0;
-  right: auto;
-  width: min(360px, calc(100vw - 48px));
-  max-height: min(420px, 60vh);
+  right: 32px;
+  width: auto;
+  max-height: min(50vh, 420px);
+  overflow-x: hidden;
   overflow-y: auto;
+  overscroll-behavior-y: contain;
+  scrollbar-width: none;
   border: 1px solid var(--line);
   border-radius: 8px;
   padding: 4px 16px;
   margin: 0;
   background: var(--paper);
   box-shadow: none;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity 200ms ease, transform 200ms ease, display 200ms allow-discrete;
 }
+.portfolio-header .header-search .site-search__results::-webkit-scrollbar { display: none; }
 .portfolio-header .header-search:not(.is-searching) .site-search__results { display: none; }
 .portfolio-header .search-matches:not([hidden]) { display: grid; }
+.portfolio-header .header-search.is-searching .search-matches:not([hidden]),
+.portfolio-header .header-search.is-searching.has-results .site-search__results {
+  opacity: 1;
+  transform: translateY(0);
+}
+@starting-style {
+  .portfolio-header .header-search.is-searching .search-matches:not([hidden]),
+  .portfolio-header .header-search.is-searching.has-results .site-search__results {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
 .portfolio-header .site-search__result,
 .portfolio-header .search-matches a {
   display: block;
@@ -421,16 +440,27 @@ a, button { transition: color 180ms ease-out, background-color 180ms ease-out, b
     border: 1px solid var(--line);
     border-radius: 8px;
     background: var(--paper);
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity 200ms ease, transform 200ms ease, display 200ms allow-discrete;
   }
-  .portfolio-header .header-search-panel.is-open { display: block; }
+  .portfolio-header .header-search-panel.is-open { display: block; opacity: 1; transform: translateY(0); }
+  @starting-style {
+    .portfolio-header .header-search-panel.is-open { opacity: 0; transform: translateY(-6px); }
+  }
   .portfolio-header .header-search .site-search__results {
     position: static;
     width: 100%;
+    max-height: min(50vh, 420px);
     margin-top: 8px;
     padding: 0;
     border: 0;
     border-radius: 0;
   }
+}
+@media (prefers-reduced-motion: reduce) {
+  .portfolio-header .header-search .site-search__results,
+  .portfolio-header .header-search-panel { transition: none; transform: none; }
 }
 @media (max-width: 360px) {
   .header-controls { gap: 2px; }

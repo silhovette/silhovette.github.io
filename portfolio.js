@@ -263,12 +263,12 @@
   ];
   const renderSearch = () => {
     if (!results) return;
-    results.replaceChildren();
     const query = searchInput.value.trim().toLocaleLowerCase();
     if (!query) {
       closeSearch();
       return;
     }
+    results.replaceChildren();
     results.hidden = false;
     searchInput.setAttribute("aria-expanded", "true");
     const matches = searchItems
