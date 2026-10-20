@@ -85,7 +85,7 @@ body::after {
   mask-image: radial-gradient(ellipse 280px 280px at var(--grid-x, -500px) var(--grid-y, -500px), #000 0%, #0009 30%, transparent 100%);
   transition: opacity 220ms ease-out;
 }
-.page-grid.is-active::after { opacity: 0.12; }
+.page-grid.is-active::after { opacity: 0.095; }
 @media (prefers-reduced-motion: reduce), (hover: none), (pointer: coarse) {
   .page-grid::after { display: none; transition: none; }
 }
@@ -304,6 +304,12 @@ button {
 }
 /* Compact, shared navigation and search shell. */
 .portfolio-header .header-search { display: flex; align-items: center; position: relative; width: 450px; margin: 0; }
+@media (min-width: 601px) {
+  .portfolio-home .portfolio-header .header-search { width: 390px; }
+}
+@media (min-width: 1001px) and (max-width: 1340px) {
+  .portfolio-home .portfolio-header .header-search { width: auto; margin-left: 48px; }
+}
 .portfolio-nav { transform: translateX(-256px); }
 .search-toggle, .menu-toggle {
   width: 32px;
@@ -559,6 +565,7 @@ a, button { transition: color 180ms ease-out, background-color 180ms ease-out, b
   border-bottom: 1px solid var(--ink);
   padding-block: 6px;
 }
+.text-link--plain { border-bottom: 0; text-decoration: none; }
 .text-link:hover {
   color: var(--red);
   border-color: var(--red);
@@ -962,14 +969,6 @@ a, button { transition: color 180ms ease-out, background-color 180ms ease-out, b
   text-underline-offset: 4px;
   font: 14px var(--font-body);
 }
-.manuscript-note {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  font: 13px var(--font-body);
-  color: var(--muted);
-  padding-top: 18px;
-}
 .sculpture-gallery {
   width: min(1080px, calc(100vw - 48px));
   /* Account for the page's 0.8 zoom while leaving 24px above and below. */
@@ -1073,7 +1072,6 @@ a, button { transition: color 180ms ease-out, background-color 180ms ease-out, b
 .timeline-preview-window {
   height: 300px;
   overflow: hidden;
-  scroll-behavior: smooth;
   position: relative;
   display: block;
   color: inherit;
@@ -1085,8 +1083,9 @@ a, button { transition: color 180ms ease-out, background-color 180ms ease-out, b
 .timeline-preview-window:focus-visible { outline: 1px solid var(--red); outline-offset: 6px; }
 .profile-timeline:has(.timeline-preview-window:focus-visible) { outline: 1px solid var(--red); outline-offset: 8px; }
 .timeline-preview-status { padding: 24px 0; color: var(--muted); font-size: 14px; }
-.timeline-preview-track { position: relative; }
+.timeline-preview-track { position: relative; display: flex; flex-direction: column; will-change: transform; }
 .timeline-preview-list {
+  flex: none;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -1130,10 +1129,12 @@ a, button { transition: color 180ms ease-out, background-color 180ms ease-out, b
 .timeline-preview-list p { font: 400 14px/1.7 var(--font-body); color: var(--muted); margin-top: 4px; }
 .timeline-preview-list strong { font-weight: 400; }
 @media (prefers-reduced-motion: reduce) {
+  .timeline-preview-track { gap: 0 !important; transform: none !important; will-change: auto; }
   .timeline-preview-window { overflow-y: auto; scrollbar-width: thin; mask-image: none; }
   .timeline-preview-list[aria-hidden="true"] { display: none; }
 }
 @media print {
+  .timeline-preview-track { gap: 0 !important; transform: none !important; will-change: auto; }
   .timeline-preview-window { height: auto; overflow: visible; mask-image: none; }
   .timeline-preview-list[aria-hidden="true"] { display: none; }
 }
@@ -1282,8 +1283,8 @@ a, button { transition: color 180ms ease-out, background-color 180ms ease-out, b
 }
 .email-link {
   font: 400 clamp(22px, 3.5vw, 44px) / 1.25 var(--font-body);
-  border-bottom: 1px solid #817672;
-  padding-bottom: 8px;
+  border-bottom: 0;
+  padding-bottom: 0;
   letter-spacing: -0.025em;
 }
 .copy-button {

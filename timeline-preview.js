@@ -6,85 +6,103 @@
   const status = viewport.querySelector(".timeline-preview-status");
   const motion = matchMedia("(prefers-reduced-motion: reduce)");
   const pixelsPerSecond = 12;
-  let animation = null;
   let sequence = null;
-  let sequenceHeight = 0;
-  let duration = 0;
-  let visible = false;
+  let cycle = 0;
+  let position = 0;
+  let wheelRemaining = 0;
+  let quietRemaining = 0;
+  let autoSpeed = pixelsPerSecond;
+  let visible = !("IntersectionObserver" in window);
   let printing = false;
-  let wheelPosition = 0;
+  let frame = null;
+  let previousTime = null;
 
-  const wrapWheelPosition = value => {
-    if (!sequenceHeight || !Number.isFinite(value)) return value;
-    // The second list is a visual clone. Once the wheel reaches it, move the
-    // scroll position back by one list height so the loop stays continuous.
-    const loopOffset = Math.max(0, (viewport.clientHeight || 0) * 0.35);
-    const cycle = sequenceHeight;
-    while (value >= cycle + loopOffset) value -= cycle;
-    while (value < 0) value += cycle;
-    return value;
+  const wrap = value => ((value % cycle) + cycle) % cycle;
+  const running = () => cycle > 0 && visible && !document.hidden && !motion.matches && !printing;
+  const paint = () => {
+    // The middle copy is canonical. Copies on both sides make either wrap
+    // visually identical, even when the viewport falls entirely in the gap.
+    track.style.transform = motion.matches || printing || !cycle
+      ? "" : `translate3d(0, ${-(cycle + position)}px, 0)`;
   };
-
-  const scrollWithWheel = value => {
-    wheelPosition = wrapWheelPosition(value);
-    if (typeof viewport.scrollTo === "function") {
-      viewport.scrollTo({ top: wheelPosition, behavior: "smooth" });
-    } else {
-      // Keeps the behavior deterministic in non-browser test environments.
-      viewport.scrollTop = wheelPosition;
+  const tick = now => {
+    frame = null;
+    if (!running()) { previousTime = null; return; }
+    const dt = previousTime === null ? 0 : Math.min(50, Math.max(0, now - previousTime));
+    previousTime = now;
+    const wheelStep = wheelRemaining * (1 - Math.exp(-dt / 85));
+    wheelRemaining -= wheelStep;
+    let movement = wheelStep;
+    if (Math.abs(wheelRemaining) < 0.01) {
+      movement += wheelRemaining;
+      wheelRemaining = 0;
     }
+    if (quietRemaining > 0) {
+      quietRemaining = Math.max(0, quietRemaining - dt);
+      autoSpeed = 0;
+    } else {
+      autoSpeed += (pixelsPerSecond - autoSpeed) * (1 - Math.exp(-dt / 350));
+      movement += autoSpeed * dt / 1000;
+    }
+    position = wrap(position + movement);
+    paint();
+    frame = requestAnimationFrame(tick);
   };
-
   const sync = () => {
-    if (!animation) return;
-    if (visible && !document.hidden && !motion.matches && !printing) animation.play();
-    else animation.pause();
+    if (frame !== null) cancelAnimationFrame(frame);
+    frame = null;
+    previousTime = null;
+    paint();
+    if (running()) frame = requestAnimationFrame(tick);
   };
   const measure = () => {
-    if (printing) return;
-    const height = sequence?.offsetHeight || 0;
-    if (!height) return;
-    if (motion.matches) {
-      animation?.cancel();
-      animation = null;
-      sequenceHeight = height;
-      return;
-    }
-    if (animation && height === sequenceHeight) return;
-    // Preserve the travelled distance when fonts, translations or wrapping change.
-    const offset = animation && duration
-      ? ((Number(animation.currentTime) || 0) % duration) / duration * sequenceHeight : 0;
-    animation?.cancel();
-    sequenceHeight = height;
-    duration = height / pixelsPerSecond * 1000;
-    wheelPosition = wrapWheelPosition(viewport.scrollTop || 0);
-    if (!track.animate) return; // The complete static list and full-page link remain available.
-    animation = track.animate([
-      { transform: "translateY(0)" }, { transform: "translateY(-50%)" },
-    ], { duration, iterations: Infinity, easing: "linear" });
-    animation.pause();
-    animation.currentTime = (offset % height) / pixelsPerSecond * 1000;
+    if (!sequence || printing) return;
+    // offsetHeight rounds to whole pixels. Measure fractional CSS pixels so
+    // wrapping at a copy boundary is exact, including under the page's zoom.
+    const scale = viewport.getBoundingClientRect().height / viewport.offsetHeight || 1;
+    const bounds = sequence.getBoundingClientRect();
+    const height = bounds.height / scale;
+    const gap = viewport.clientHeight * 1.2;
+    if (!height || !viewport.clientHeight) return;
+    track.style.gap = `${gap}px`;
+    // Use the actual copy spacing, including the browser's fractional layout
+    // rounding of the gap, rather than accumulating a tiny error each wrap.
+    const nextCycle = motion.matches ? height + gap
+      : (sequence.nextElementSibling.getBoundingClientRect().top - sequence.getBoundingClientRect().top) / scale;
+    if (nextCycle === cycle) return;
+    // Keep the fractional progress through the list and trailing gap when
+    // wrapping, language, viewport dimensions or font metrics change.
+    const ratio = cycle ? nextCycle / cycle : 1;
+    position *= ratio;
+    wheelRemaining *= ratio;
+    cycle = nextCycle;
     sync();
   };
-  const localize = root => {
-    root.querySelectorAll("[data-i18n]").forEach(element => {
+  const localize = () => {
+    track.querySelectorAll("[data-i18n]").forEach(element => {
       window.siteI18n?.setText(element, element.dataset.i18n);
     });
   };
 
-  // Keep the page stationary while the pointer is over the preview. The
-  // preview remains animated, and wheel input moves its own scroll container.
   viewport.addEventListener("wheel", event => {
+    // Reduced motion retains one ordinary, manually scrollable list.
+    if (motion.matches || printing || !cycle || event.ctrlKey) return;
     event.preventDefault();
     const unit = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? viewport.clientHeight : 1;
-    const current = Number.isFinite(wheelPosition) ? wheelPosition : viewport.scrollTop;
-    scrollWithWheel(current + event.deltaY * unit);
+    const delta = event.deltaY * unit;
+    if (!Number.isFinite(delta) || !delta) return;
+    wheelRemaining += delta;
+    quietRemaining = 700;
+    autoSpeed = 0;
   }, { passive: false });
   document.addEventListener("visibilitychange", sync);
   addEventListener("pageshow", sync);
-  addEventListener("beforeprint", () => { printing = true; animation?.cancel(); });
-  addEventListener("afterprint", () => { printing = false; animation = null; measure(); });
+  addEventListener("resize", measure, { passive: true });
+  addEventListener("beforeprint", () => { printing = true; sync(); });
+  addEventListener("afterprint", () => { printing = false; measure(); sync(); });
   motion.addEventListener("change", () => {
+    wheelRemaining = 0;
+    quietRemaining = 0;
     viewport.scrollTop = 0;
     measure();
     sync();
@@ -96,7 +114,6 @@
     }, { threshold: 0.01 }).observe(viewport);
   }
 
-  // Both pages consume the same local data, without a fetch blocked by file://.
   try {
     const source = new DOMParser().parseFromString(
       '<ol>' + window.siteTimelineMarkup + '</ol>', 'text/html'
@@ -104,22 +121,28 @@
     if (!window.siteTimelineMarkup || !source?.children.length) throw new Error('Timeline is empty');
     sequence = document.importNode(source, true);
     sequence.className = 'timeline-preview-list';
-    // Event headings sit one level below this preview's own heading.
     sequence.querySelectorAll('h3').forEach(heading => {
       const replacement = document.createElement('h4');
       for (const attribute of heading.attributes) replacement.setAttribute(attribute.name, attribute.value);
       replacement.append(...heading.childNodes);
       heading.replaceWith(replacement);
     });
-    const duplicate = sequence.cloneNode(true);
-    duplicate.setAttribute('aria-hidden', 'true');
-    duplicate.inert = true;
-    track.append(sequence, duplicate);
-    localize(track);
+    const clone = () => {
+      const duplicate = sequence.cloneNode(true);
+      duplicate.setAttribute('aria-hidden', 'true');
+      duplicate.inert = true;
+      return duplicate;
+    };
+    track.append(clone(), sequence, clone());
+    localize();
     status.hidden = true;
     measure();
-    new ResizeObserver(measure).observe(sequence);
-    document.addEventListener('site-language-change', measure);
+    const resizeObserver = new ResizeObserver(measure);
+    resizeObserver.observe(sequence);
+    resizeObserver.observe(viewport);
+    document.addEventListener('site-language-change', () => { localize(); measure(); });
+    document.fonts?.ready.then(measure);
+    document.fonts?.addEventListener('loadingdone', measure);
   } catch (error) {
     status.hidden = true;
     console.error('Unable to initialize timeline preview:', error);
