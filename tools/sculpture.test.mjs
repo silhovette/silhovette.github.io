@@ -292,7 +292,8 @@ test("animation lifecycle: rapid input, visibility, resize and live reduced-moti
       const offset = i * 3, depth = unexpandedDepth[offset + 2];
       const ratio = settings.hoverExpansion * (4.8 - depth) / (4.8 - depth * settings.hoverExpansion);
       assert.ok(Math.abs(engine.projected[offset] - engine.width / 2 - (unexpandedDepth[offset] - engine.width / 2) * ratio) < 1e-4);
-      assert.ok(Math.abs(engine.projected[offset + 1] - engine.height / 2 - (unexpandedDepth[offset + 1] - engine.height / 2) * ratio) < 1e-4);
+      const centerY = engine.height / 2 + (engine.shapes[engine.current].heroOffsetY || 0);
+      assert.ok(Math.abs(engine.projected[offset + 1] - centerY - (unexpandedDepth[offset + 1] - centerY) * ratio) < 1e-4);
     }
     assert.deepEqual(engine.points, geometry, "hover cannot modify the base shape");
   }

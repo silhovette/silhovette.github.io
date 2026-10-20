@@ -218,12 +218,12 @@ const SCULPTURE_SHAPES = [
   { id: "torus", name: "Torus", generate: torus },
   { id: "hopf", name: "Hopf Fibration", generate: hopf },
   { id: "harmonics", name: "Spherical Harmonics", generate: harmonics },
-  { id: "lorenz", name: "Lorenz Attractor", generate: lorenz },
+  { id: "lorenz", name: "Lorenz Attractor", generate: lorenz, heroScale: 1.08, heroOffsetY: -15 },
   { id: "mobius", name: "Möbius Strip", generate: mobius, displayScale: 1.08 },
   { id: "enneper", name: "Enneper Surface", generate: enneper },
-  { id: "dini", name: "Dini's Surface", generate: dini },
-  { id: "klein", name: "Klein Bottle", generate: klein },
-  { id: "plucker", name: "Plücker Conoid", generate: plucker },
+  { id: "dini", name: "Dini's Surface", generate: dini, heroScale: 1.17, heroOffsetY: -60 },
+  { id: "klein", name: "Klein Bottle", generate: klein, heroScale: 1.15, heroOffsetY: -30 },
+  { id: "plucker", name: "Plücker Conoid", generate: plucker, heroScale: 0.99144, heroOffsetY: 25 },
   { id: "roman", name: "Roman Surface", generate: roman },
 ];
 
@@ -369,16 +369,19 @@ function sampleParticleDrift(base, parameters, seconds, output) {
 }
 
 class ParticleSculpture {
-  constructor(canvas) {
+  constructor(canvas, options = {}) {
     this.canvas = canvas;
     this.ctx = canvas.getContext("2d");
     if (!this.ctx) return;
     this.motion = matchMedia("(prefers-reduced-motion: reduce)");
     this.status = canvas.parentElement.querySelector("[data-orbit-status]");
-    this.count = matchMedia("(max-width: 760px)").matches
-      ? SCULPTURE_SETTINGS.mobileParticles : SCULPTURE_SETTINGS.desktopParticles;
-    this.shapes = createShapeLibrary(this.count);
-    this.current = this.shapes.findIndex((shape) => shape.id === "mobius");
+    this.count = options.count || (matchMedia("(max-width: 760px)").matches
+      ? SCULPTURE_SETTINGS.mobileParticles : SCULPTURE_SETTINGS.desktopParticles);
+    this.shapes = options.shapes || createShapeLibrary(this.count);
+    this.current = this.shapes.findIndex((shape) => shape.id === (options.shape || "mobius"));
+    this.interactive = options.interactive !== false;
+    this.frameInterval = this.interactive ? 0 : 1000 / 30;
+    this.depthBuckets = this.interactive ? null : Array.from({ length: 16 }, () => []);
     this.target = this.current;
     this.points = this.shapes[this.current].points.slice();
     this.drift = createParticleDrift(this.count);
@@ -415,11 +418,11 @@ class ParticleSculpture {
     const i18n = window.siteI18n;
     const current = this.shapes[this.current];
     const shape = i18n ? i18n.t(`sculpture_shape_${current.id}`, {}, current.name) : current.name;
-    if (i18n) {
+    if (i18n && this.interactive) {
       i18n.setAttribute(this.canvas, "aria-label", "sculpture_label", { shape });
       if (this.status && (announce || this.status.textContent)) i18n.setText(this.status, "sculpture_changed", { shape });
     } else {
-      this.canvas.setAttribute("aria-label", `${shape} particle sculpture. Click or press Enter to transform.`);
+      this.canvas.setAttribute("aria-label", `${shape} particle sculpture.${this.interactive ? " Click or press Enter to transform." : ""}`);
       if (announce && this.status) this.status.textContent = `Now showing ${shape}.`;
     }
   }
@@ -447,6 +450,23 @@ class ParticleSculpture {
   }
 
   bindInteractions() {
+    if (this.interactive) this.bindInput();
+    document.addEventListener("visibilitychange", () => this.sync());
+    document.addEventListener("site-language-change", () => this.updateAccessibleState());
+    this.motion.addEventListener("change", () => {
+      if (this.motion.matches) {
+        this.hover.factor = this.hover.from = this.hover.target = 1;
+        this.hover.elapsed = 0;
+      }
+      if (this.motion.matches && this.transition) {
+        this.transition = createTransition(this.points, this.shapes[this.target].points, true);
+        this.setStage("morph");
+      }
+      this.sync();
+    });
+  }
+
+  bindInput() {
     this.canvas.addEventListener("click", () => this.transform());
     this.canvas.addEventListener("keydown", (event) => {
       if (event.key === "Enter" || event.key === " ") {
@@ -460,21 +480,6 @@ class ParticleSculpture {
     });
     this.canvas.addEventListener("pointerleave", () => {
       this.setExpansion(1);
-    });
-    document.addEventListener("visibilitychange", () => this.sync());
-    document.addEventListener("site-language-change", () => this.updateAccessibleState());
-    this.motion.addEventListener("change", () => {
-      if (this.motion.matches) {
-        this.hover.factor = this.hover.from = this.hover.target = 1;
-        this.hover.elapsed = 0;
-      }
-      // Changing the OS preference during a scatter starts a gentle continuation
-      // from the current particles, without jumping directly to the target.
-      if (this.motion.matches && this.transition) {
-        this.transition = createTransition(this.points, this.shapes[this.target].points, true);
-        this.setStage("morph");
-      }
-      this.sync();
     });
   }
 
@@ -490,7 +495,7 @@ class ParticleSculpture {
   }
 
   shouldAnimate() {
-    return this.width > 0 && this.height > 0 && this.visible && !document.hidden
+    return this.width > 0 && this.height > 0 && this.visible && !this.suspended && !document.hidden
       && (!this.motion.matches || this.transition !== null);
   }
 
@@ -506,6 +511,10 @@ class ParticleSculpture {
   tick(now) {
     this.frame = null;
     if (!this.shouldAnimate()) { this.previous = null; return; }
+    if (this.previous !== null && now - this.previous < this.frameInterval - 0.5) {
+      this.frame = requestAnimationFrame(this.tick);
+      return;
+    }
     const delta = this.previous === null ? 0 : Math.min(50, Math.max(0, now - this.previous));
     this.previous = now;
     if (!this.motion.matches) {
@@ -541,11 +550,16 @@ class ParticleSculpture {
     const rx = 0.88, ry = this.angle;
     const cx = Math.cos(rx), sx = Math.sin(rx), cy = Math.cos(ry), sy = Math.sin(ry);
     const breathing = 1 + 0.006 * Math.sin(this.elapsed * 0.00045);
-    const sourceScale = this.shapes[this.current].displayScale || 1;
-    const targetScale = this.shapes[this.target].displayScale || 1;
+    const sourceShape = this.shapes[this.current], targetShape = this.shapes[this.target];
+    const sourceScale = (sourceShape.displayScale || 1) * (this.interactive ? sourceShape.heroScale || 1 : 1);
+    const targetScale = (targetShape.displayScale || 1) * (this.interactive ? targetShape.heroScale || 1 : 1);
+    const progress = this.transition ? smooth(this.transition.elapsed / this.transition.duration) : 0;
     const shapeScale = this.transition
-      ? sourceScale + (targetScale - sourceScale) * smooth(this.transition.elapsed / this.transition.duration)
+      ? sourceScale + (targetScale - sourceScale) * progress
       : sourceScale;
+    const sourceOffsetY = this.interactive ? sourceShape.heroOffsetY || 0 : 0;
+    const targetOffsetY = this.interactive ? targetShape.heroOffsetY || 0 : 0;
+    const offsetY = sourceOffsetY + (targetOffsetY - sourceOffsetY) * progress;
     const scale = Math.min(width, height) / SCULPTURE_SETTINGS.canvasOverscan * SCULPTURE_SETTINGS.viewScale * shapeScale;
     const expansion = this.hover.factor;
     for (let i = 0; i < this.count; i++) {
@@ -557,12 +571,35 @@ class ParticleSculpture {
       // coordinates before projection, keeping camera parameters unchanged.
       const perspective = 4.8 / (4.8 - depth * expansion);
       projected[offset] = width * 0.5 + a * expansion * scale * perspective;
-      projected[offset + 1] = height * 0.5 + c * expansion * scale * perspective;
+      projected[offset + 1] = height * 0.5 + offsetY + c * expansion * scale * perspective;
       // Unexpanded depth preserves each point's radius, color and opacity.
       projected[offset + 2] = depth;
     }
-    this.depthOrder.sort((a, b) => projected[a * 3 + 2] - projected[b * 3 + 2]);
     const pointScale = Math.min(1, width / SCULPTURE_SETTINGS.canvasOverscan / 440);
+    if (this.depthBuckets) {
+      // Preview particles share 16 depth layers: one canvas fill per layer,
+      // rather than a sort and a separate style/path/fill for every particle.
+      for (const bucket of this.depthBuckets) bucket.length = 0;
+      for (let index = 0; index < this.count; index++) {
+        const depth = Math.max(0, Math.min(1, (projected[index * 3 + 2] + 1.65) / 3.3));
+        this.depthBuckets[Math.min(15, Math.floor(depth * 16))].push(index);
+      }
+      this.depthBuckets.forEach((bucket, layer) => {
+        if (!bucket.length) return;
+        const depth = (layer + 0.5) / 16;
+        const radius = (0.65 + depth * 0.65) * pointScale * 0.912;
+        ctx.fillStyle = `rgba(161,62,35,${0.19 + depth * 0.62})`;
+        ctx.beginPath();
+        for (const index of bucket) {
+          const x = projected[index * 3], y = projected[index * 3 + 1];
+          ctx.moveTo(x + radius, y);
+          ctx.arc(x, y, radius, 0, TAU);
+        }
+        ctx.fill();
+      });
+      return;
+    }
+    this.depthOrder.sort((a, b) => projected[a * 3 + 2] - projected[b * 3 + 2]);
     for (const index of this.depthOrder) {
       const offset = index * 3;
       const depth = Math.max(0, Math.min(1, (projected[offset + 2] + 1.65) / 3.3));
@@ -571,22 +608,115 @@ class ParticleSculpture {
       ctx.arc(projected[offset], projected[offset + 1], (0.65 + depth * 0.65) * pointScale * 0.912, 0, TAU);
       ctx.fill();
     }
-    // Two quiet registration marks keep the editorial composition familiar.
-    ctx.strokeStyle = "#95888440";
-    ctx.lineWidth = 0.7;
-    const insetX = width * 0.1, insetY = height * 0.1;
-    for (const [x, y] of [[insetX + 20, insetY + 78], [width - insetX - 20, height - insetY - 60]]) {
-      ctx.beginPath();
-      ctx.moveTo(x - 5, y); ctx.lineTo(x + 5, y);
-      ctx.moveTo(x, y - 5); ctx.lineTo(x, y + 5);
-      ctx.stroke();
-    }
   }
 }
 
 if (typeof document !== "undefined") {
   const canvas = document.getElementById("agent-orbit");
-  if (canvas) new ParticleSculpture(canvas);
+  if (canvas) {
+    const sculpture = new ParticleSculpture(canvas);
+    const dialog = document.getElementById("sculpture-gallery");
+    if (dialog) setupGallery(canvas, sculpture, dialog);
+  }
+}
+
+function setupGallery(canvas, sculpture, dialog) {
+  const grid = dialog.querySelector(".sculpture-gallery__grid");
+  const previews = [];
+  const descriptions = [
+    "A ring with a rounded tube and an open center.",
+    "Linked circles woven into a flowing bundle.",
+    "A sphere shaped into rounded, petal-like lobes.",
+    "Two swirling wings of a chaotic trajectory.",
+    "A continuous ribbon with a half twist.",
+    "A curved sheet folding into flowing petals.",
+    "A twisting surface spiraling around its axis.",
+    "A bottle whose neck passes through its own surface.",
+    "Straight lines sweeping out a twisted surface.",
+    "Rounded sheets meeting in a tetrahedral form.",
+  ];
+  let clicks = [];
+  let closing = false;
+  let previousOverflow;
+  let previousFocus;
+  let pauseBackgroundTimer;
+  const setSuspended = (engine, suspended) => { engine.suspended = suspended; engine.sync(); };
+  const open = () => {
+    if (dialog.open) return;
+    previousFocus = document.activeElement;
+    previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    dialog.classList.remove("is-closing");
+    dialog.showModal();
+    clearTimeout(pauseBackgroundTimer);
+    pauseBackgroundTimer = setTimeout(() => {
+      if (dialog.open && !closing) setSuspended(sculpture, true);
+    }, 1000);
+    if (!previews.length) {
+      const count = 800;
+      const shapes = createShapeLibrary(count);
+      shapes.forEach((shape, index) => {
+        const card = document.createElement("article");
+        card.className = "sculpture-gallery__card";
+        const preview = document.createElement("canvas");
+        preview.setAttribute("role", "img");
+        const title = document.createElement("h3");
+        title.textContent = shape.name;
+        const description = document.createElement("p");
+        description.textContent = descriptions[index];
+        card.append(preview, title, description);
+        grid.append(card);
+        previews.push(new ParticleSculpture(preview, { count, shapes, shape: shape.id, interactive: false }));
+      });
+    }
+    previews.forEach(engine => { engine.resize(); setSuspended(engine, false); });
+    if (!sculpture.motion.matches) dialog.animate([
+      { opacity: 0, transform: "translateY(16px) scale(0.98)" },
+      { opacity: 1, transform: "translateY(0) scale(1)" },
+    ], { duration: 240, easing: "ease-out" });
+  };
+  const close = () => {
+    if (!dialog.open || closing) return;
+    closing = true;
+    clearTimeout(pauseBackgroundTimer);
+    setSuspended(sculpture, false);
+    dialog.classList.add("is-closing");
+    const finish = () => {
+      dialog.close();
+      closing = false;
+    };
+    if (sculpture.motion.matches) finish();
+    else dialog.animate([
+      { opacity: 1, transform: "translateY(0) scale(1)" },
+      { opacity: 0, transform: "translateY(12px) scale(0.98)" },
+    ], { duration: 200, easing: "ease-in", fill: "forwards" }).finished.then(finish);
+  };
+  canvas.addEventListener("click", event => {
+    const now = event.timeStamp;
+    clicks = clicks.filter(time => now - time < 800);
+    clicks.push(now);
+    if (clicks.length >= 3) { clicks = []; open(); }
+  });
+  dialog.addEventListener("cancel", event => { event.preventDefault(); close(); });
+  dialog.querySelector("[data-gallery-close]").addEventListener("click", close);
+  let backdropDown = false;
+  const outside = event => {
+    const rect = dialog.getBoundingClientRect();
+    return event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom;
+  };
+  dialog.addEventListener("pointerdown", event => { backdropDown = event.target === dialog && outside(event); });
+  dialog.addEventListener("click", event => {
+    if (backdropDown && event.target === dialog && outside(event)) close();
+    backdropDown = false;
+  });
+  dialog.addEventListener("close", () => {
+    clearTimeout(pauseBackgroundTimer);
+    previews.forEach(engine => setSuspended(engine, true));
+    setSuspended(sculpture, false);
+    document.body.style.overflow = previousOverflow;
+    dialog.getAnimations().forEach(animation => animation.cancel());
+    previousFocus?.focus({ preventScroll: true });
+  });
 }
 
 // CommonJS access is only used by the Node test suite.

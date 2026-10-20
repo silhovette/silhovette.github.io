@@ -1,0 +1,17 @@
+/* Hide scrollbar chrome without changing native scrolling or overflow. */
+* {
+  scrollbar-width: none !important;
+  outline: none !important;
+}
+
+*::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Focus remains functional without an outline or a shadow ring. */
+:focus,
+:focus-visible {
+  box-shadow: none !important;
+}
