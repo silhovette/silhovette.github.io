@@ -77,37 +77,32 @@
     }, { threshold: 0.01 }).observe(viewport);
   }
 
-  // timeline.html is the canonical event data, including its complete no-JS content.
-  // Import only the event list; no second set of dates/copy is maintained here.
-  fetch("timeline.html")
-    .then(response => {
-      if (!response.ok) throw new Error("Timeline unavailable");
-      return response.text();
-    })
-    .then(html => {
-      const source = new DOMParser().parseFromString(html, "text/html").querySelector(".personal-timeline");
-      if (!source?.children.length) throw new Error("Timeline is empty");
-      sequence = document.importNode(source, true);
-      sequence.className = "timeline-preview-list";
-      // Event headings sit one level below this preview's own heading.
-      sequence.querySelectorAll("h3").forEach(heading => {
-        const replacement = document.createElement("h4");
-        for (const attribute of heading.attributes) replacement.setAttribute(attribute.name, attribute.value);
-        replacement.append(...heading.childNodes);
-        heading.replaceWith(replacement);
-      });
-      const duplicate = sequence.cloneNode(true);
-      duplicate.setAttribute("aria-hidden", "true");
-      duplicate.inert = true;
-      track.append(sequence, duplicate);
-      localize(track);
-      status.hidden = true;
-      measure();
-      new ResizeObserver(measure).observe(sequence);
-      document.addEventListener("site-language-change", measure);
-    })
-    .catch(() => {
-      window.siteI18n?.setText(status, "timeline_preview_unavailable");
-      if (!window.siteI18n) status.textContent = "Explore all events in the full timeline below.";
+  // Both pages consume the same local data, without a fetch blocked by file://.
+  try {
+    const source = new DOMParser().parseFromString(
+      '<ol>' + window.siteTimelineMarkup + '</ol>', 'text/html'
+    ).querySelector('ol');
+    if (!window.siteTimelineMarkup || !source?.children.length) throw new Error('Timeline is empty');
+    sequence = document.importNode(source, true);
+    sequence.className = 'timeline-preview-list';
+    // Event headings sit one level below this preview's own heading.
+    sequence.querySelectorAll('h3').forEach(heading => {
+      const replacement = document.createElement('h4');
+      for (const attribute of heading.attributes) replacement.setAttribute(attribute.name, attribute.value);
+      replacement.append(...heading.childNodes);
+      heading.replaceWith(replacement);
     });
+    const duplicate = sequence.cloneNode(true);
+    duplicate.setAttribute('aria-hidden', 'true');
+    duplicate.inert = true;
+    track.append(sequence, duplicate);
+    localize(track);
+    status.hidden = true;
+    measure();
+    new ResizeObserver(measure).observe(sequence);
+    document.addEventListener('site-language-change', measure);
+  } catch (error) {
+    status.hidden = true;
+    console.error('Unable to initialize timeline preview:', error);
+  }
 })();

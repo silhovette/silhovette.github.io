@@ -4,7 +4,6 @@
     "view_full_timeline": ["View full timeline", "查看完整时间轴", "查看完整時間軸"],
     "timeline_preview_label": ["Timeline preview", "时间轴预览", "時間軸預覽"],
     "timeline_preview_loading": ["Loading timeline…", "正在加载时间轴…", "正在載入時間軸…"],
-    "timeline_preview_unavailable": ["Explore all events in the full timeline below.", "请通过下方链接查看完整时间轴。", "請透過下方連結查看完整時間軸。"],
     "portfolio_personal_interests": ["PERSONAL INTERESTS", "个人兴趣", "個人興趣"],
     "portfolio_playground_heading": ["Playground", "Playground", "Playground"],
     "works_kicker": ["WORK", "作品", "作品"],
