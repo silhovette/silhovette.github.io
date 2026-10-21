@@ -81,7 +81,7 @@
     "portfolio_writing": ["RESEARCH", "研究", "研究"],
     "portfolio_papers_title": ["Publications", "学术论文", "學術論文"],
     "portfolio_papers_note": ["Preprints, manuscripts, and ongoing questions about intelligent systems.", "关于智能系统的预印本、研究手稿，以及仍在探索的问题。", "關於智能系統的預印本、研究手稿，以及仍在探索的問題。"],
-    "portfolio_preview": ["View figure ↗", "查看图示 ↗", "查看圖示 ↗"],
+    "portfolio_preview": ["View figure", "查看图示", "查看圖示"],
     "portfolio_pending": ["Two additional manuscripts · details to follow", "另有两篇未公开手稿 · 内容待更新", "另有兩篇未公開手稿 · 內容待更新"],
     "portfolio_journey": ["BACKGROUND", "背景", "背景"],
     "portfolio_journey_title": ["Experience", "个人经历", "個人經歷"],

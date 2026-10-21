@@ -868,30 +868,11 @@ a, button { transition: color 180ms ease-out, background-color 180ms ease-out, b
   padding: 19px 0 0;
 }
 .project-title-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 20px;
+  display: block;
 }
 .project-info h3 {
   font: 500 20px/1.35 var(--font-display);
   letter-spacing: -0.04em;
-}
-.project-arrow {
-  flex-shrink: 0;
-  display: grid;
-  place-items: center;
-  border: 1px solid var(--line);
-  border-radius: 50%;
-  width: 32px;
-  height: 32px;
-  transition:
-    background 0.2s,
-    color 0.2s;
-}
-.project-card:hover .project-arrow {
-  background: var(--ink);
-  color: var(--paper);
 }
 .project-info p {
   font-size: 15.5px;
@@ -1177,19 +1158,6 @@ a, button { transition: color 180ms ease-out, background-color 180ms ease-out, b
 }
 .play-card[href="playground.html#photography"]:hover img {
   filter: saturate(1.1);
-}
-.play-image::after {
-  content: "↗";
-  position: absolute;
-  right: 13px;
-  bottom: 13px;
-  width: 31px;
-  height: 31px;
-  border-radius: 50%;
-  background: var(--paper);
-  display: grid;
-  place-items: center;
-  font-size: 17px;
 }
 .play-card h3 {
   font: 500 18px var(--font-display);
