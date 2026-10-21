@@ -303,12 +303,9 @@ button {
   padding: 10px;
 }
 /* Compact, shared navigation and search shell. */
-.portfolio-header .header-search { display: flex; align-items: center; position: relative; width: 450px; margin: 0; }
-@media (min-width: 601px) {
-  .portfolio-home .portfolio-header .header-search { width: 390px; }
-}
+.portfolio-header .header-search { display: flex; align-items: center; position: relative; width: 390px; margin: 0; }
 @media (min-width: 1001px) and (max-width: 1340px) {
-  .portfolio-home .portfolio-header .header-search { width: auto; margin-left: 48px; }
+  .portfolio-header .header-search { width: auto; margin-left: 48px; }
 }
 .portfolio-nav { transform: translateX(-256px); }
 .search-toggle, .menu-toggle {
@@ -350,6 +347,7 @@ button {
   left: 0;
   right: 32px;
   width: auto;
+  gap: 0;
   max-height: min(50vh, 420px);
   overflow-x: hidden;
   overflow-y: auto;
@@ -1350,6 +1348,64 @@ a, button { transition: color 180ms ease-out, background-color 180ms ease-out, b
   opacity: 1;
   transform: translate(-50%, 0);
 }
+/* Playground notice stays independent of the existing email toast. */
+.construction-notice {
+  position: fixed;
+  z-index: 81;
+  left: 50%;
+  bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  width: max-content;
+  max-width: calc(100vw - 32px);
+  box-sizing: border-box;
+  padding: 10px 18px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: 0 2px 10px rgb(39 35 34 / 5%);
+  font: 400 14px/1.5 var(--font-body);
+  white-space: nowrap;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, 8px);
+  transition: opacity 350ms ease, transform 350ms ease;
+}
+.construction-notice.is-visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+  transition-duration: 280ms;
+}
+@media (prefers-reduced-motion: reduce) {
+  .construction-notice,
+  .construction-notice.is-visible {
+    transform: translate(-50%, 0);
+    transition: none;
+  }
+}
+@media print {
+  .construction-notice { display: none; }
+}
+.construction-page {
+  zoom: 1;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  padding: 32px 24px;
+}
+.construction-page main {
+  max-width: 100%;
+  text-align: center;
+}
+.construction-page h1 {
+  margin: 12px 0 28px;
+  font: 500 clamp(30px, 7vw, 52px)/1.15 var(--font-display);
+  letter-spacing: -0.04em;
+}
+.construction-page .section-kicker { margin: 0; }
+.construction-page .text-link { font-size: 14px; }
+
 /* Only JS-enrolled, offscreen content waits; ordinary HTML is visible by default. */
 [data-scroll-reveal].is-reveal-pending {
   opacity: 0;

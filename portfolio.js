@@ -231,6 +231,29 @@
         figureDialog.close();
     }
   });
+  const playgroundEntries = document.querySelectorAll("[data-playground-paused]");
+  if (playgroundEntries.length) {
+    const notice = document.createElement("div");
+    notice.className = "construction-notice";
+    notice.setAttribute("role", "status");
+    notice.setAttribute("aria-live", "polite");
+    notice.setAttribute("aria-atomic", "true");
+    document.body.append(notice);
+    let noticeTimer;
+    const showConstructionNotice = (event) => {
+      if (event.type === "auxclick" && event.button !== 1) return;
+      event.preventDefault();
+      notice.textContent = "Currently under construction.";
+      notice.classList.add("is-visible");
+      clearTimeout(noticeTimer);
+      noticeTimer = setTimeout(() => notice.classList.remove("is-visible"), reducedMotion.matches ? 3000 : 3280);
+    };
+    playgroundEntries.forEach((entry) => {
+      entry.addEventListener("click", showConstructionNotice);
+      entry.addEventListener("auxclick", showConstructionNotice);
+    });
+  }
+
   const toast = document.querySelector(".toast");
   let toastTimer;
   document

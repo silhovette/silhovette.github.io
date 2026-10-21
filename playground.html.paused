@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en" data-page-fade="complete">
+<head>
+  <meta charset="UTF-8" />
+    <style id="page-fade-style">
+      html[data-page-fade] { background: #f5f3ec; }
+      html[data-page-fade="pending"] body,
+      html[data-page-fade="revealing"] body {
+        transition: opacity 700ms cubic-bezier(0.22, 1, 0.36, 1) !important;
+      }
+      html[data-page-fade="pending"] body { opacity: 0 !important; }
+      html[data-page-fade="revealing"] body { opacity: 1 !important; }
+      /* Replace legacy per-main load fades; scroll reveals remain independent. */
+      html[data-page-fade] body > main { animation: none !important; }
+      @media (prefers-reduced-motion: reduce) {
+        html[data-page-fade] body { opacity: 1 !important; transition: none !important; }
+      }
+    </style>
+    <script id="page-fade-init">
+      (() => {
+        const root = document.documentElement;
+        const motion = matchMedia("(prefers-reduced-motion: reduce)");
+        if (motion.matches) return;
+        let shown = false;
+        const reveal = (immediate = false) => {
+          if (shown && !immediate) return;
+          shown = true;
+          clearTimeout(deadline);
+          root.setAttribute("data-page-fade", immediate ? "complete" : "revealing");
+          if (!immediate) setTimeout(() => root.setAttribute("data-page-fade", "complete"), 700);
+        };
+        // Set the fallback before hiding: a missing or broken external script is safe.
+        const deadline = setTimeout(() => reveal(), 1800);
+        document.addEventListener("page-fade-ready", () => reveal(), { once: true });
+        addEventListener("pageshow", event => { if (event.persisted) reveal(true); });
+        motion.addEventListener("change", event => { if (event.matches) reveal(true); });
+        root.setAttribute("data-page-fade", "pending");
+      })();
+    </script>
+    <script src="page-fade.js?v=1" defer></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta
+    name="description"
+    content="Photography, games and apps by Yuhua Luo."
+   data-i18n-content="playground_active_description"/>
+  <title data-i18n="playground_yuhua_luo">Playground | Yuhua Luo</title>
+  <link rel="stylesheet" href="fonts.css?v=2" />
+  <link rel="stylesheet" href="style.css?v=56" />
+  <link rel="stylesheet" href="photos.css?v=12" />
+  <!-- Temporarily paused: <link rel="stylesheet" href="miniatures.css?v=3" /> -->
+  <!-- Temporarily paused: <noscript><style>.miniature-card img { opacity: 1; }</style></noscript> -->
+  <link rel="preload" href="assets/fonts/InstrumentSans-Latin.woff2" as="font" type="font/woff2" crossorigin />
+  <script src="languages.js?v=38" defer></script>
+  <script src="script.js?v=15" defer></script>
+  <script src="photos.js?v=8" defer></script>
+  <!-- Temporarily paused: <script src="miniatures.js?v=4" defer></script> -->
+  <link rel="stylesheet" href="portfolio.css?v=45" />
+  <link rel="icon" href="assets/icons/portfolio.svg" type="image/svg+xml" />
+  <script src="portfolio.js?v=11" defer></script>
+  <script src="scroll-reveal.js?v=2" defer></script>
+  <link rel="stylesheet" href="scrollbars.css?v=2" />
+</head>
+<body class="playground-page">
+  <a class="skip-link" href="#main" data-i18n="skip_to_content">Skip to content</a>
+  <canvas id="cursor-field" class="cursor-field" aria-hidden="true"></canvas>
+
+  <header class="portfolio-header">
+      <div class="header-inner wrap">
+        <span class="header-clock mono" aria-label="Shanghai local time">SHANGHAI <span data-shanghai-time>—:—</span></span>
+        <nav class="portfolio-nav" id="portfolio-nav" aria-label="Primary navigation">
+          <a href="index.html#about" data-i18n="about">About</a>
+          <a href="index.html#projects" data-i18n="portfolio_work">Selected Work</a>
+          <a href="index.html#publications" data-i18n="publications">Publications</a>
+
+          <a href="index.html#playground" data-i18n="playground">Playground</a>
+        </nav>
+        <div class="header-controls">
+          <div class="site-search header-search" data-site-search role="search">
+            <div class="header-search-panel" id="header-search-panel">
+              <label class="sr-only" for="site-search-input" data-i18n="search_this_page">Search this page</label>
+              <input id="site-search-input" type="search" aria-controls="site-search-results" aria-expanded="false" autocomplete="off"/>
+              <div class="search-matches site-search__results" id="site-search-results" aria-live="polite" hidden></div>
+            </div>
+            <button type="button" class="search-toggle" aria-label="Search this page" data-i18n-aria-label="search_this_page" aria-expanded="false" aria-controls="header-search-panel"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M16 16l5 5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+          </div>
+          <a class="contact-link" href="index.html#contact"><span data-i18n="portfolio_contact">Contact</span></a>
+          <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="portfolio-nav" aria-label="Menu" data-i18n-aria-label="portfolio_menu"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 8h16M4 16h16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+        </div>
+      </div>
+    </header>
+
+  <main id="main">
+    <section id="playground-intro" class="section works-hero">
+      <div class="section-heading">
+        <p class="eyebrow">playground</p>
+        <h1 data-i18n="beyond">Beyond Research</h1>
+      </div>
+    </section>
+
+    <!-- Miniature models and mods remain inert; photography stays active. -->
+
+    <section id="photography" class="section">
+      <details class="playground-disclosure" open>
+        <summary class="section-heading playground-summary">
+          <h2><span class="eyebrow">Photography</span><span data-i18n="photo_collection">Photo Collection</span></h2>
+        </summary>
+        <div class="playground-disclosure__content">
+          <div class="photo-gallery" data-photo-gallery data-photo-repository="silhovette/silhovette.github.io">
+            <div class="photo-toolbar" data-photo-toolbar hidden>
+              <div class="photo-toolbar__actions">
+                <button class="photo-icon-button" type="button" data-strip-prev title="Previous photos" aria-label="Previous photos" data-i18n-aria-label="previous_photos" data-i18n-title="previous_photos"><svg aria-hidden="true"><use href="assets/icons/gallery.svg#chevron-left"></use></svg></button>
+                <button class="photo-icon-button" type="button" data-photo-autoplay title="Pause slideshow" aria-label="Pause slideshow" aria-pressed="true" data-i18n-aria-label="pause_slideshow" data-i18n-title="pause_slideshow"><svg aria-hidden="true"><use href="assets/icons/gallery.svg#pause"></use></svg></button>
+                <button class="photo-icon-button" type="button" data-strip-next title="Next photos" aria-label="Next photos" data-i18n-aria-label="next_photos" data-i18n-title="next_photos"><svg aria-hidden="true"><use href="assets/icons/gallery.svg#chevron-right"></use></svg></button>
+                <button class="photo-view-all" type="button" data-photo-all data-i18n="view_all">View all</button>
+              </div>
+            </div>
+            <div class="photo-empty" data-photo-empty>
+              <p data-photo-status role="status" data-i18n="loading_photos">Loading photos...</p>
+              <button class="photo-icon-button" type="button" data-photo-retry title="Reload photos" aria-label="Reload photos" hidden data-i18n-aria-label="reload_photos" data-i18n-title="reload_photos"><svg aria-hidden="true"><use href="assets/icons/gallery.svg#refresh-cw"></use></svg></button>
+            </div>
+            <div class="photo-strip" data-photo-strip role="region" aria-label="Photo slideshow" hidden data-i18n-aria-label="photo_slideshow"></div>
+          </div>
+    <template id="paused-miniature-models">
+    <section id="miniature-models" class="playground-subsection">
+      <details class="playground-disclosure" open>
+        <summary class="section-heading playground-summary">
+          <h2><span class="eyebrow">Photography</span><span>Miniature Models</span></h2>
+        </summary>
+        <div class="playground-disclosure__content">
+          <div id="miniature-gallery" class="miniature-gallery">
+              <a class="miniature-card" href="assets/miniatures/72A5D17881EA9097ED87B9F1E75CABD9.png"><img src="assets/miniatures/previews/72A5D17881EA9097ED87B9F1E75CABD9.png.840.jpg" srcset="assets/miniatures/previews/72A5D17881EA9097ED87B9F1E75CABD9.png.420.jpg 420w, assets/miniatures/previews/72A5D17881EA9097ED87B9F1E75CABD9.png.840.jpg 840w" sizes="(max-width: 560px) calc((100vw - 84px) / 2), (max-width: 1392px) calc((100vw - 112px) / 3), 427px" width="600" height="800" loading="lazy" decoding="async" alt="Miniature car photography" data-i18n-alt="miniature_car_photography" /></a>
+              <a class="miniature-card" href="assets/miniatures/IMG_2313.JPG"><img src="assets/miniatures/previews/IMG_2313.JPG.840.webp" srcset="assets/miniatures/previews/IMG_2313.JPG.420.webp 420w, assets/miniatures/previews/IMG_2313.JPG.840.webp 840w" sizes="(max-width: 560px) calc((100vw - 84px) / 2), (max-width: 1392px) calc((100vw - 112px) / 3), 427px" width="600" height="800" loading="lazy" decoding="async" alt="Miniature car photography" data-i18n-alt="miniature_car_photography" /></a>
+              <a class="miniature-card" href="assets/miniatures/IMG_7893.JPG"><img src="assets/miniatures/previews/IMG_7893.JPG.840.webp" srcset="assets/miniatures/previews/IMG_7893.JPG.420.webp 420w, assets/miniatures/previews/IMG_7893.JPG.840.webp 840w" sizes="(max-width: 560px) calc((100vw - 84px) / 2), (max-width: 1392px) calc((100vw - 112px) / 3), 427px" width="600" height="800" loading="lazy" decoding="async" alt="Miniature car photography" data-i18n-alt="miniature_car_photography" /></a>
+              <a class="miniature-card" href="assets/miniatures/F9F892C09205B670B444A3E96F795924.jpeg"><img src="assets/miniatures/previews/F9F892C09205B670B444A3E96F795924.jpeg.840.webp" srcset="assets/miniatures/previews/F9F892C09205B670B444A3E96F795924.jpeg.420.webp 420w, assets/miniatures/previews/F9F892C09205B670B444A3E96F795924.jpeg.840.webp 840w" sizes="(max-width: 560px) calc((100vw - 84px) / 2), (max-width: 1392px) calc((100vw - 112px) / 3), 427px" width="600" height="800" loading="lazy" decoding="async" alt="Miniature car photography" data-i18n-alt="miniature_car_photography" /></a>
+              <a class="miniature-card" href="assets/miniatures/IMG_7571.JPG"><img src="assets/miniatures/previews/IMG_7571.JPG.840.webp" srcset="assets/miniatures/previews/IMG_7571.JPG.420.webp 420w, assets/miniatures/previews/IMG_7571.JPG.840.webp 840w" sizes="(max-width: 560px) calc((100vw - 84px) / 2), (max-width: 1392px) calc((100vw - 112px) / 3), 427px" width="600" height="800" loading="lazy" decoding="async" alt="Miniature car photography" data-i18n-alt="miniature_car_photography" /></a>
+              <a class="miniature-card" href="assets/miniatures/8F3B04A28C9D3693C370873C10683761.png"><img src="assets/miniatures/8F3B04A28C9D3693C370873C10683761.png" width="600" height="800" loading="lazy" decoding="async" alt="Miniature car photography" data-i18n-alt="miniature_car_photography" /></a>
+              <a class="miniature-card" hidden href="assets/miniatures/9D5EB8755A0C76698FCF799BBD3DF340.png"><img data-src="assets/miniatures/previews/9D5EB8755A0C76698FCF799BBD3DF340.png.840.jpg" data-srcset="assets/miniatures/previews/9D5EB8755A0C76698FCF799BBD3DF340.png.420.jpg 420w, assets/miniatures/previews/9D5EB8755A0C76698FCF799BBD3DF340.png.840.jpg 840w" sizes="(max-width: 560px) calc((100vw - 84px) / 2), (max-width: 1392px) calc((100vw - 112px) / 3), 427px" width="600" height="800" loading="lazy" decoding="async" alt="Miniature car photography" data-i18n-alt="miniature_car_photography" /></a>
+              <a class="miniature-card" hidden href="assets/miniatures/C24F67848CBB1467BB0E0AFC26C93EE0.png"><img data-src="assets/miniatures/C24F67848CBB1467BB0E0AFC26C93EE0.png" data-srcset="assets/miniatures/C24F67848CBB1467BB0E0AFC26C93EE0.png 1x" width="600" height="800" loading="lazy" decoding="async" alt="Miniature car photography" data-i18n-alt="miniature_car_photography" /></a>
+              <a class="miniature-card" hidden href="assets/miniatures/IMG_6815.JPG"><img data-src="assets/miniatures/previews/IMG_6815.JPG.840.webp" data-srcset="assets/miniatures/previews/IMG_6815.JPG.420.webp 420w, assets/miniatures/previews/IMG_6815.JPG.840.webp 840w" sizes="(max-width: 560px) calc((100vw - 84px) / 2), (max-width: 1392px) calc((100vw - 112px) / 3), 427px" width="600" height="800" loading="lazy" decoding="async" alt="Miniature car photography" data-i18n-alt="miniature_car_photography" /></a>
+              <a class="miniature-card" hidden href="assets/miniatures/IMG_7163.PNG"><img data-src="assets/miniatures/previews/IMG_7163.PNG.840.webp" data-srcset="assets/miniatures/previews/IMG_7163.PNG.420.webp 420w, assets/miniatures/previews/IMG_7163.PNG.840.webp 840w" sizes="(max-width: 560px) calc((100vw - 84px) / 2), (max-width: 1392px) calc((100vw - 112px) / 3), 427px" width="600" height="800" loading="lazy" decoding="async" alt="Miniature car photography" data-i18n-alt="miniature_car_photography" /></a>
+              <a class="miniature-card" hidden href="assets/miniatures/IMG_7458.JPG"><img data-src="assets/miniatures/previews/IMG_7458.JPG.840.webp" data-srcset="assets/miniatures/previews/IMG_7458.JPG.420.webp 420w, assets/miniatures/previews/IMG_7458.JPG.840.webp 840w" sizes="(max-width: 560px) calc((100vw - 84px) / 2), (max-width: 1392px) calc((100vw - 112px) / 3), 427px" width="600" height="800" loading="lazy" decoding="async" alt="Miniature car photography" data-i18n-alt="miniature_car_photography" /></a>
+              <a class="miniature-card" hidden href="assets/miniatures/IMG_8400.JPG"><img data-src="assets/miniatures/previews/IMG_8400.JPG.840.webp" data-srcset="assets/miniatures/previews/IMG_8400.JPG.420.webp 420w, assets/miniatures/previews/IMG_8400.JPG.840.webp 840w" sizes="(max-width: 560px) calc((100vw - 84px) / 2), (max-width: 1392px) calc((100vw - 112px) / 3), 427px" width="600" height="800" loading="lazy" decoding="async" alt="Miniature car photography" data-i18n-alt="miniature_car_photography" /></a>
+              <a class="miniature-card" hidden href="assets/miniatures/IMG_8694.JPG"><img data-src="assets/miniatures/previews/IMG_8694.JPG.840.webp" data-srcset="assets/miniatures/previews/IMG_8694.JPG.420.webp 420w, assets/miniatures/previews/IMG_8694.JPG.840.webp 840w" sizes="(max-width: 560px) calc((100vw - 84px) / 2), (max-width: 1392px) calc((100vw - 112px) / 3), 427px" width="600" height="800" loading="lazy" decoding="async" alt="Miniature car photography" data-i18n-alt="miniature_car_photography" /></a>
+              <a class="miniature-card" hidden href="assets/miniatures/IMG_8825.JPG"><img data-src="assets/miniatures/previews/IMG_8825.JPG.840.webp" data-srcset="assets/miniatures/previews/IMG_8825.JPG.420.webp 420w, assets/miniatures/previews/IMG_8825.JPG.840.webp 840w" sizes="(max-width: 560px) calc((100vw - 84px) / 2), (max-width: 1392px) calc((100vw - 112px) / 3), 427px" width="600" height="800" loading="lazy" decoding="async" alt="Miniature car photography" data-i18n-alt="miniature_car_photography" /></a>
+              <a class="miniature-card" hidden href="assets/miniatures/IMG_8940.JPG"><img data-src="assets/miniatures/previews/IMG_8940.JPG.840.webp" data-srcset="assets/miniatures/previews/IMG_8940.JPG.420.webp 420w, assets/miniatures/previews/IMG_8940.JPG.840.webp 840w" sizes="(max-width: 560px) calc((100vw - 84px) / 2), (max-width: 1392px) calc((100vw - 112px) / 3), 427px" width="600" height="800" loading="lazy" decoding="async" alt="Miniature car photography" data-i18n-alt="miniature_car_photography" /></a>
+              <a class="miniature-card" hidden href="assets/miniatures/IMG_9310.JPG"><img data-src="assets/miniatures/previews/IMG_9310.JPG.840.webp" data-srcset="assets/miniatures/previews/IMG_9310.JPG.420.webp 420w, assets/miniatures/previews/IMG_9310.JPG.840.webp 840w" sizes="(max-width: 560px) calc((100vw - 84px) / 2), (max-width: 1392px) calc((100vw - 112px) / 3), 427px" width="600" height="800" loading="lazy" decoding="async" alt="Miniature car photography" data-i18n-alt="miniature_car_photography" /></a>
+              <a class="miniature-card" hidden href="assets/miniatures/IMG_9651.JPG"><img data-src="assets/miniatures/previews/IMG_9651.JPG.840.webp" data-srcset="assets/miniatures/previews/IMG_9651.JPG.420.webp 420w, assets/miniatures/previews/IMG_9651.JPG.840.webp 840w" sizes="(max-width: 560px) calc((100vw - 84px) / 2), (max-width: 1392px) calc((100vw - 112px) / 3), 427px" width="600" height="800" loading="lazy" decoding="async" alt="Miniature car photography" data-i18n-alt="miniature_car_photography" /></a>
+              <a class="miniature-card" hidden href="assets/miniatures/IMG_9801.JPG"><img data-src="assets/miniatures/previews/IMG_9801.JPG.840.webp" data-srcset="assets/miniatures/previews/IMG_9801.JPG.420.webp 420w, assets/miniatures/previews/IMG_9801.JPG.840.webp 840w" sizes="(max-width: 560px) calc((100vw - 84px) / 2), (max-width: 1392px) calc((100vw - 112px) / 3), 427px" width="600" height="800" loading="lazy" decoding="async" alt="Miniature car photography" data-i18n-alt="miniature_car_photography" /></a>
+              <a class="miniature-card" hidden href="assets/miniatures/Untitled%20design.png"><img data-src="assets/miniatures/previews/Untitled%20design.png.840.webp" data-srcset="assets/miniatures/previews/Untitled%20design.png.420.webp 420w, assets/miniatures/previews/Untitled%20design.png.840.webp 840w" sizes="(max-width: 560px) calc((100vw - 84px) / 2), (max-width: 1392px) calc((100vw - 112px) / 3), 427px" width="600" height="800" loading="lazy" decoding="async" alt="Miniature car photography" data-i18n-alt="miniature_car_photography" /></a>
+              <a class="miniature-card" hidden href="assets/miniatures/IMG_9525.JPG"><img data-src="assets/miniatures/previews/IMG_9525.JPG.840.webp" data-srcset="assets/miniatures/previews/IMG_9525.JPG.420.webp 420w, assets/miniatures/previews/IMG_9525.JPG.840.webp 840w" sizes="(max-width: 560px) calc((100vw - 84px) / 2), (max-width: 1392px) calc((100vw - 112px) / 3), 427px" width="600" height="800" loading="lazy" decoding="async" alt="Miniature car photography" data-i18n-alt="miniature_car_photography" /></a>
+              <a class="miniature-card" hidden href="assets/miniatures/IMG_7751.JPG"><img data-src="assets/miniatures/previews/IMG_7751.JPG.840.webp" data-srcset="assets/miniatures/previews/IMG_7751.JPG.420.webp 420w, assets/miniatures/previews/IMG_7751.JPG.840.webp 840w" sizes="(max-width: 560px) calc((100vw - 84px) / 2), (max-width: 1392px) calc((100vw - 112px) / 3), 427px" width="600" height="800" loading="lazy" decoding="async" alt="Miniature car photography" data-i18n-alt="miniature_car_photography" /></a>
+              <a class="miniature-card" hidden href="assets/miniatures/IMG_7927.JPG"><img data-src="assets/miniatures/previews/IMG_7927.JPG.840.webp" data-srcset="assets/miniatures/previews/IMG_7927.JPG.420.webp 420w, assets/miniatures/previews/IMG_7927.JPG.840.webp 840w" sizes="(max-width: 560px) calc((100vw - 84px) / 2), (max-width: 1392px) calc((100vw - 112px) / 3), 427px" width="600" height="800" loading="lazy" decoding="async" alt="Miniature car photography" data-i18n-alt="miniature_car_photography" /></a>
+              <a class="miniature-card" hidden href="assets/miniatures/IMG_0428.JPG"><img data-src="assets/miniatures/previews/IMG_0428.JPG.840.webp" data-srcset="assets/miniatures/previews/IMG_0428.JPG.420.webp 420w, assets/miniatures/previews/IMG_0428.JPG.840.webp 840w" sizes="(max-width: 560px) calc((100vw - 84px) / 2), (max-width: 1392px) calc((100vw - 112px) / 3), 427px" width="600" height="800" loading="lazy" decoding="async" alt="Miniature car photography" data-i18n-alt="miniature_car_photography" /></a>
+              <a class="miniature-card" hidden href="assets/miniatures/192F79ECF63115F7C932D56A8EB210D5.jpeg"><img data-src="assets/miniatures/previews/192F79ECF63115F7C932D56A8EB210D5.jpeg.840.webp" data-srcset="assets/miniatures/previews/192F79ECF63115F7C932D56A8EB210D5.jpeg.420.webp 420w, assets/miniatures/previews/192F79ECF63115F7C932D56A8EB210D5.jpeg.840.webp 840w" sizes="(max-width: 560px) calc((100vw - 84px) / 2), (max-width: 1392px) calc((100vw - 112px) / 3), 427px" width="600" height="800" loading="lazy" decoding="async" alt="Miniature car photography" data-i18n-alt="miniature_car_photography" /></a>
+              <a class="miniature-card" hidden href="assets/miniatures/1FFE601B4BFB489C6D3BB3C6846E6153.jpeg"><img data-src="assets/miniatures/previews/1FFE601B4BFB489C6D3BB3C6846E6153.jpeg.840.webp" data-srcset="assets/miniatures/previews/1FFE601B4BFB489C6D3BB3C6846E6153.jpeg.420.webp 420w, assets/miniatures/previews/1FFE601B4BFB489C6D3BB3C6846E6153.jpeg.840.webp 840w" sizes="(max-width: 560px) calc((100vw - 84px) / 2), (max-width: 1392px) calc((100vw - 112px) / 3), 427px" width="600" height="800" loading="lazy" decoding="async" alt="Miniature car photography" data-i18n-alt="miniature_car_photography" /></a>
+              <a class="miniature-card" hidden href="assets/miniatures/222A575D5563A471BD1E43DC0D8EC855.jpeg"><img data-src="assets/miniatures/previews/222A575D5563A471BD1E43DC0D8EC855.jpeg.840.webp" data-srcset="assets/miniatures/previews/222A575D5563A471BD1E43DC0D8EC855.jpeg.420.webp 420w, assets/miniatures/previews/222A575D5563A471BD1E43DC0D8EC855.jpeg.840.webp 840w" sizes="(max-width: 560px) calc((100vw - 84px) / 2), (max-width: 1392px) calc((100vw - 112px) / 3), 427px" width="600" height="800" loading="lazy" decoding="async" alt="Miniature car photography" data-i18n-alt="miniature_car_photography" /></a>
+              <a class="miniature-card" hidden href="assets/miniatures/40C8F6F860CB7DD593F26D2165ADA596.jpeg"><img data-src="assets/miniatures/previews/40C8F6F860CB7DD593F26D2165ADA596.jpeg.840.webp" data-srcset="assets/miniatures/previews/40C8F6F860CB7DD593F26D2165ADA596.jpeg.420.webp 420w, assets/miniatures/previews/40C8F6F860CB7DD593F26D2165ADA596.jpeg.840.webp 840w" sizes="(max-width: 560px) calc((100vw - 84px) / 2), (max-width: 1392px) calc((100vw - 112px) / 3), 427px" width="600" height="800" loading="lazy" decoding="async" alt="Miniature car photography" data-i18n-alt="miniature_car_photography" /></a>
+              <a class="miniature-card" hidden href="assets/miniatures/42F6C35EB62DB05A0EDB36C91360FA2A.jpg"><img data-src="assets/miniatures/previews/42F6C35EB62DB05A0EDB36C91360FA2A.jpg.840.webp" data-srcset="assets/miniatures/previews/42F6C35EB62DB05A0EDB36C91360FA2A.jpg.420.webp 420w, assets/miniatures/previews/42F6C35EB62DB05A0EDB36C91360FA2A.jpg.840.webp 840w" sizes="(max-width: 560px) calc((100vw - 84px) / 2), (max-width: 1392px) calc((100vw - 112px) / 3), 427px" width="600" height="800" loading="lazy" decoding="async" alt="Miniature car photography" data-i18n-alt="miniature_car_photography" /></a>
+              <a class="miniature-card" hidden href="assets/miniatures/6CA8609213584BCE4FD6423691CA6412.jpeg"><img data-src="assets/miniatures/previews/6CA8609213584BCE4FD6423691CA6412.jpeg.840.webp" data-srcset="assets/miniatures/previews/6CA8609213584BCE4FD6423691CA6412.jpeg.420.webp 420w, assets/miniatures/previews/6CA8609213584BCE4FD6423691CA6412.jpeg.840.webp 840w" sizes="(max-width: 560px) calc((100vw - 84px) / 2), (max-width: 1392px) calc((100vw - 112px) / 3), 427px" width="600" height="800" loading="lazy" decoding="async" alt="Miniature car photography" data-i18n-alt="miniature_car_photography" /></a>
+              <a class="miniature-card" hidden href="assets/miniatures/%E6%9C%AA%E5%91%BD%E5%90%8D%E7%9A%84%E8%AE%BE%E8%AE%A1.png"><img data-src="assets/miniatures/previews/%E6%9C%AA%E5%91%BD%E5%90%8D%E7%9A%84%E8%AE%BE%E8%AE%A1.png.840.webp" data-srcset="assets/miniatures/previews/%E6%9C%AA%E5%91%BD%E5%90%8D%E7%9A%84%E8%AE%BE%E8%AE%A1.png.420.webp 420w, assets/miniatures/previews/%E6%9C%AA%E5%91%BD%E5%90%8D%E7%9A%84%E8%AE%BE%E8%AE%A1.png.840.webp 840w" sizes="(max-width: 560px) calc((100vw - 84px) / 2), (max-width: 1392px) calc((100vw - 112px) / 3), 427px" width="600" height="800" loading="lazy" decoding="async" alt="Miniature car photography" data-i18n-alt="miniature_car_photography" /></a>
+              <a class="miniature-card" hidden href="assets/miniatures/bae683f0b598a80652122ea5080249cc.png"><img data-src="assets/miniatures/previews/bae683f0b598a80652122ea5080249cc.png.840.webp" data-srcset="assets/miniatures/previews/bae683f0b598a80652122ea5080249cc.png.420.webp 420w, assets/miniatures/previews/bae683f0b598a80652122ea5080249cc.png.840.webp 840w" sizes="(max-width: 560px) calc((100vw - 84px) / 2), (max-width: 1392px) calc((100vw - 112px) / 3), 427px" width="600" height="800" loading="lazy" decoding="async" alt="Miniature car photography" data-i18n-alt="miniature_car_photography" /></a>
+              <a class="miniature-card" hidden href="assets/miniatures/DAD36CCF01080586223F13A6515D292F.jpeg"><img data-src="assets/miniatures/previews/DAD36CCF01080586223F13A6515D292F.jpeg.840.webp" data-srcset="assets/miniatures/previews/DAD36CCF01080586223F13A6515D292F.jpeg.420.webp 420w, assets/miniatures/previews/DAD36CCF01080586223F13A6515D292F.jpeg.840.webp 840w" sizes="(max-width: 560px) calc((100vw - 84px) / 2), (max-width: 1392px) calc((100vw - 112px) / 3), 427px" width="600" height="800" loading="lazy" decoding="async" alt="Miniature car photography" data-i18n-alt="miniature_car_photography" /></a>
+              <a class="miniature-card" hidden href="assets/miniatures/E343377302154F230F99758471AFB237.jpeg"><img data-src="assets/miniatures/previews/E343377302154F230F99758471AFB237.jpeg.840.webp" data-srcset="assets/miniatures/previews/E343377302154F230F99758471AFB237.jpeg.420.webp 420w, assets/miniatures/previews/E343377302154F230F99758471AFB237.jpeg.840.webp 840w" sizes="(max-width: 560px) calc((100vw - 84px) / 2), (max-width: 1392px) calc((100vw - 112px) / 3), 427px" width="600" height="800" loading="lazy" decoding="async" alt="Miniature car photography" data-i18n-alt="miniature_car_photography" /></a>
+              <a class="miniature-card" hidden href="assets/miniatures/913286517504338407518FA7393F5AA4.jpeg"><img data-src="assets/miniatures/previews/913286517504338407518FA7393F5AA4.jpeg.840.webp" data-srcset="assets/miniatures/previews/913286517504338407518FA7393F5AA4.jpeg.420.webp 420w, assets/miniatures/previews/913286517504338407518FA7393F5AA4.jpeg.840.webp 840w" sizes="(max-width: 560px) calc((100vw - 84px) / 2), (max-width: 1392px) calc((100vw - 112px) / 3), 427px" width="600" height="800" loading="lazy" decoding="async" alt="Miniature car photography" data-i18n-alt="miniature_car_photography" /></a>
+              <a class="miniature-card" hidden href="assets/miniatures/FB95E0921F15AD8CF4F52EF3B99ACAF6.jpg"><img data-src="assets/miniatures/previews/FB95E0921F15AD8CF4F52EF3B99ACAF6.jpg.840.webp" data-srcset="assets/miniatures/previews/FB95E0921F15AD8CF4F52EF3B99ACAF6.jpg.420.webp 420w, assets/miniatures/previews/FB95E0921F15AD8CF4F52EF3B99ACAF6.jpg.840.webp 840w" sizes="(max-width: 560px) calc((100vw - 84px) / 2), (max-width: 1392px) calc((100vw - 112px) / 3), 427px" width="600" height="800" loading="lazy" decoding="async" alt="Miniature car photography" data-i18n-alt="miniature_car_photography" /></a>
+              <a class="miniature-card" hidden href="assets/miniatures/IMG_0490.JPG"><img data-src="assets/miniatures/previews/IMG_0490.JPG.840.webp" data-srcset="assets/miniatures/previews/IMG_0490.JPG.420.webp 420w, assets/miniatures/previews/IMG_0490.JPG.840.webp 840w" sizes="(max-width: 560px) calc((100vw - 84px) / 2), (max-width: 1392px) calc((100vw - 112px) / 3), 427px" width="600" height="800" loading="lazy" decoding="async" alt="Miniature car photography" data-i18n-alt="miniature_car_photography" /></a>
+              <a class="miniature-card" hidden href="assets/miniatures/IMG_1317.JPG"><img data-src="assets/miniatures/previews/IMG_1317.JPG.840.webp" data-srcset="assets/miniatures/previews/IMG_1317.JPG.420.webp 420w, assets/miniatures/previews/IMG_1317.JPG.840.webp 840w" sizes="(max-width: 560px) calc((100vw - 84px) / 2), (max-width: 1392px) calc((100vw - 112px) / 3), 427px" width="600" height="800" loading="lazy" decoding="async" alt="Miniature car photography" data-i18n-alt="miniature_car_photography" /></a>
+              <a class="miniature-card" hidden href="assets/miniatures/IMG_1798.JPG"><img data-src="assets/miniatures/previews/IMG_1798.JPG.840.webp" data-srcset="assets/miniatures/previews/IMG_1798.JPG.420.webp 420w, assets/miniatures/previews/IMG_1798.JPG.840.webp 840w" sizes="(max-width: 560px) calc((100vw - 84px) / 2), (max-width: 1392px) calc((100vw - 112px) / 3), 427px" width="600" height="800" loading="lazy" decoding="async" alt="Miniature car photography" data-i18n-alt="miniature_car_photography" /></a>
+              <a class="miniature-card" hidden href="assets/miniatures/IMG_2421.JPG"><img data-src="assets/miniatures/previews/IMG_2421.JPG.840.webp" data-srcset="assets/miniatures/previews/IMG_2421.JPG.420.webp 420w, assets/miniatures/previews/IMG_2421.JPG.840.webp 840w" sizes="(max-width: 560px) calc((100vw - 84px) / 2), (max-width: 1392px) calc((100vw - 112px) / 3), 427px" width="600" height="800" loading="lazy" decoding="async" alt="Miniature car photography" data-i18n-alt="miniature_car_photography" /></a>
+              <a class="miniature-card" hidden href="assets/miniatures/IMG_4005.JPG"><img data-src="assets/miniatures/previews/IMG_4005.JPG.840.webp" data-srcset="assets/miniatures/previews/IMG_4005.JPG.420.webp 420w, assets/miniatures/previews/IMG_4005.JPG.840.webp 840w" sizes="(max-width: 560px) calc((100vw - 84px) / 2), (max-width: 1392px) calc((100vw - 112px) / 3), 427px" width="600" height="800" loading="lazy" decoding="async" alt="Miniature car photography" data-i18n-alt="miniature_car_photography" /></a>
+              <a class="miniature-card" hidden href="assets/miniatures/IMG_4096.JPG"><img data-src="assets/miniatures/previews/IMG_4096.JPG.840.webp" data-srcset="assets/miniatures/previews/IMG_4096.JPG.420.webp 420w, assets/miniatures/previews/IMG_4096.JPG.840.webp 840w" sizes="(max-width: 560px) calc((100vw - 84px) / 2), (max-width: 1392px) calc((100vw - 112px) / 3), 427px" width="600" height="800" loading="lazy" decoding="async" alt="Miniature car photography" data-i18n-alt="miniature_car_photography" /></a>
+              <a class="miniature-card" hidden href="assets/miniatures/IMG_4825.JPG"><img data-src="assets/miniatures/previews/IMG_4825.JPG.840.webp" data-srcset="assets/miniatures/previews/IMG_4825.JPG.420.webp 420w, assets/miniatures/previews/IMG_4825.JPG.840.webp 840w" sizes="(max-width: 560px) calc((100vw - 84px) / 2), (max-width: 1392px) calc((100vw - 112px) / 3), 427px" width="600" height="800" loading="lazy" decoding="async" alt="Miniature car photography" data-i18n-alt="miniature_car_photography" /></a>
+              <a class="miniature-card" hidden href="assets/miniatures/IMG_5763.JPG"><img data-src="assets/miniatures/previews/IMG_5763.JPG.840.webp" data-srcset="assets/miniatures/previews/IMG_5763.JPG.420.webp 420w, assets/miniatures/previews/IMG_5763.JPG.840.webp 840w" sizes="(max-width: 560px) calc((100vw - 84px) / 2), (max-width: 1392px) calc((100vw - 112px) / 3), 427px" width="600" height="800" loading="lazy" decoding="async" alt="Miniature car photography" data-i18n-alt="miniature_car_photography" /></a>
+              <a class="miniature-card" hidden href="assets/miniatures/IMG_6439.JPG"><img data-src="assets/miniatures/previews/IMG_6439.JPG.840.webp" data-srcset="assets/miniatures/previews/IMG_6439.JPG.420.webp 420w, assets/miniatures/previews/IMG_6439.JPG.840.webp 840w" sizes="(max-width: 560px) calc((100vw - 84px) / 2), (max-width: 1392px) calc((100vw - 112px) / 3), 427px" width="600" height="800" loading="lazy" decoding="async" alt="Miniature car photography" data-i18n-alt="miniature_car_photography" /></a>
+              <a class="miniature-card" hidden href="assets/miniatures/IMG_6498.JPG"><img data-src="assets/miniatures/previews/IMG_6498.JPG.840.webp" data-srcset="assets/miniatures/previews/IMG_6498.JPG.420.webp 420w, assets/miniatures/previews/IMG_6498.JPG.840.webp 840w" sizes="(max-width: 560px) calc((100vw - 84px) / 2), (max-width: 1392px) calc((100vw - 112px) / 3), 427px" width="600" height="800" loading="lazy" decoding="async" alt="Miniature car photography" data-i18n-alt="miniature_car_photography" /></a>
+              <a class="miniature-card" hidden href="assets/miniatures/IMG_6913.JPG"><img data-src="assets/miniatures/previews/IMG_6913.JPG.840.webp" data-srcset="assets/miniatures/previews/IMG_6913.JPG.420.webp 420w, assets/miniatures/previews/IMG_6913.JPG.840.webp 840w" sizes="(max-width: 560px) calc((100vw - 84px) / 2), (max-width: 1392px) calc((100vw - 112px) / 3), 427px" width="600" height="800" loading="lazy" decoding="async" alt="Miniature car photography" data-i18n-alt="miniature_car_photography" /></a>
+          <div class="miniature-more"><button type="button" data-miniature-more aria-controls="miniature-gallery">click to view more</button></div>
+        </div>
+      </details>
+    </section>
+    </template>
+        </div>
+      </details>
+    </section>
+
+    <template id="paused-night-runners-mods">
+    <section id="mods" class="section">
+      <details class="playground-disclosure" open>
+        <summary class="section-heading playground-summary">
+          <h2>
+            <span class="eyebrow">Mods</span>
+            <span><span data-i18n="mods_for">Mods for </span><em>Night Runners</em><span data-i18n="mods_suffix"></span></span>
+          </h2>
+        </summary>
+        <div class="playground-disclosure__content">
+      <div class="playground-profile-link">
+        <a href="https://www.nexusmods.com/profile/AZX777" target="_blank" rel="noreferrer"><span data-i18n="azx777_on_nexus_mods">AZX777 on Nexus Mods</span></a>
+      </div>
+      <div class="works-list mod-gallery">
+      <article class="work-detail mod-entry">
+        <img loading="lazy" src="assets/playground/mod-86.webp" width="960" height="540" alt="Midnight Monarchs cover artwork with rival cars and crew portraits" decoding="async"  data-i18n-alt="midnight_monarchs_cover_artwork_with_rival_cars_and_crew_portraits"/>
+        <div class="mod-entry__content">
+          <p class="mod-entry__category" data-i18n="rival_crew">Rival Crew</p>
+          <h2><a href="https://www.nexusmods.com/nightrunners/mods/86" target="_blank" rel="noreferrer">NEW Rival Crew - Midnight Monarchs</a></h2>
+          <p data-i18n="replaces_g_company_with_a_new_mt_haruna_rival_crew_bringing_new_opponents_cars">Replaces G-COMPANY with a new Mt. Haruna rival crew, bringing new opponents, cars, portraits and race-based progression.</p>
+          <a class="mod-entry__link" href="https://www.nexusmods.com/nightrunners/mods/86" target="_blank" rel="noreferrer"><span data-i18n="view_on_nexus_mods">View on Nexus Mods</span></a>
+        </div>
+      </article>
+      <article class="work-detail mod-entry">
+        <img loading="lazy" src="assets/playground/mod-85.webp" width="960" height="720" alt="A collage of vehicles available with the ULTIMATE Unlocker" decoding="async"  data-i18n-alt="a_collage_of_vehicles_available_with_the_ultimate_unlocker"/>
+        <div class="mod-entry__content">
+          <p class="mod-entry__category" data-i18n="vehicle_unlock">Vehicle Unlock</p>
+          <h2><a href="https://www.nexusmods.com/nightrunners/mods/85" target="_blank" rel="noreferrer">the ULTIMATE Unlocker</a></h2>
+          <p data-i18n="expands_the_private_alpha_roster_with_the_360_rx_7_fd_skyline_pgc10_r32_r33_r3">Expands the Private Alpha roster with the 360, RX-7 FD, Skyline PGC10/R32/R33/R34, 180SX, NSX NA1 and 964.</p>
+          <a class="mod-entry__link" href="https://www.nexusmods.com/nightrunners/mods/85" target="_blank" rel="noreferrer"><span data-i18n="view_on_nexus_mods">View on Nexus Mods</span></a>
+        </div>
+      </article>
+      <article class="work-detail mod-entry">
+        <img loading="lazy" src="assets/playground/mod-83.webp" width="960" height="540" alt="A lineup of Korschen K6 variants" decoding="async"  data-i18n-alt="a_lineup_of_korschen_k6_variants"/>
+        <div class="mod-entry__content">
+          <p class="mod-entry__category" data-i18n="vehicle_unlock">Vehicle Unlock</p>
+          <h2><a href="https://www.nexusmods.com/nightrunners/mods/83" target="_blank" rel="noreferrer">Porsche Unlocker for Priv Alpha</a></h2>
+          <p data-i18n="opens_up_korschen_k6_variants_including_turbo_flatnose_and_gemballa_for_purcha">Opens up Korschen K6 variants, including Turbo, Flatnose and Gemballa, for purchase, driving and customization.</p>
+          <a class="mod-entry__link" href="https://www.nexusmods.com/nightrunners/mods/83" target="_blank" rel="noreferrer"><span data-i18n="view_on_nexus_mods">View on Nexus Mods</span></a>
+        </div>
+      </article>
+      <article class="work-detail mod-entry">
+        <img loading="lazy" src="assets/playground/mod-81.webp?v=3" width="960" height="540" alt="180SX with a white and orange racing livery" decoding="async"  data-i18n-alt="180sx_with_a_white_and_orange_racing_livery"/>
+        <div class="mod-entry__content">
+          <p class="mod-entry__category" data-i18n="vehicle_unlock">Vehicle Unlock</p>
+          <h2><a href="https://www.nexusmods.com/nightrunners/mods/81" target="_blank" rel="noreferrer">180SX Unlocker for Priv Alpha</a></h2>
+          <p data-i18n="makes_the_180sx_available_to_purchase_drive_and_customize_in_the_private_alpha">Makes the 180SX available to purchase, drive and customize in the Private Alpha.</p>
+          <a class="mod-entry__link" href="https://www.nexusmods.com/nightrunners/mods/81" target="_blank" rel="noreferrer"><span data-i18n="view_on_nexus_mods">View on Nexus Mods</span></a>
+        </div>
+      </article>
+      <article class="work-detail mod-entry">
+        <img loading="lazy" src="assets/playground/mod-63.webp" width="960" height="540" alt="Flame graphics along a dark JZX100 Mark II" decoding="async"  data-i18n-alt="flame_graphics_along_a_dark_jzx100_mark_ii"/>
+        <div class="mod-entry__content">
+          <p class="mod-entry__category" data-i18n="livery">Livery</p>
+          <h2><a href="https://www.nexusmods.com/nightrunners/mods/63" target="_blank" rel="noreferrer">flame livery for JZX MarkII</a></h2>
+          <p data-i18n="a_drift_inspired_flame_design_for_the_jzx100_mark_ii">A drift-inspired flame design for the JZX100 Mark II.</p>
+          <a class="mod-entry__link" href="https://www.nexusmods.com/nightrunners/mods/63" target="_blank" rel="noreferrer"><span data-i18n="view_on_nexus_mods">View on Nexus Mods</span></a>
+        </div>
+      </article>
+      <article class="work-detail mod-entry">
+        <img loading="lazy" src="assets/playground/mod-61.webp" width="960" height="540" alt="Kita Ikuyo artwork on the side of a red 200SX" decoding="async"  data-i18n-alt="kita_ikuyo_artwork_on_the_side_of_a_red_200sx"/>
+        <div class="mod-entry__content">
+          <p class="mod-entry__category" data-i18n="livery">Livery</p>
+          <h2><a href="https://www.nexusmods.com/nightrunners/mods/61" target="_blank" rel="noreferrer">200SX Kita IKuyo itasha</a></h2>
+          <p data-i18n="a_kita_ikuyo_themed_itasha_livery_for_the_200sx">A Kita Ikuyo-themed itasha livery for the 200SX.</p>
+          <a class="mod-entry__link" href="https://www.nexusmods.com/nightrunners/mods/61" target="_blank" rel="noreferrer"><span data-i18n="view_on_nexus_mods">View on Nexus Mods</span></a>
+        </div>
+      </article>
+      </div>
+        </div>
+      </details>
+    </section>
+
+
+
+    </template>
+
+    <section id="games-and-more" class="section">
+      <details class="playground-disclosure" open>
+        <summary class="section-heading playground-summary">
+          <h2>
+            <span class="eyebrow" data-i18n="side_projects">Side Projects</span>
+            <span data-i18n="off_script">Off Script</span>
+          </h2>
+        </summary>
+        <div class="playground-disclosure__content">
+      <div class="works-list playground-details">
+        <article id="peeker-project" class="work-detail">
+          <div class="publication-content">
+            <h2>Peeker</h2>
+            <p class="publication-venue" data-i18n="windows_app">Windows App</p>
+            <p class="publication-summary" data-i18n="peeker_summary">A local-only privacy watcher for Windows that gently alerts you when someone nearby appears to be looking at your screen.</p>
+            <ul class="work-points">
+              <li data-i18n="peeker_detection">Uses face detection and head pose to spot potential onlookers, with a subtle eye alert at the top of the screen.</li>
+              <li data-i18n="peeker_privacy">Processes camera frames locally without saving or uploading them.</li>
+              <li data-i18n="peeker_controls">Runs in the system tray, with monitoring controls and an optional camera preview.</li>
+            </ul>
+            <div class="keywords">
+              <a href="https://github.com/silhovette/peeker/releases" target="_blank" rel="noreferrer" data-i18n="download_for_windows">Download for Windows</a>
+              <a href="https://github.com/silhovette/peeker" target="_blank" rel="noreferrer" data-i18n="view_on_github">View on GitHub</a>
+            </div>
+          </div>
+        </article>
+        <article id="deskveil-project" class="work-detail">
+          <div class="publication-content">
+            <h2>DeskVeil</h2>
+            <p class="publication-venue" data-i18n="windows_app">Windows App</p>
+            <p class="publication-summary" data-i18n="deskveil_summary">A Windows app that automatically veils your screens when you step away and reveals them when you return, without locking your computer.</p>
+            <ul class="work-points">
+              <li data-i18n="deskveil_cover">Uses face detection to trigger a frosted-glass overlay across all monitors during short breaks.</li>
+              <li data-i18n="deskveil_privacy">Processes camera and desktop images locally in memory, without saving or uploading them.</li>
+              <li data-i18n="deskveil_controls">Runs in the system tray, with manual cover, a 10-minute snooze, and a keyboard shortcut to dismiss the overlay.</li>
+            </ul>
+            <div class="keywords">
+              <a href="https://github.com/silhovette/deskveil" target="_blank" rel="noreferrer" data-i18n="view_on_github">View on GitHub</a>
+            </div>
+          </div>
+        </article>
+        <article id="chartflow-project" class="work-detail">
+          <div class="publication-content">
+            <h2>ChartFlow</h2>
+            <p class="publication-venue" data-i18n="rhythm_chart_editor">Rhythm Chart Editor</p>
+            <p class="publication-summary" data-i18n="chartflow_summary">A browser-based rhythm chart tool for recording, editing, and playing 4K–8K charts.</p>
+            <ul class="work-points">
+              <li data-i18n="chartflow_recording">Records keyboard performances on empty lanes and quantizes input to a 1/32 grid.</li>
+              <li data-i18n="chartflow_editing">Provides a visual editor with note selection, movement, copy and paste, undo and redo, preview, and playtesting.</li>
+              <li data-i18n="chartflow_storage">Keeps charts, profiles, and progress in the browser, with JSON import and export for transferring saves.</li>
+            </ul>
+            <div class="keywords">
+              <a href="games/chartflow/index.html" data-game-demo-trigger data-i18n="play_demo">Play Demo</a>
+              <a href="https://github.com/silhovette/chartflow" target="_blank" rel="noreferrer" data-i18n="view_on_github">View on GitHub</a>
+            </div>
+          </div>
+        </article>
+        <article id="falling-pulse-project" class="work-detail">
+          <div class="publication-content">
+            <h2 data-i18n="falling_pulse_rhythm_game">Falling Pulse</h2>
+            <p class="publication-venue" data-i18n="interactive_game">Interactive Game</p>
+            <p class="publication-summary" data-i18n="playground_game">
+              A configurable browser-based fixed-lane falling-note game prototype.
+            </p>
+            <ul class="work-points">
+              <li data-i18n="falling_pulse_simulator">A rhythm-game-style simulator with no music, only beats, designed to train players' reaction speed and sight-reading ability.</li>
+              <li data-i18n="implemented_adjustable_bpm_scroll_speed_difficulty_note_count_beat_divisions_a">Implemented adjustable BPM, scroll speed, difficulty, note count, beat divisions, and 4K/5K/6K lane modes.</li>
+              <li data-i18n="added_profile_customization_rating_progression_achievements_key_bindings_autop">Features profile customization, rating progression, achievements, key bindings, autoplay, and metronome controls.</li>
+            </ul>
+            <div class="keywords">
+              <a href="games/falling-pulse/index.html" data-game-demo-trigger data-i18n="play_demo">Play Demo</a>
+            </div>
+          </div>
+        </article>
+
+
+      </div>
+        </div>
+      </details>
+      <div class="section-link">
+        <a href="index.html#playground" data-i18n="back_to_homepage">Back to homepage</a>
+      </div>
+    </section>
+  </main>
+
+
+  <template id="paused-miniature-dialog">
+<dialog id="miniature-dialog" class="miniature-dialog" aria-labelledby="miniature-dialog-title">
+    <header class="miniature-dialog__header">
+      <h2 id="miniature-dialog-title">Miniature Models</h2>
+      <button class="photo-icon-button" type="button" data-miniature-close aria-label="Close photo viewer" data-i18n-aria-label="close_photo_viewer" autofocus><svg aria-hidden="true"><use href="assets/icons/gallery.svg#x"></use></svg></button>
+    </header>
+    <div class="miniature-viewer">
+      <button class="photo-icon-button" type="button" data-miniature-prev aria-label="Previous photo" data-i18n-aria-label="previous_photo"><svg aria-hidden="true"><use href="assets/icons/gallery.svg#chevron-left"></use></svg></button>
+      <div class="miniature-stage"><img alt="" hidden /><p role="status"></p></div>
+      <button class="photo-icon-button" type="button" data-miniature-next aria-label="Next photo" data-i18n-aria-label="next_photo"><svg aria-hidden="true"><use href="assets/icons/gallery.svg#chevron-right"></use></svg></button>
+    </div>
+  </dialog>
+  </template>
+  <dialog id="photo-dialog" class="photo-dialog" aria-labelledby="photo-dialog-title">
+    <header class="photo-dialog__header">
+      <h2 id="photo-dialog-title" data-i18n="photo_collection">Photo Collection</h2>
+      <button class="photo-icon-button" type="button" data-photo-grid title="All photos" aria-label="All photos" data-i18n-aria-label="all_photos" data-i18n-title="all_photos"><svg aria-hidden="true"><use href="assets/icons/gallery.svg#grid-2x2"></use></svg></button>
+      <a class="photo-icon-button" data-photo-original target="_blank" rel="noreferrer" title="Open original" aria-label="Open original photo" hidden data-i18n-aria-label="open_original_photo" data-i18n-title="open_original"><svg aria-hidden="true"><use href="assets/icons/gallery.svg#external-link"></use></svg></a>
+      <button class="photo-icon-button" type="button" data-photo-close title="Close" aria-label="Close photo viewer" autofocus data-i18n-aria-label="close_photo_viewer" data-i18n-title="close"><svg aria-hidden="true"><use href="assets/icons/gallery.svg#x"></use></svg></button>
+    </header>
+    <div class="photo-library" data-photo-library hidden></div>
+    <div class="photo-viewer" data-photo-viewer hidden>
+      <button class="photo-icon-button photo-viewer__prev" type="button" data-photo-prev title="Previous photo" aria-label="Previous photo" data-i18n-aria-label="previous_photo" data-i18n-title="previous_photo"><svg aria-hidden="true"><use href="assets/icons/gallery.svg#chevron-left"></use></svg></button>
+      <div class="photo-stage">
+        <img data-photo-full alt="" hidden />
+        <p data-photo-viewer-status role="status"></p>
+      </div>
+      <button class="photo-icon-button photo-viewer__next" type="button" data-photo-next title="Next photo" aria-label="Next photo" data-i18n-aria-label="next_photo" data-i18n-title="next_photo"><svg aria-hidden="true"><use href="assets/icons/gallery.svg#chevron-right"></use></svg></button>
+    </div>
+  </dialog>
+
+
+
+  <div id="falling-pulse-gate" class="game-gate" aria-hidden="true">
+    <div class="game-gate__backdrop" data-game-gate-close></div>
+    <section class="game-gate__panel" role="dialog" aria-modal="true" aria-labelledby="falling-pulse-gate-title">
+      <button class="game-gate__close" type="button" data-game-gate-close aria-label="Close" data-i18n-aria-label="close">&times;</button>
+      <p class="eyebrow">Before Playing</p>
+      <div class="game-gate__title-row">
+        <h2 id="falling-pulse-gate-title" data-i18n="fixed_lane_rhythm_game_experience">Fixed-Lane Rhythm Game Experience?</h2>
+        <div class="game-gate__mark thinking-visual is-animated" aria-hidden="true">
+          <svg class="thinking-line-mark" viewBox="0 0 1254 1254" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <filter id="game-gate-rust-glow" x="-35%" y="-35%" width="170%" height="170%">
+                <feGaussianBlur stdDeviation="5" result="blur" />
+                <feMerge>
+                  <feMergeNode in="blur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+              <path
+                id="game-gate-line-shape"
+                fill-rule="evenodd"
+                pathLength="100"
+                d="M787 36L738 23L678 13L643 10L573 11L520 18L454 34L404 52L356 75L306 106L269 134L241 159L199 204L171 241L139 292L115 340L98 383L86 422L77 461L70 507L67 552L68 590L72 634L79 674L88 711L109 772L137 831L169 883L191 912L215 938L203 980L200 1021L203 1049L208 1074L218 1107L227 1128L249 1164L272 1190L296 1210L311 1220L348 1238L366 1244L399 1251L440 1253L487 1247L596 1225L612 1220L634 1207L643 1198L651 1184L654 1173L654 1157L651 1146L644 1134L658 1122L711 1117L769 1105L810 1092L838 1081L872 1065L899 1050L939 1024L975 996L1021 952L1044 926L1071 891L1100 845L1122 802L1137 766L1153 716L1168 645L1173 594L1173 541L1169 495L1158 436L1139 374L1121 331L1098 287L1065 236L1032 195L987 150L945 116L889 80L841 56Z M360 630L387 630L404 637L414 644L425 655L439 675L449 696L455 714L463 751L464 790L461 809L456 825L447 842L427 866L427 877L429 881L436 886L451 887L819 804L831 803L844 807L852 814L858 824L862 838L861 859L854 873L840 884L632 934L632 938L642 943L656 956L663 969L665 977L665 993L662 1004L657 1014L647 1025L631 1035L631 1040L633 1042L645 1047L657 1060L662 1074L662 1088L659 1099L652 1111L641 1122L623 1130L622 1134L637 1146L641 1155L642 1171L635 1188L624 1199L609 1208L588 1214L458 1238L417 1239L392 1236L370 1231L331 1216L306 1201L286 1185L270 1169L254 1149L234 1112L223 1080L214 1035L213 1000L218 969L227 943L247 908L276 873L332 819L346 796L353 777L358 748L358 729L353 697L343 664L343 653L345 645L349 638Z M569 26L629 24L681 28L738 38L789 52L829 67L873 88L925 120L961 147L983 166L1032 217L1063 258L1091 303L1118 359L1137 412L1147 450L1157 511L1160 556L1158 614L1151 665L1138 720L1123 765L1100 817L1076 859L1044 905L1011 943L979 974L930 1013L883 1043L836 1067L777 1089L739 1099L682 1108L669 1107L674 1091L674 1072L667 1053L663 1047L652 1037L662 1027L673 1009L677 993L677 976L673 961L667 950L659 941L666 938L839 897L854 890L866 878L871 868L874 857L874 836L872 827L865 811L855 800L847 795L837 792L820 792L446 876L440 875L438 872L439 869L451 857L466 833L475 804L477 789L477 763L474 740L468 714L460 690L451 671L438 651L424 636L410 626L393 619L384 617L363 617L349 622L338 632L331 650L331 668L338 689L345 724L344 760L335 790L320 814L277 854L255 878L239 898L225 921L221 925L196 896L169 858L150 826L130 786L114 746L101 705L90 658L84 616L81 570L84 507L93 452L107 400L121 361L148 304L178 255L208 215L243 177L281 143L310 121L365 87L414 64L459 48L515 34Z M496 654L496 669L500 680L511 692L517 695L533 698L564 693L602 693L620 695L655 703L680 712L705 724L732 741L748 755L760 761L773 762L785 758L797 746L802 734L802 718L797 707L786 695L772 684L744 666L721 654L692 642L660 632L638 627L601 622L557 622L522 627L508 634L501 642Z M509 654L512 648L521 640L565 634L608 635L658 644L707 661L747 682L773 700L785 711L789 718L790 731L786 740L780 746L774 749L764 749L757 746L735 728L707 711L675 697L653 690L631 685L602 681L563 681L534 686L524 685L512 675L509 669Z M705 299L698 305L691 320L691 333L695 344L705 355L717 360L731 360L762 350L770 350L761 371L757 393L758 417L764 440L776 463L791 479L810 490L821 493L844 493L865 485L885 467L893 455L903 431L907 408L906 384L903 370L896 353L897 351L921 358L965 378L976 378L987 374L995 367L1002 352L1002 337L998 327L990 318L978 310L957 300L923 288L876 277L849 274L805 274L786 276L750 283L718 293Z M711 310L748 297L789 289L811 287L847 287L868 289L920 300L953 312L972 321L987 333L990 339L990 351L987 357L981 363L974 366L966 366L941 353L915 343L891 337L868 335L882 353L891 374L894 388L894 413L892 424L882 449L875 459L864 470L855 476L845 480L824 481L806 474L791 461L777 438L771 417L770 394L773 376L783 352L795 337L795 334L765 337L726 349L718 348L708 341L703 330L704 319Z M461 271L445 275L435 280L423 289L413 300L404 314L396 333L392 350L391 374L393 389L398 406L405 421L414 434L423 443L438 453L458 459L473 459L489 455L502 448L517 434L523 426L533 407L537 395L541 373L541 355L535 326L525 305L520 298L506 284L490 275L473 271Z M458 284L480 285L490 289L500 296L512 309L520 323L528 354L528 374L526 387L522 400L514 416L506 427L495 437L485 443L468 447L453 445L441 440L421 422L410 402L404 377L404 356L409 334L418 315L427 303L437 294L449 287Z M314 196L314 211L318 221L327 231L340 237L358 236L390 222L418 214L446 209L470 207L500 208L530 213L560 222L587 234L603 234L614 229L622 221L627 209L627 196L624 187L618 179L602 169L573 157L542 148L513 143L488 141L463 141L431 144L403 149L377 156L347 167L328 176L319 185Z M326 201L328 194L336 186L362 175L394 165L444 156L495 155L539 161L562 167L587 176L602 183L612 191L615 197L615 208L612 214L606 220L599 223L592 223L565 211L521 199L479 195L455 196L408 204L377 214L353 225L342 225L336 222L330 216L327 210Z"
+              />
+            </defs>
+            <use href="#game-gate-line-shape" class="thinking-line-mark__glow" />
+            <use href="#game-gate-line-shape" class="thinking-line-mark__main" />
+            <use href="#game-gate-line-shape" class="thinking-line-mark__runner" />
+          </svg>
+        </div>
+      </div>
+      <p data-i18n="are_you_a_fixed_lane_rhythm_game_player_or_do_you_have_experience_with_fixed_l">
+        Are you a fixed-lane rhythm game player, or do you have experience with fixed-lane rhythm games?
+        If not, you may not know how this demo is played or how its settings work, which could lead
+        to a poor experience.
+      </p>
+      <div class="game-gate__actions">
+        <button class="game-gate__button game-gate__button--primary" type="button" data-game-gate-confirm data-i18n="yes">Yes</button>
+        <button class="game-gate__button" type="button" data-game-gate-close data-i18n="no">No</button>
+      </div>
+    </section>
+  </div>
+
+  <footer class="secondary-footer wrap">
+    <div class="secondary-footer-inner">
+      <p>&copy; <span id="year">2026</span> Yuhua Luo</p>
+      <a href="index.html#hero"><span data-i18n="timeline_back_home">Back to home</span></a>
+    </div>
+  </footer>
+</body>
+</html>

@@ -133,43 +133,42 @@ const setupSiteSearch = () => {
     const query = input.value.trim().toLowerCase();
     if (!query) {
       search.classList.remove("has-results");
+      results.hidden = true;
+      input.setAttribute("aria-expanded", "false");
       return;
     }
     results.replaceChildren();
     const matches = searchableItems.filter((item) => item.textContent.toLowerCase().includes(query));
-    matches.slice(0, 7).forEach((item) => {
-      const button = document.createElement("button");
-      button.type = "button";
-      button.className = "site-search__result";
-      button.setAttribute("role", "option");
-      const section = item.closest("section");
-      const title = document.createElement("strong");
-      title.textContent = window.siteI18n.getSourceText(item).trim().slice(0, 72);
-      const label = document.createElement("span");
-      const eyebrow = section?.querySelector(".eyebrow");
-      label.textContent = eyebrow ? window.siteI18n.getSourceText(eyebrow).trim() : "Section";
-      button.append(title, label);
-      button.addEventListener("click", () => {
+    matches.slice(0, 10).forEach((item) => {
+      const link = document.createElement("a");
+      link.href = "#" + item.closest("section[id]").id;
+      link.textContent = item.textContent.trim().slice(0, 140);
+      link.addEventListener("click", (event) => {
+        event.preventDefault();
         revealPlaygroundTarget(item);
         window.siteReveal?.show(item);
         item.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "center" });
         highlight(item, query);
         input.value = "";
         search.classList.remove("has-results");
+        results.hidden = true;
+        input.setAttribute("aria-expanded", "false");
         input.blur();
       });
-      results.appendChild(button);
+      results.appendChild(link);
     });
     if (!matches.length) {
       const empty = document.createElement("p");
-      empty.className = "site-search__empty";
-      empty.textContent = "No matching section";
+      empty.textContent = window.siteI18n?.t("no_matching_section") || "No matching section";
       results.appendChild(empty);
     }
     search.classList.add("has-results");
+    results.hidden = false;
+    input.setAttribute("aria-expanded", "true");
   };
 
   input.addEventListener("input", render);
+  input.addEventListener("focus", render);
   document.addEventListener("site-language-change", () => {
     clearHighlight();
     render();
@@ -184,6 +183,8 @@ const setupSiteSearch = () => {
   document.addEventListener("click", (event) => {
     if (!search.contains(event.target) && !event.target.closest("[data-language-switcher]")) {
       search.classList.remove("has-results");
+      results.hidden = true;
+      input.setAttribute("aria-expanded", "false");
       if (!event.target.closest(".search-highlight")) clearHighlight();
     }
   });
