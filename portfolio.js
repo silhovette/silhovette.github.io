@@ -338,5 +338,28 @@
   });
   document.addEventListener("site-language-change", renderSearch);
 
+  const relayCarousel = document.querySelector("[data-relay-carousel]");
+  if (relayCarousel) {
+    const relayImages = [...relayCarousel.querySelectorAll("img")];
+    let relayIndex = 0;
+    let relayTimer;
+    const showNextRelayImage = () => {
+      relayImages[relayIndex].style.opacity = "0";
+      relayIndex = (relayIndex + 1) % relayImages.length;
+      relayImages[relayIndex].style.opacity = "1";
+    };
+    const startRelayCarousel = () => {
+      if (document.hidden || relayImages.length < 2) return;
+      clearInterval(relayTimer);
+      relayTimer = setInterval(showNextRelayImage, 3500);
+    };
+    const stopRelayCarousel = () => clearInterval(relayTimer);
+    startRelayCarousel();
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) stopRelayCarousel();
+      else startRelayCarousel();
+    });
+  }
+
 
 })();
