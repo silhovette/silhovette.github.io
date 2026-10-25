@@ -64,7 +64,7 @@
   min-width: 0;
   margin: 0;
   padding: 16px;
-  background: #fff;
+  background: var(--theme-color-d14f901611);
   border: 1px solid var(--line);
   border-radius: 18px;
   overflow: hidden;
@@ -126,5 +126,5 @@
 @media print {
   .research-entry { break-inside: avoid; }
   .archive-heading { padding-block: 20px; }
-  .research-figure { border-color: #ccc; }
+  .research-figure { border-color: var(--theme-color-d436045138); }
 }

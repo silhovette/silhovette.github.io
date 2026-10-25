@@ -1,12 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-page-fade="complete">
 <head>
   <meta charset="UTF-8" />
+  <script src="theme.js?v=1"></script>
+<style id="page-fade-style">
+      html[data-page-fade] { background: #f5f3ec; }
+      html[data-page-fade="pending"] body,
+      html[data-page-fade="revealing"] body {
+        transition: opacity 700ms cubic-bezier(0.22, 1, 0.36, 1) !important;
+      }
+      html[data-page-fade="pending"] body { opacity: 0 !important; }
+      html[data-page-fade="revealing"] body { opacity: 1 !important; }
+      /* Replace legacy per-main load fades; scroll reveals remain independent. */
+      html[data-page-fade] body > main { animation: none !important; }
+      @media (prefers-reduced-motion: reduce) {
+        html[data-page-fade] body { opacity: 1 !important; transition: none !important; }
+      }
+    </style>
+<script id="page-fade-init">
+      (() => {
+        const root = document.documentElement;
+        const motion = matchMedia("(prefers-reduced-motion: reduce)");
+        if (motion.matches) return;
+        let shown = false;
+        const reveal = (immediate = false) => {
+          if (shown && !immediate) return;
+          shown = true;
+          clearTimeout(deadline);
+          root.setAttribute("data-page-fade", immediate ? "complete" : "revealing");
+          if (!immediate) setTimeout(() => root.setAttribute("data-page-fade", "complete"), 700);
+        };
+        // Set the fallback before hiding: a missing or broken external script is safe.
+        const deadline = setTimeout(() => reveal(), 1800);
+        document.addEventListener("page-fade-ready", () => reveal(), { once: true });
+        addEventListener("pageshow", event => { if (event.persisted) reveal(true); });
+        motion.addEventListener("change", event => { if (event.matches) reveal(true); });
+        root.setAttribute("data-page-fade", "pending");
+      })();
+    </script>
+<script src="page-fade.js?v=1" defer></script>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#f5f3ec" />
   <title>Playground — Under Construction | Yuhua Luo</title>
   <link rel="stylesheet" href="fonts.css?v=2" />
   <link rel="stylesheet" href="portfolio.css?v=46" />
+  <link rel="stylesheet" href="theme.css?v=1" />
 </head>
 <body class="construction-page">
   <main>

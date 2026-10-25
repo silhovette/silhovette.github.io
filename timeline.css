@@ -54,7 +54,7 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #b9b0ac;
+  background: var(--theme-color-d73800ade2);
   transform: translate(-50%, -50%);
   transition: background-color 250ms ease-out;
 }

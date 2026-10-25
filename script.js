@@ -1,5 +1,7 @@
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const touchDevice = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+const themedRgba = (variable, alpha, fallback = "185, 71, 44") =>
+  window.siteTheme?.rgba(variable, alpha) || `rgba(${fallback}, ${alpha})`;
 
 document.getElementById("year").textContent = new Date().getFullYear();
 
@@ -347,7 +349,7 @@ const setupCursorField = () => {
 
       context.beginPath();
       context.arc(ripple.x, ripple.y, radius, 0, Math.PI * 2);
-      context.strokeStyle = `rgba(185, 71, 44, ${opacity})`;
+      context.strokeStyle = themedRgba("--theme-canvas-accent-rgb", opacity);
       context.lineWidth = 1.9;
       context.stroke();
     });
@@ -692,7 +694,7 @@ const setupHeroPolyhedron = () => {
         context.beginPath();
         context.moveTo(a.x + (b.x - a.x) * t0, a.y + (b.y - a.y) * t0);
         context.lineTo(a.x + (b.x - a.x) * t1, a.y + (b.y - a.y) * t1);
-        context.strokeStyle = `rgba(219, 138, 120, ${pulseOpacity})`;
+        context.strokeStyle = themedRgba("--theme-canvas-pulse-rgb", pulseOpacity, "219, 138, 120");
         context.stroke();
       }
     });
@@ -742,7 +744,7 @@ const setupHeroPolyhedron = () => {
       );
 
       context.beginPath();
-      context.strokeStyle = `rgba(185, 71, 44, ${edgeOpacity})`;
+      context.strokeStyle = themedRgba("--theme-canvas-accent-rgb", edgeOpacity);
       context.moveTo(a.x, a.y);
       context.lineTo(b.x, b.y);
       context.stroke();
