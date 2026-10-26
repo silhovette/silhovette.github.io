@@ -58,6 +58,7 @@
   color: var(--ink);
 }
 .research-links { display: flex; gap: 20px; margin-bottom: 0; }
+.research-links--spaced { margin-top: 22px; }
 .research-links a { font: 14px/1.6 var(--font-body); border-bottom: 1px solid var(--line); }
 .research-links a:hover { color: var(--red); border-color: var(--red); }
 .research-figure {
