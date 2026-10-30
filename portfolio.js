@@ -231,6 +231,15 @@
         figureDialog.close();
     }
   });
+  const toast = document.querySelector(".toast");
+  let toastTimer;
+  const hideToast = () => {
+    if (!toast) return;
+    clearTimeout(toastTimer);
+    toast.classList.remove("visible");
+  };
+
+  let hideConstructionNotice = () => {};
   const playgroundEntries = document.querySelectorAll("[data-playground-paused]");
   if (playgroundEntries.length) {
     const notice = document.createElement("div");
@@ -240,13 +249,18 @@
     notice.setAttribute("aria-atomic", "true");
     document.body.append(notice);
     let noticeTimer;
+    hideConstructionNotice = () => {
+      clearTimeout(noticeTimer);
+      notice.classList.remove("is-visible");
+    };
     const showConstructionNotice = (event) => {
       if (event.type === "auxclick" && event.button !== 1) return;
       event.preventDefault();
+      hideToast();
       notice.textContent = "Currently under construction.";
       notice.classList.add("is-visible");
       clearTimeout(noticeTimer);
-      noticeTimer = setTimeout(() => notice.classList.remove("is-visible"), reducedMotion.matches ? 3000 : 3280);
+      noticeTimer = setTimeout(() => notice.classList.remove("is-visible"), reducedMotion.matches ? 1050 : 1148);
     };
     playgroundEntries.forEach((entry) => {
       entry.addEventListener("click", showConstructionNotice);
@@ -254,11 +268,10 @@
     });
   }
 
-  const toast = document.querySelector(".toast");
-  let toastTimer;
   document
     .querySelector("[data-copy-email]")
     ?.addEventListener("click", async () => {
+      hideConstructionNotice();
       try {
         await navigator.clipboard.writeText("silhovette@sjtu.edu.cn");
         toast.textContent =
@@ -266,9 +279,10 @@
       } catch {
         toast.textContent = "silhovette@sjtu.edu.cn";
       }
+      hideConstructionNotice();
       toast.classList.add("visible");
       clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => toast.classList.remove("visible"), 2600);
+      toastTimer = setTimeout(() => toast.classList.remove("visible"), 910);
     });
 
   const searchInput = document.getElementById("portfolio-search");
