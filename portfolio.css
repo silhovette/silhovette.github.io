@@ -522,9 +522,9 @@ a, button { transition: color 180ms ease-out, background-color 180ms ease-out, b
   color: var(--red);
 }
 .cover-tagline {
-  font: 400 22px/1.4 var(--font-display);
+  font: 400 20px/1.35 var(--font-display);
   letter-spacing: -0.035em;
-  margin: 26px 0 15px;
+  margin: 20px 0 11px;
   max-width: 450px;
 }
 .cover-description {
@@ -1667,7 +1667,7 @@ body:not(.portfolio-home) .work-detail p {
     padding-left: 7px;
   }
   .cover-tagline {
-    font-size: 22px;
+    font-size: 20px;
     max-width: 340px;
   }
   .cover-description {

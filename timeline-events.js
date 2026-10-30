@@ -48,7 +48,7 @@
         <li>
           <time class="timeline-date" datetime="2025-03">Mar 2025</time>
           <div class="timeline-event">
-            <h3 data-i18n="timeline_talk">Hosted my first talk on science and technology innovation</h3>
+            <h3 data-i18n="timeline_talk">Hosted my first talk on AI and its implications</h3>
             <p data-i18n="timeline_sjtu">Shanghai Jiao Tong University</p>
           </div>
         </li>
