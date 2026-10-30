@@ -471,6 +471,18 @@ a, button { transition: color 180ms ease-out, background-color 180ms ease-out, b
   .language-switcher button { padding-inline: 3px; }
   .search-toggle, .menu-toggle { width: 28px; }
 }
+.blank-page .header-inner {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+.blank-page .header-controls {
+  grid-column: 2;
+}
+@media (min-width: 601px) {
+  .blank-page .portfolio-header .header-search {
+    width: 390px;
+    margin-left: 0;
+  }
+}
 .cover {
   padding-top: 8px;
 }
@@ -1177,10 +1189,10 @@ a, button { transition: color 180ms ease-out, background-color 180ms ease-out, b
   transform: scale(1.05);
   filter: saturate(1);
 }
-.play-card[href="playground.html#photography"] img {
+.play-card[href="photos.html"] img {
   filter: saturate(1);
 }
-.play-card[href="playground.html#photography"]:hover img {
+.play-card[href="photos.html"]:hover img {
   filter: saturate(1.1);
 }
 .play-card h3 {

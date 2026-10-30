@@ -96,7 +96,6 @@
     "portfolio_cohort": ["Class monitor of the first undergraduate cohort", "人工智能学院首届本科生班长", "人工智能學院首屆本科生班長"],
     "portfolio_offscreen": ["PERSONAL", "个人生活", "個人生活"],
     "portfolio_play_title": ["Interests", "兴趣爱好", "興趣愛好"],
-    "portfolio_play_link": ["Enter the playground", "进入 Playground", "進入 Playground"],
     "portfolio_photo_meta": ["EVERYDAY MOMENTS", "日常片刻 / 镜头所见", "日常片刻 / 鏡頭所見"],
     "portfolio_mod_meta": ["MODS & CUSTOM LIVERIES / AZX777", "模组与自定义涂装 / AZX777", "模組與自訂塗裝 / AZX777"],
     "portfolio_game_meta": ["PLAY / BUILD / EXPLORE", "节奏游戏 / 交互实验", "節奏遊戲 / 互動實驗"],
