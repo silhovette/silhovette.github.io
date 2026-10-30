@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import vm from "node:vm";
 
-const pages = ["index.html", "works.html", "timeline.html", "playground.html"];
+const pages = ["index.html", "works.html", "timeline.html"];
 const read = name => readFileSync(new URL(`../${name}`, import.meta.url), "utf8");
 const html = read(pages[0]);
 const bootstrap = html.match(/<script id="page-fade-init">([\s\S]*?)<\/script>/)[1];
@@ -58,7 +58,7 @@ function environment({ reduced = false, images = [], width = 1440, fontReady = P
   };
 }
 
-test("four pages share the early, fail-open bootstrap and opacity-only fade", () => {
+test("three pages share the early, fail-open bootstrap and opacity-only fade", () => {
   for (const page of pages) {
     const source = read(page);
     assert.match(source, /<html lang="en" data-page-fade="complete">/);

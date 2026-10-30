@@ -76,7 +76,7 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
   const server = await createPreviewServer();
   const firstPort = Number(process.argv[2] || 8766);
   server.once("listening", () => {
-    console.log(`Preview: http://127.0.0.1:${server.address().port}/playground.html#photography`);
+    console.log(`Preview: http://127.0.0.1:${server.address().port}/index.html#playground`);
   });
   function listen(port) {
     server.once("error", error => {
