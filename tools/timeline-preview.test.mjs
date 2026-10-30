@@ -40,7 +40,7 @@ async function setup({ reduced = false, missing = false } = {}) {
     cancelAnimationFrame: key => frames.delete(key),
     DOMParser: class { parseFromString(html) {
       assert.equal(html, '<ol>' + window.siteTimelineMarkup + '</ol>');
-      return { querySelector: () => ({ children: new Array(13) }) };
+      return { querySelector: () => ({ children: new Array(14) }) };
     } },
   });
   await new Promise(resolve => setImmediate(resolve));
@@ -177,10 +177,10 @@ test('missing data hides the loading message and preserves the full timeline lin
   assert.match(home, /class="timeline-preview-window"[^>]+href="timeline\.html"/);
 });
 
-test('all 13 events remain shared with the unchanged standalone timeline page', () => {
+test('all 14 events remain shared with the unchanged standalone timeline page', () => {
   const list = { innerHTML: '' };
   vm.runInNewContext(eventsScript, { window: {}, document: { querySelector: () => list } });
-  assert.equal(list.innerHTML, markup); assert.equal((markup.match(/<li(?:>| )/g) || []).length, 13);
+  assert.equal(list.innerHTML, markup); assert.equal((markup.match(/<li(?:>| )/g) || []).length, 14);
   assert.match(markup, /2012–2017/); assert.match(markup, /timeline_present/);
   for (const file of ['index.html', 'timeline.html']) {
     const html = readFileSync(new URL('../' + file, import.meta.url), 'utf8');

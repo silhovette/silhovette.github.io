@@ -4,6 +4,12 @@
   "use strict";
   window.siteTimelineMarkup = `
 <li>
+          <span class="timeline-date">2006</span>
+          <div class="timeline-event">
+            <h3>print("Hello, World!")</h3>
+          </div>
+        </li>
+<li>
           <span class="timeline-date">2012–2017</span>
           <div class="timeline-event">
             <h3 data-i18n="timeline_bilingual_school">Shanghai International Studies University Bilingual School</h3>
@@ -17,7 +23,7 @@
             <p data-i18n="timeline_middle">Middle School</p>
           </div>
         </li>
-        <li>
+        <li data-timeline-start>
           <span class="timeline-date">2021–2024</span>
           <div class="timeline-event">
             <h3 data-i18n="timeline_high_school">High School Affiliated to Shanghai Jiao Tong University</h3>
@@ -41,7 +47,7 @@
         <li>
           <time class="timeline-date" datetime="2024-09">Sep 2024</time>
           <div class="timeline-event">
-            <h3 data-i18n="timeline_monitor">Class Monitor of the First Undergraduate Cohort</h3>
+            <h3 data-i18n="timeline_monitor">Class Monitor of the First Undergraduate Class</h3>
             <p data-i18n="timeline_sjtu_ai">School of Artificial Intelligence, Shanghai Jiao Tong University</p>
           </div>
         </li>

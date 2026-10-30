@@ -1108,10 +1108,14 @@ a, button { transition: color 180ms ease-out, background-color 180ms ease-out, b
   padding: 0;
   position: relative;
 }
+.timeline-preview-list[aria-hidden="true"] {
+  pointer-events: none;
+  user-select: none;
+}
 .timeline-preview-list::before {
   content: "";
   position: absolute;
-  top: 0;
+  top: 22px;
   bottom: 0;
   left: 91px;
   width: 1px;

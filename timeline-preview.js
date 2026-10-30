@@ -135,6 +135,8 @@
     };
     track.append(clone(), sequence, clone());
     localize();
+    const startingItem = sequence.querySelector?.("[data-timeline-start]");
+    if (startingItem) position = startingItem.offsetTop;
     status.hidden = true;
     measure();
     const resizeObserver = new ResizeObserver(measure);
