@@ -79,7 +79,13 @@ body::after {
   background-size: 40px 40px;
   background-position: 0 var(--grid-scroll-y, 0px);
 }
-.page-grid::before { opacity: 0.035; }
+.page-grid::before {
+  opacity: 0.035;
+  inset: -40px 0;
+  background-position: 0 0;
+  transform: translateY(var(--grid-offset-y, 0px));
+  will-change: transform;
+}
 .page-grid::after {
   opacity: 0;
   mask-image: radial-gradient(ellipse 280px 280px at var(--grid-x, -500px) var(--grid-y, -500px), var(--theme-color-598b32b7d9) 0%, var(--theme-color-7bdc44be1f) 30%, transparent 100%);

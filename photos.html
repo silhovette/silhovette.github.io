@@ -3,6 +3,7 @@
 <html lang="en" data-page-fade="pending">
 <head>
 <meta charset="utf-8"/>
+    <script src="image-preload.js?v=1"></script>
     <style id="page-fade-style">
       /* White curtain sits over the entire UI, including the sticky header.
          Placing it on the root avoids inheriting body { zoom: .95 }. */
@@ -70,8 +71,8 @@
 <meta content="#f5f3ec" name="theme-color"/>
 <title>Photos | Yuhua Luo</title>
 <link rel="icon" type="image/svg+xml" href="assets/icons/portfolio.svg"/>
-<link rel="stylesheet" href="photos.css?v=6"/>
-<script src="photos-gallery.js?v=6" defer></script>
+<link rel="stylesheet" href="photos.css?v=11"/>
+<script src="photos-gallery.js?v=14" defer></script>
 </head>
 <body class="portfolio-home blank-page"><a class="skip-link" href="#main">Skip to content</a><div aria-hidden="true" class="page-grid"></div>
 <header class="portfolio-header">
@@ -90,56 +91,38 @@
 <div class="hero-panel hero-color"><div class="hero-copy"><h1><span>RE4LITY</span><span>IS</span><span>SUBJECT1VE</span></h1><p class="hero-note">“What is there, however strange,<br />can be accepted without question;<br />familiarity will be what overwhelms us.”<br />—— Eudora Welty</p></div></div>
 </section>
 
-<section aria-label="Photography collection" class="gallery">
-<div class="spread spread--opening">
-<button aria-label="Open frame 01: Window / Late afternoon" class="shot" data-index="0" type="button">
-<span class="shot-art"><img alt="Illustrative mock image for Window / Late afternoon" decoding="async" loading="eager" src="assets/photos/webp/frame-01-1800.webp" srcset="assets/photos/webp/frame-01-900.webp 900w, assets/photos/webp/frame-01-1800.webp 1800w, assets/photos/webp/frame-01.webp 3200w" sizes="(max-width:580px) calc(100vw - 36px), (min-width:1460px) 800px, 60vw" data-full="assets/photos/webp/frame-01.webp" width="1800" height="1350"/></span>
-</button>
-<button aria-label="Open frame 02: Quiet geometry" class="shot" data-index="1" type="button">
-<span class="shot-art"><img alt="Illustrative mock image for Quiet geometry" decoding="async" loading="eager" src="assets/photos/webp/frame-02-1800.webp" srcset="assets/photos/webp/frame-02-900.webp 675w, assets/photos/webp/frame-02-1800.webp 1350w, assets/photos/webp/frame-02.webp 2400w" sizes="(max-width:580px) calc(100vw - 36px), (min-width:1460px) 400px, 30vw" data-full="assets/photos/webp/frame-02.webp" width="1350" height="1800"/></span>
-</button>
-</div>
-<div class="spread spread--triptych">
-<button aria-label="Open frame 03: Last light" class="shot" data-index="2" type="button">
-<span class="shot-art"><img alt="Illustrative mock image for Last light" decoding="async" loading="lazy" src="assets/photos/webp/frame-03-1800.webp" srcset="assets/photos/webp/frame-03-900.webp 675w, assets/photos/webp/frame-03-1800.webp 1350w, assets/photos/webp/frame-03.webp 2400w" sizes="auto, (max-width:580px) 94vw, 65vw" data-full="assets/photos/webp/frame-03.webp" width="1350" height="1800"/></span>
-</button>
-<button aria-label="Open frame 04: Between buildings" class="shot" data-index="3" type="button">
-<span class="shot-art"><img alt="Illustrative mock image for Between buildings" decoding="async" loading="lazy" src="assets/photos/webp/frame-04-1800.webp" srcset="assets/photos/webp/frame-04-900.webp 900w, assets/photos/webp/frame-04-1800.webp 1800w, assets/photos/webp/frame-04.webp 3200w" sizes="auto, (max-width:580px) 94vw, 65vw" data-full="assets/photos/webp/frame-04.webp" width="1800" height="1350"/></span>
-</button>
-<button aria-label="Open frame 05: Blur / passing" class="shot" data-index="4" type="button">
-<span class="shot-art"><img alt="Illustrative mock image for Blur / passing" decoding="async" loading="lazy" src="assets/photos/webp/frame-05-1800.webp" srcset="assets/photos/webp/frame-05-900.webp 675w, assets/photos/webp/frame-05-1800.webp 1350w, assets/photos/webp/frame-05.webp 2400w" sizes="auto, (max-width:580px) 94vw, 65vw" data-full="assets/photos/webp/frame-05.webp" width="1350" height="1800"/></span>
-</button>
-</div>
-<div class="spread spread--pair">
-<button aria-label="Open frame 06: A line across" class="shot" data-index="5" type="button">
-<span class="shot-art"><img alt="Illustrative mock image for A line across" decoding="async" loading="lazy" src="assets/photos/webp/frame-06-1800.webp" srcset="assets/photos/webp/frame-06-900.webp 675w, assets/photos/webp/frame-06-1800.webp 1350w, assets/photos/webp/frame-06.webp 2400w" sizes="auto, (max-width:580px) 94vw, 65vw" data-full="assets/photos/webp/frame-06.webp" width="1350" height="1800"/></span>
-</button>
-<button aria-label="Open frame 07: After dark" class="shot" data-index="6" type="button">
-<span class="shot-art"><img alt="Illustrative mock image for After dark" decoding="async" loading="lazy" src="assets/photos/webp/frame-07-1800.webp" srcset="assets/photos/webp/frame-07-900.webp 900w, assets/photos/webp/frame-07-1800.webp 1800w, assets/photos/webp/frame-07.webp 3200w" sizes="auto, (max-width:580px) 94vw, 65vw" data-full="assets/photos/webp/frame-07.webp" width="1800" height="1350"/></span>
-</button>
-</div>
-<div class="spread spread--feature">
-<button aria-label="Open frame 09: A distant window" class="shot" data-index="8" type="button">
-<span class="shot-art"><img alt="Illustrative mock image for A distant window" decoding="async" loading="lazy" src="assets/photos/webp/frame-08-1800.webp" srcset="assets/photos/webp/frame-08-900.webp 900w, assets/photos/webp/frame-08-1800.webp 1800w, assets/photos/webp/frame-08.webp 3200w" sizes="auto, (max-width:580px) 94vw, 65vw" data-full="assets/photos/webp/frame-08.webp" width="1800" height="1350"/></span>
-</button>
-</div>
-<div class="spread spread--after">
-<button aria-label="Open frame 08: Coffee, perhaps" class="shot" data-index="7" type="button">
-<span class="shot-art"><img alt="Illustrative mock image for Coffee, perhaps" decoding="async" loading="lazy" src="assets/photos/webp/frame-09-1800.webp" srcset="assets/photos/webp/frame-09-900.webp 675w, assets/photos/webp/frame-09-1800.webp 1350w, assets/photos/webp/frame-09.webp 2400w" sizes="auto, (max-width:580px) 94vw, 65vw" data-full="assets/photos/webp/frame-09.webp" width="1350" height="1800"/></span>
-</button>
-<button aria-label="Open frame 10: Surface / Warm light" class="shot" data-index="9" type="button">
-<span class="shot-art"><img alt="Illustrative mock image for Surface / Warm light" decoding="async" loading="lazy" src="assets/photos/webp/frame-10-1800.webp" srcset="assets/photos/webp/frame-10-900.webp 900w, assets/photos/webp/frame-10-1800.webp 1800w, assets/photos/webp/frame-10.webp 3200w" sizes="auto, (max-width:580px) 94vw, 65vw" data-full="assets/photos/webp/frame-10.webp" width="1800" height="1350"/></span>
-</button>
-</div>
-<div class="spread spread--ending">
-<button aria-label="Open frame 11: Concrete / silence" class="shot" data-index="10" type="button">
-<span class="shot-art"><img alt="Illustrative mock image for Concrete / silence" decoding="async" loading="lazy" src="assets/photos/webp/frame-11-1800.webp" srcset="assets/photos/webp/frame-11-900.webp 675w, assets/photos/webp/frame-11-1800.webp 1350w, assets/photos/webp/frame-11.webp 2400w" sizes="auto, (max-width:580px) 94vw, 65vw" data-full="assets/photos/webp/frame-11.webp" width="1350" height="1800"/></span>
-</button>
-<button aria-label="Open frame 12: The final frame" class="shot" data-index="11" type="button">
-<span class="shot-art"><img alt="Illustrative mock image for The final frame" decoding="async" loading="lazy" src="assets/photos/webp/frame-12-1800.webp" srcset="assets/photos/webp/frame-12-900.webp 675w, assets/photos/webp/frame-12-1800.webp 1350w, assets/photos/webp/frame-12.webp 2400w" sizes="auto, (max-width:580px) 94vw, 65vw" data-full="assets/photos/webp/frame-12.webp" width="1350" height="1800"/></span>
-</button>
-</div>
+<div class="photo-chapters">
+<section class="photo-chapter photo-chapter--materia" aria-labelledby="materia-title" id="materia">
+  <div class="chapter-subhero">
+    <div class="chapter-image"><img src="assets/photos/1materia/hero.webp" alt="Framed Giorgio Morandi exhibition posters" width="3200" height="2400" loading="eager" decoding="async"/></div>
+    <div class="chapter-copy">
+      <h2 id="materia-title">MATERIA.</h2>
+      <p>We keep giving our thoughts a shape. Strange how they sometimes end up saying something else.</p>
+    </div>
+  </div>
+  <div class="chapter-gallery-slot"></div>
 </section>
+<section class="photo-chapter photo-chapter--terra" aria-labelledby="terra-title" id="terra">
+  <div class="chapter-subhero">
+    <div class="chapter-copy">
+      <h2 id="terra-title">TERRA.</h2>
+      <p>The world keeps changing the light, as if it hasn't quite decided what it wants to look like.</p>
+    </div>
+    <div class="chapter-image"><img src="assets/photos/2terra/hero.webp" alt="Sunlit red flowers beneath tree branches" width="2400" height="3200" loading="eager" decoding="async"/></div>
+  </div>
+  <div class="chapter-gallery-slot"></div>
+</section>
+<section class="photo-chapter photo-chapter--mechanica" aria-labelledby="mechanica-title" id="mechanica">
+  <div class="chapter-subhero">
+    <div class="chapter-image"><img src="assets/photos/3mechanica/hero.webp" alt="Sports cars displayed beneath suspended technical drawings" width="2400" height="3200" loading="eager" decoding="async"/></div>
+    <div class="chapter-copy">
+      <h2 id="mechanica-title">MECHANICA.</h2>
+      <p>Everyone needs something to keep them grounded. Funny how mine usually have wheels.</p>
+    </div>
+  </div>
+  <div class="chapter-gallery-slot"></div>
+</section>
+</div>
 </main>
 <footer aria-label="Look closer" class="archive-footer">
 <div class="archive-marquee">

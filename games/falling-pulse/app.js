@@ -48,6 +48,21 @@ const beatIndicator = $("#beatIndicator");
 const resultPanel = $("#resultPanel");
 const resultCanvas = $("#resultCanvas");
 const resultCtx = resultCanvas.getContext("2d");
+// CSS dimensions only change with layout. Reuse the original integer client
+// sizes in drawing loops, and refresh them when canvases resize or become visible.
+const canvasSizes = new WeakMap();
+function measureCanvasSize(targetCanvas) {
+  const size = { width: targetCanvas.clientWidth, height: targetCanvas.clientHeight };
+  canvasSizes.set(targetCanvas, size);
+  return size;
+}
+function canvasSize(targetCanvas) {
+  return canvasSizes.get(targetCanvas) || measureCanvasSize(targetCanvas);
+}
+const canvasSizeObserver = new ResizeObserver(entries => {
+  entries.forEach(entry => measureCanvasSize(entry.target));
+});
+[setupParticleCanvas, canvas, particleCanvas].forEach(targetCanvas => canvasSizeObserver.observe(targetCanvas));
 const perfectCount = $("#perfectCount");
 const greatCount = $("#greatCount");
 const goodCount = $("#goodCount");
@@ -410,6 +425,7 @@ function resizeCanvasToDisplay(targetCanvas, context, dpr) {
   targetCanvas.width = Math.max(1, Math.floor(rect.width * dpr));
   targetCanvas.height = Math.max(1, Math.floor(rect.height * dpr));
   context.setTransform(dpr, 0, 0, dpr, 0, 0);
+  measureCanvasSize(targetCanvas);
 }
 
 function buildAllowedBeatTicks(startBeat, endBeat, beatDivisions) {
@@ -556,8 +572,7 @@ function drawParticleSet({
   centerXRatio = 0.53,
   centerYRatio = 0.5,
 }) {
-  const width = targetCanvas.clientWidth;
-  const height = targetCanvas.clientHeight;
+  const { width, height } = canvasSize(targetCanvas);
   if (!width || !height) return;
 
   const time = now * 0.001;
@@ -615,8 +630,7 @@ function drawParticleSet({
 }
 
 function drawParticleCluster(now, delta) {
-  const width = particleCanvas.clientWidth;
-  const height = particleCanvas.clientHeight;
+  const { width, height } = canvasSize(particleCanvas);
   if (!width || !height) return;
 
   const brightenEase = 1 - Math.exp(-delta / 82);
@@ -642,8 +656,7 @@ function drawParticleCluster(now, delta) {
 
 function drawSetupParticles(now) {
   if (setupPanel.classList.contains("hidden")) return;
-  const width = setupParticleCanvas.clientWidth;
-  const height = setupParticleCanvas.clientHeight;
+  const { width, height } = canvasSize(setupParticleCanvas);
   if (!width || !height) return;
 
   setupParticleCtx.clearRect(0, 0, width, height);
@@ -1313,8 +1326,7 @@ function showResults() {
 }
 
 function draw(songTime) {
-  const width = canvas.clientWidth;
-  const height = canvas.clientHeight;
+  const { width, height } = canvasSize(canvas);
   const laneCount = state?.lanes || activeLaneCount;
   const laneWidth = width / laneCount;
   const hitY = height * HIT_LINE_RATIO;

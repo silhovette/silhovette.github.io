@@ -151,34 +151,44 @@ CF.GuideIntro = class {
     const ribbons = this.depthOrder;
     ribbons.sort((a, b) => a.z - b.z || a.strand - b.strand);
     const colorText = color.join(",");
+    const coreGradientKey = `${geometryKey}:${dpr}`;
     for (const ribbon of ribbons)
       for (const pass of [0, 1, 2]) {
         const points = ribbon.points;
         const first = points[0],
           last = points.at(-1);
-        const gradient = ctx.createLinearGradient(
-          first.x,
-          first.y,
-          last.x + 0.01,
-          last.y + 0.01,
-        );
-        for (let j = 0; j <= 12; j++) {
-          const point = points[Math.round((j / 12) * (points.length - 1))],
-            depth = (point.z + 230) / 460;
-          const taper =
-            (0.2 + 0.8 * Math.pow(Math.sin((j / 12) * Math.PI), 0.5)) *
-              (1 - morph) +
-            morph;
-          const opacity =
-            alpha *
-            (0.4 + 0.6 * depth) *
-            (pass === 0
-              ? 0.07 + glow * 0.045 * morph
-              : pass === 1
-                ? 0.16 + glow * 0.08 * morph
-                : 1) *
-            taper;
-          gradient.addColorStop(j / 12, `rgba(${colorText},${opacity})`);
+        let gradient = pass === 2 && settledGeometry && ribbon.coreGradientKey === coreGradientKey
+          ? ribbon.coreGradient : null;
+        if (!gradient) {
+          gradient = ctx.createLinearGradient(
+            first.x,
+            first.y,
+            last.x + 0.01,
+            last.y + 0.01,
+          );
+          for (let j = 0; j <= 12; j++) {
+            const point = points[Math.round((j / 12) * (points.length - 1))],
+              depth = (point.z + 230) / 460;
+            const taper =
+              (0.2 + 0.8 * Math.pow(Math.sin((j / 12) * Math.PI), 0.5)) *
+                (1 - morph) +
+              morph;
+            const opacity =
+              alpha *
+              (0.4 + 0.6 * depth) *
+              (pass === 0
+                ? 0.07 + glow * 0.045 * morph
+                : pass === 1
+                  ? 0.16 + glow * 0.08 * morph
+                  : 1) *
+              taper;
+            gradient.addColorStop(j / 12, `rgba(${colorText},${opacity})`);
+          }
+          // Once geometry and color settle, only the two glow passes change.
+          if (pass === 2 && settledGeometry) {
+            ribbon.coreGradient = gradient;
+            ribbon.coreGradientKey = coreGradientKey;
+          }
         }
         ctx.strokeStyle = gradient;
         const core = 2.4 * (1 - morph) + 3.6 * logoScale * morph;

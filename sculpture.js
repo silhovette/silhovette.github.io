@@ -576,6 +576,13 @@ class ParticleSculpture {
       projected[offset + 2] = depth;
     }
     const pointScale = Math.min(1, width / SCULPTURE_SETTINGS.canvasOverscan / 440);
+    // Canvas drawing cannot change this CSS color between particles. Resolve it
+    // once per frame, including during theme transitions, rather than per dot.
+    const themed = Boolean(window.siteTheme);
+    const ink = themed
+      ? getComputedStyle(document.documentElement).getPropertyValue("--theme-sculpture-rgb").trim() || "185, 71, 44"
+      : "161,62,35";
+    const colorPrefix = `rgba(${ink},${themed ? " " : ""}`;
     if (this.depthBuckets) {
       // Preview particles share 16 depth layers: one canvas fill per layer,
       // rather than a sort and a separate style/path/fill for every particle.
@@ -588,7 +595,7 @@ class ParticleSculpture {
         if (!bucket.length) return;
         const depth = (layer + 0.5) / 16;
         const radius = (0.65 + depth * 0.65) * pointScale * 0.912;
-        ctx.fillStyle = window.siteTheme?.rgba("--theme-sculpture-rgb", 0.19 + depth * 0.62) || `rgba(161,62,35,${0.19 + depth * 0.62})`;
+        ctx.fillStyle = `${colorPrefix}${0.19 + depth * 0.62})`;
         ctx.beginPath();
         for (const index of bucket) {
           const x = projected[index * 3], y = projected[index * 3 + 1];
@@ -603,7 +610,7 @@ class ParticleSculpture {
     for (const index of this.depthOrder) {
       const offset = index * 3;
       const depth = Math.max(0, Math.min(1, (projected[offset + 2] + 1.65) / 3.3));
-      ctx.fillStyle = window.siteTheme?.rgba("--theme-sculpture-rgb", 0.19 + depth * 0.62) || `rgba(161,62,35,${0.19 + depth * 0.62})`;
+      ctx.fillStyle = `${colorPrefix}${0.19 + depth * 0.62})`;
       ctx.beginPath();
       ctx.arc(projected[offset], projected[offset + 1], (0.65 + depth * 0.65) * pointScale * 0.912, 0, TAU);
       ctx.fill();

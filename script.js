@@ -3,7 +3,8 @@ const touchDevice = window.matchMedia("(hover: none) and (pointer: coarse)").mat
 const themedRgba = (variable, alpha, fallback = "185, 71, 44") =>
   window.siteTheme?.rgba(variable, alpha) || `rgba(${fallback}, ${alpha})`;
 
-document.getElementById("year").textContent = new Date().getFullYear();
+const footerYear = document.getElementById("year");
+if (footerYear) footerYear.textContent = new Date().getFullYear();
 
 // Navigation
 const setupNavigation = () => {

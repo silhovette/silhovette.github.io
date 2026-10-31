@@ -52,6 +52,7 @@
       if (nextScrollY === gridScrollY) return;
       gridScrollY = nextScrollY;
       grid.style.setProperty("--grid-scroll-y", `${nextScrollY}px`);
+      grid.style.setProperty("--grid-offset-y", `${nextScrollY % 40}px`);
     });
   };
   scrollGrid();

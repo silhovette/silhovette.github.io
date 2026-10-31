@@ -2,6 +2,7 @@
 <html lang="en" data-page-fade="complete">
 <head>
   <meta charset="UTF-8" />
+    <script src="image-preload.js?v=1"></script>
   <script src="theme.js?v=1"></script>
     <style id="page-fade-style">
       html[data-page-fade] { background: #f5f3ec; }
@@ -49,11 +50,11 @@
   <link rel="stylesheet" href="style.css?v=56" />
   <link rel="preload" href="assets/fonts/InstrumentSans-Latin.woff2" as="font" type="font/woff2" crossorigin />
   <script src="languages.js?v=38" defer></script>
-  <script src="script.js?v=15" defer></script>
-  <link rel="stylesheet" href="portfolio.css?v=45" />
+  <script src="script.js?v=16" defer></script>
+  <link rel="stylesheet" href="portfolio.css?v=52" />
   <link rel="stylesheet" href="works.css?v=7" />
   <link rel="icon" href="assets/icons/portfolio.svg" type="image/svg+xml" />
-  <script src="portfolio.js?v=11" defer></script>
+  <script src="portfolio.js?v=14" defer></script>
   <script src="scroll-reveal.js?v=2" defer></script>
   <link rel="stylesheet" href="scrollbars.css?v=2" />
   <link rel="stylesheet" href="theme.css?v=1" />
@@ -115,7 +116,7 @@
  <div class="research-intro"><p data-i18n="works_2_intro">ChainLoRA studies replay-free continual parameter-efficient fine-tuning by treating forgetting as geometric interference between task updates. It combines chain-updated training with adaptive SVD merging after the task stream, maintaining constant historical-state overhead. Procrustes adaptation aligns a shared carrier with the latest task, while shared and task-specific components are separated during merging. A one-sided orthogonality proxy and effective-rank penalty regularize interference and task-subspace use.</p></div>
  <ul class="research-contributions"><li><span data-i18n="works_2_point_1">Combines chain-updated training and adaptive SVD merging with constant historical-state overhead.</span></li><li><span data-i18n="works_2_point_2">Separates shared and task-specific components through Procrustes alignment and geometric regularization.</span></li><li><span data-i18n="works_2_point_3">Reports strong replay-free results on Large and SuperNI, with competitive results on Standard CL.</span></li></ul><div class="research-links"><a href="https://arxiv.org/abs/2610.00431" target="_blank" rel="noreferrer">arXiv</a></div>
  </div>
- <figure class="research-figure"><img class="research-image" src="assets/projects/chainlora-overview.webp" width="1600" height="653" alt="ChainLoRA: Geometry-Preserving Task Vector Merging for Continual Learning in LLMs: method overview" loading="lazy" decoding="async"/></figure>
+ <figure class="research-figure"><img class="research-image" src="assets/projects/chainlora-overview.webp" width="1600" height="653" alt="ChainLoRA: Geometry-Preserving Task Vector Merging for Continual Learning in LLMs: method overview" loading="eager" decoding="async"/></figure>
  </article>
 <article class="research-entry" id="communication-fragility" aria-labelledby="communication-fragility-title">
  <div class="research-copy"><div class="research-meta"><span>03</span><span><span data-i18n="works_3_category">Multi-Agent Communication</span></span></div>
@@ -123,7 +124,7 @@
  <div class="research-intro"><p data-i18n="works_3_intro">This study examines how joint training can improve coordination while making agents more sensitive to meaning-preserving changes in messages. Matched comparisons separate joint versus independent updating from fixed versus rotating partner exposure, evaluating paraphrase robustness alongside canonical task success. Semantic-Invariant Communication Training (SICT) addresses this fragility by aligning receiver task-action policies across equivalent messages, with robustness evaluated on held-out paraphrase generators as well.</p></div>
  <ul class="research-contributions"><li><span data-i18n="works_3_point_1">Separates update coupling from partner exposure through matched training comparisons.</span></li><li><span data-i18n="works_3_point_2">Measures robustness to meaning-preserving message changes alongside canonical task success.</span></li><li><span data-i18n="works_3_point_3">Uses receiver task-action consistency to reduce fragility, including on held-out paraphrase generators.</span></li></ul>
  </div>
- <figure class="research-figure"><img class="research-image research-image--muted" src="assets/projects/sict-overview.webp" width="1600" height="849" alt="When Coordination Comes at a Cost: Training-Induced Fragility in Multi-Agent Communication: method overview" loading="lazy" decoding="async"/></figure>
+ <figure class="research-figure"><img class="research-image research-image--muted" src="assets/projects/sict-overview.webp" width="1600" height="849" alt="When Coordination Comes at a Cost: Training-Induced Fragility in Multi-Agent Communication: method overview" loading="eager" decoding="async"/></figure>
  </article>
 <article class="research-entry" id="relay" aria-labelledby="relay-title">
  <div class="research-copy"><div class="research-meta"><span>04</span><span><span data-i18n="works_relay_category">Heterogeneous Multi-Agent Systems</span></span></div>
@@ -132,9 +133,9 @@
   <ul class="research-contributions"><li><span data-i18n="works_relay_point_1">Unifies task decomposition, allocation, scheduling, and failure replanning in a single cross-device orchestration layer.</span></li><li><span data-i18n="works_relay_point_2">Combines short-term task state with long-term experience so interruptions do not force the whole task to restart.</span></li><li><span data-i18n="works_relay_point_3">The deck's comparison reports 2.0555 resource efficiency, 100.0% fault tolerance, and 32.51% accuracy for RELAY, alongside qualitative support for platform and interface switching.</span></li></ul>
  </div>
  <figure class="research-figure research-figure--relay" aria-label="RELAY project figures"><div class="project-visual project-visual--image relay-carousel" data-relay-carousel>
-   <img src="assets/papers/RELAY1.png" alt="RELAY short- and long-term memory architecture" loading="lazy" decoding="async" />
-   <img src="assets/papers/RELAY2.png" alt="RELAY heterogeneous multi-agent orchestration architecture" loading="lazy" decoding="async" aria-hidden="true" />
-   <img src="assets/papers/RELAY3.png" alt="RELAY global and local planning layers" loading="lazy" decoding="async" aria-hidden="true" />
+   <img src="assets/papers/RELAY1.webp" alt="RELAY short- and long-term memory architecture" loading="eager" decoding="async" />
+   <img src="assets/papers/RELAY2.webp" alt="RELAY heterogeneous multi-agent orchestration architecture" loading="eager" decoding="async" aria-hidden="true" />
+   <img src="assets/papers/RELAY3.webp" alt="RELAY global and local planning layers" loading="eager" decoding="async" aria-hidden="true" />
  </div></figure>
  </article>
 <article class="research-entry" id="visual2craft" aria-labelledby="visual2craft-title">
@@ -142,7 +143,7 @@
  <h3 id="visual2craft-title">Visual2Craft: From Construction Videos to Executable Minecraft Builds</h3>
  <div class="research-intro"><p data-i18n="works_visual2craft_intro">Visual2Craft is a desktop workflow that turns Minecraft construction videos into executable Java Edition Data Packs. It samples source frames, uses a vision-capable AI model to reconstruct visible structures, and compiles validated scenes with build and undo functions.</p></div><div class="research-links research-links--spaced"><a href="https://github.com/silhovette/Visual2Craft" target="_blank" rel="noreferrer">GitHub</a></div>
  </div>
- <figure class="research-figure research-figure--full-bleed"><img class="research-image" src="assets/papers/Visual2Craft.webp?v=3" width="1600" height="900" alt="Visual2Craft: construction video to executable Minecraft build workflow" loading="lazy" decoding="async"/></figure>
+ <figure class="research-figure research-figure--full-bleed"><img class="research-image" src="assets/papers/Visual2Craft.webp?v=3" width="1600" height="900" alt="Visual2Craft: construction video to executable Minecraft build workflow" loading="eager" decoding="async"/></figure>
  </article>
 <article class="research-entry" id="capability-preservation" aria-labelledby="capability-preservation-title">
  <div class="research-copy"><div class="research-meta"><span>06</span><span><span data-i18n="works_4_category">Multi-Agent Learning</span></span></div>
@@ -150,7 +151,7 @@
  <div class="research-intro"><p data-i18n="works_4_intro">This work examines individual capability loss that aggregate team performance can hide when teammates compensate during specialization. It evaluates retained competence alongside team utility and uses teammate and practice interventions to distinguish compensation from preserved focal-agent ability. RACP combines responsibility decline and skill disuse into an online risk signal, directing selective rehearsal toward endangered capabilities while retaining the utility of team collaboration.</p></div>
  <ul class="research-contributions"><li><span data-i18n="works_4_point_1">Evaluates retained individual competence alongside team performance during specialization.</span></li><li><span data-i18n="works_4_point_2">Uses teammate and practice interventions to distinguish compensation from retained agent ability.</span></li><li><span data-i18n="works_4_point_3">Tracks responsibility decline and disuse to guide selective rehearsal of at-risk capabilities.</span></li></ul>
  </div>
- <figure class="research-figure"><img class="research-image research-image--muted" src="assets/projects/racp-overview.webp" width="1600" height="837" alt="What Team Success Hides: Compensation-Masked Capability Loss in Multi-Agent Language Systems: method overview" loading="lazy" decoding="async"/></figure>
+ <figure class="research-figure"><img class="research-image research-image--muted" src="assets/projects/racp-overview.webp" width="1600" height="837" alt="What Team Success Hides: Compensation-Masked Capability Loss in Multi-Agent Language Systems: method overview" loading="eager" decoding="async"/></figure>
  </article>
 </section>
 <section id="other-projects" class="archive-other wrap" aria-labelledby="other-projects-title"><h2 id="other-projects-title" class="archive-section-title"><span data-i18n="works_other">Other Projects</span></h2><ol class="other-projects-list">
