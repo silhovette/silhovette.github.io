@@ -762,7 +762,7 @@ a, button { transition: color 180ms ease-out, background-color 180ms ease-out, b
   padding-left: 25px;
 }
 .interest-item h3 {
-  font: 500 16px var(--font-display);
+  font: 440 16px var(--font-body);
   margin: 12px 0;
 }
 .interest-item p {
@@ -907,7 +907,7 @@ a, button { transition: color 180ms ease-out, background-color 180ms ease-out, b
   display: block;
 }
 .project-info h3 {
-  font: 500 20px/1.35 var(--font-display);
+  font: 425 20px/1.35 var(--font-display);
   letter-spacing: -0.04em;
 }
 .project-info p {

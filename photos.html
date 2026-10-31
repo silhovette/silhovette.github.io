@@ -1,74 +1,193 @@
-<!doctype html>
-<html lang="en" data-page-fade="complete">
-  <head>
-    <meta charset="UTF-8" />
-    <script src="theme.js?v=1"></script>
+<!DOCTYPE html>
+
+<html lang="en" data-page-fade="pending">
+<head>
+<meta charset="utf-8"/>
     <style id="page-fade-style">
-      html[data-page-fade] { background: #f5f3ec; }
-      html[data-page-fade="pending"] body,
-      html[data-page-fade="revealing"] body { transition: opacity 700ms cubic-bezier(0.22, 1, 0.36, 1) !important; }
-      html[data-page-fade="pending"] body { opacity: 0 !important; }
-      html[data-page-fade="revealing"] body { opacity: 1 !important; }
+      /* White curtain sits over the entire UI, including the sticky header.
+         Placing it on the root avoids inheriting body { zoom: .95 }. */
+      html[data-page-fade]::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        width: 100vw;
+        height: 100dvh;
+        z-index: 2147483647;
+        pointer-events: none;
+        background: #fff;
+        opacity: 0;
+        transition: opacity 1200ms cubic-bezier(.42, 0, .58, 1);
+      }
+      html[data-page-fade="pending"]::after { opacity: 1; }
+      html[data-page-fade="revealing"]::after,
+      html[data-page-fade="complete"]::after { opacity: 0; }
+      /* Disable older per-main entry fades; keep gallery scroll reveals. */
       html[data-page-fade] body > main { animation: none !important; }
       @media (prefers-reduced-motion: reduce) {
-        html[data-page-fade] body { opacity: 1 !important; transition: none !important; }
+        html[data-page-fade]::after { display: none; transition: none; }
       }
     </style>
-    <script id="page-fade-init">
+        <script id="page-fade-init">
       (() => {
         const root = document.documentElement;
-        const motion = matchMedia("(prefers-reduced-motion: reduce)");
-        if (motion.matches) return;
-        let shown = false;
-        const reveal = (immediate = false) => {
-          if (shown && !immediate) return;
-          shown = true;
-          clearTimeout(deadline);
-          root.setAttribute("data-page-fade", immediate ? "complete" : "revealing");
-          if (!immediate) setTimeout(() => root.setAttribute("data-page-fade", "complete"), 700);
-        };
-        const deadline = setTimeout(() => reveal(), 1800);
-        document.addEventListener("page-fade-ready", () => reveal(), { once: true });
-        addEventListener("pageshow", event => { if (event.persisted) reveal(true); });
-        motion.addEventListener("change", event => { if (event.matches) reveal(true); });
-        root.setAttribute("data-page-fade", "pending");
+        const motion = matchMedia('(prefers-reduced-motion: reduce)');
+        let played = false;
+        let animation = null;
+
+        function completeImmediately() {
+          if (animation) { animation.cancel(); animation = null; }
+          const hero = document.querySelector('.hero');
+          if (hero) hero.style.clipPath = 'none';
+          root.dataset.pageFade = 'complete';
+        }
+
+        function reveal() {
+          if (played) return;
+          played = true;
+          if (motion.matches) { completeImmediately(); return; }
+
+          const hero = document.querySelector('.hero');
+          if (hero && typeof hero.animate === 'function') {
+            // Match the slanted edge of the two existing cut corners.
+            // offsetWidth/Height are intentionally used because the body has zoom: .95.
+            const panel = hero.querySelector('.hero-color');
+            const css = getComputedStyle(hero);
+            const x = (parseFloat(css.getPropertyValue('--corner-x')) || 32) / 100;
+            const y = (parseFloat(css.getPropertyValue('--corner-y')) || 36) / 100;
+            const w = hero.offsetWidth;
+            const h = hero.offsetHeight;
+            const pw = panel?.offsetWidth || w / 2;
+            const ph = panel?.offsetHeight || h;
+            const run = h * pw * x / (ph * y);
+            const polygon = (top, bottom) => `polygon(0 0, ${top.toFixed(2)}px 0, ${bottom.toFixed(2)}px 100%, 0 100%)`;
+            try {
+              animation = hero.animate([
+                {clipPath: polygon(0, -run)},
+                {clipPath: polygon(w + run, w)}
+              ], {duration: 1340, easing: 'cubic-bezier(.48, .04, .19, 1)', fill:'both'});
+              animation.finished.then(() => {
+                hero.style.clipPath = 'none';
+                animation.cancel();
+                animation = null;
+              }).catch(() => {});
+            } catch (e) { hero.style.clipPath = 'none'; }
+          } else if (hero) {
+            hero.style.clipPath = 'none';
+          }
+          // Fade the white top-layer curtain while the diagonal sweep runs underneath.
+          root.dataset.pageFade = 'revealing';
+          setTimeout(() => {
+            if (root.dataset.pageFade === 'revealing') root.dataset.pageFade = 'complete';
+          }, 1250);
+        }
+
+        if (!motion.matches) {
+          root.dataset.pageFade = 'pending';
+          // No 1.8-second deadline and no dependency on page-fade.js.
+          if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => requestAnimationFrame(reveal), {once:true});
+          } else {
+            requestAnimationFrame(reveal);
+          }
+        }
+        addEventListener('pageshow', event => {
+          if (event.persisted) { played = true; completeImmediately(); }
+        });
+        motion.addEventListener('change', event => {
+          if (event.matches) { played = true; completeImmediately(); }
+        });
       })();
     </script>
-    <script src="page-fade.js?v=1" defer></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#f5f3ec" />
-    <title>Photos | Yuhua Luo</title>
-    <link rel="icon" type="image/svg+xml" href="assets/icons/portfolio.svg" />
-    <link rel="preload" href="assets/fonts/SpaceGrotesk-Variable.ttf" as="font" type="font/ttf" crossorigin />
-    <link rel="preload" href="assets/fonts/InstrumentSans-Latin.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="stylesheet" href="fonts.css?v=2" />
-    <link rel="stylesheet" href="portfolio.css?v=51" />
-    <link rel="stylesheet" href="scrollbars.css?v=2" />
-    <link rel="stylesheet" href="theme.css?v=1" />
-    <script src="languages.js?v=38" defer></script>
-    <script src="script.js?v=15" defer></script>
-    <script src="portfolio.js?v=13" defer></script>
-  </head>
-  <body class="portfolio-home blank-page">
-    <a class="skip-link" href="#main" data-i18n="skip_to_content">Skip to content</a>
-    <header class="portfolio-header">
-      <div class="header-inner wrap">
-        <div class="header-left">
-          <span class="header-clock mono" aria-label="Shanghai local time">SHANGHAI <span data-shanghai-time>—:—</span></span>
-        </div>
-        <div class="header-controls">
-          <div class="site-search header-search" data-site-search role="search">
-            <div class="header-search-panel" id="header-search-panel">
-              <label class="sr-only" for="site-search-input" data-i18n="search_this_page">Search this page</label>
-              <input id="site-search-input" type="search" aria-controls="site-search-results" aria-expanded="false" autocomplete="off" />
-              <div class="search-matches site-search__results" id="site-search-results" aria-live="polite" hidden></div>
-            </div>
-            <button type="button" class="search-toggle" aria-label="Search this page" data-i18n-aria-label="search_this_page" aria-expanded="false" aria-controls="header-search-panel"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M16 16l5 5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
-          </div>
-          <a class="contact-link" href="index.html" data-i18n="back_to_homepage">Back to homepage</a>
-        </div>
-      </div>
-    </header>
-    <main id="main"></main>
-  </body>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="#f5f3ec" name="theme-color"/>
+<title>Photos | Yuhua Luo</title>
+<link rel="icon" type="image/svg+xml" href="assets/icons/portfolio.svg"/>
+<link rel="stylesheet" href="photos.css?v=6"/>
+<script src="photos-gallery.js?v=6" defer></script>
+</head>
+<body class="portfolio-home blank-page"><a class="skip-link" href="#main">Skip to content</a><div aria-hidden="true" class="page-grid"></div>
+<header class="portfolio-header">
+<div class="header-inner wrap">
+<div class="header-left">
+<span aria-label="Shanghai local time" class="header-clock mono">SHANGHAI <span data-shanghai-time="">—:—</span></span>
+</div>
+<div class="header-controls">
+<a class="contact-link" data-i18n="back_to_homepage" href="index.html">Back to homepage</a>
+</div>
+</div>
+</header>
+<main class="wrap photo-editorial" id="main">
+<section aria-label="Photography feature" class="hero">
+<div class="hero-panel hero-photo"><img alt="Architectural photograph placeholder" src="assets/photos/webp/avatar.webp" width="1024" height="1024" decoding="async" fetchpriority="high"/></div>
+<div class="hero-panel hero-color"><div class="hero-copy"><h1><span>RE4LITY</span><span>IS</span><span>SUBJECT1VE</span></h1><p class="hero-note">“What is there, however strange,<br />can be accepted without question;<br />familiarity will be what overwhelms us.”<br />—— Eudora Welty</p></div></div>
+</section>
+
+<section aria-label="Photography collection" class="gallery">
+<div class="spread spread--opening">
+<button aria-label="Open frame 01: Window / Late afternoon" class="shot" data-index="0" type="button">
+<span class="shot-art"><img alt="Illustrative mock image for Window / Late afternoon" decoding="async" loading="eager" src="assets/photos/webp/frame-01-1800.webp" srcset="assets/photos/webp/frame-01-900.webp 900w, assets/photos/webp/frame-01-1800.webp 1800w, assets/photos/webp/frame-01.webp 3200w" sizes="(max-width:580px) calc(100vw - 36px), (min-width:1460px) 800px, 60vw" data-full="assets/photos/webp/frame-01.webp" width="1800" height="1350"/></span>
+</button>
+<button aria-label="Open frame 02: Quiet geometry" class="shot" data-index="1" type="button">
+<span class="shot-art"><img alt="Illustrative mock image for Quiet geometry" decoding="async" loading="eager" src="assets/photos/webp/frame-02-1800.webp" srcset="assets/photos/webp/frame-02-900.webp 675w, assets/photos/webp/frame-02-1800.webp 1350w, assets/photos/webp/frame-02.webp 2400w" sizes="(max-width:580px) calc(100vw - 36px), (min-width:1460px) 400px, 30vw" data-full="assets/photos/webp/frame-02.webp" width="1350" height="1800"/></span>
+</button>
+</div>
+<div class="spread spread--triptych">
+<button aria-label="Open frame 03: Last light" class="shot" data-index="2" type="button">
+<span class="shot-art"><img alt="Illustrative mock image for Last light" decoding="async" loading="lazy" src="assets/photos/webp/frame-03-1800.webp" srcset="assets/photos/webp/frame-03-900.webp 675w, assets/photos/webp/frame-03-1800.webp 1350w, assets/photos/webp/frame-03.webp 2400w" sizes="auto, (max-width:580px) 94vw, 65vw" data-full="assets/photos/webp/frame-03.webp" width="1350" height="1800"/></span>
+</button>
+<button aria-label="Open frame 04: Between buildings" class="shot" data-index="3" type="button">
+<span class="shot-art"><img alt="Illustrative mock image for Between buildings" decoding="async" loading="lazy" src="assets/photos/webp/frame-04-1800.webp" srcset="assets/photos/webp/frame-04-900.webp 900w, assets/photos/webp/frame-04-1800.webp 1800w, assets/photos/webp/frame-04.webp 3200w" sizes="auto, (max-width:580px) 94vw, 65vw" data-full="assets/photos/webp/frame-04.webp" width="1800" height="1350"/></span>
+</button>
+<button aria-label="Open frame 05: Blur / passing" class="shot" data-index="4" type="button">
+<span class="shot-art"><img alt="Illustrative mock image for Blur / passing" decoding="async" loading="lazy" src="assets/photos/webp/frame-05-1800.webp" srcset="assets/photos/webp/frame-05-900.webp 675w, assets/photos/webp/frame-05-1800.webp 1350w, assets/photos/webp/frame-05.webp 2400w" sizes="auto, (max-width:580px) 94vw, 65vw" data-full="assets/photos/webp/frame-05.webp" width="1350" height="1800"/></span>
+</button>
+</div>
+<div class="spread spread--pair">
+<button aria-label="Open frame 06: A line across" class="shot" data-index="5" type="button">
+<span class="shot-art"><img alt="Illustrative mock image for A line across" decoding="async" loading="lazy" src="assets/photos/webp/frame-06-1800.webp" srcset="assets/photos/webp/frame-06-900.webp 675w, assets/photos/webp/frame-06-1800.webp 1350w, assets/photos/webp/frame-06.webp 2400w" sizes="auto, (max-width:580px) 94vw, 65vw" data-full="assets/photos/webp/frame-06.webp" width="1350" height="1800"/></span>
+</button>
+<button aria-label="Open frame 07: After dark" class="shot" data-index="6" type="button">
+<span class="shot-art"><img alt="Illustrative mock image for After dark" decoding="async" loading="lazy" src="assets/photos/webp/frame-07-1800.webp" srcset="assets/photos/webp/frame-07-900.webp 900w, assets/photos/webp/frame-07-1800.webp 1800w, assets/photos/webp/frame-07.webp 3200w" sizes="auto, (max-width:580px) 94vw, 65vw" data-full="assets/photos/webp/frame-07.webp" width="1800" height="1350"/></span>
+</button>
+</div>
+<div class="spread spread--feature">
+<button aria-label="Open frame 09: A distant window" class="shot" data-index="8" type="button">
+<span class="shot-art"><img alt="Illustrative mock image for A distant window" decoding="async" loading="lazy" src="assets/photos/webp/frame-08-1800.webp" srcset="assets/photos/webp/frame-08-900.webp 900w, assets/photos/webp/frame-08-1800.webp 1800w, assets/photos/webp/frame-08.webp 3200w" sizes="auto, (max-width:580px) 94vw, 65vw" data-full="assets/photos/webp/frame-08.webp" width="1800" height="1350"/></span>
+</button>
+</div>
+<div class="spread spread--after">
+<button aria-label="Open frame 08: Coffee, perhaps" class="shot" data-index="7" type="button">
+<span class="shot-art"><img alt="Illustrative mock image for Coffee, perhaps" decoding="async" loading="lazy" src="assets/photos/webp/frame-09-1800.webp" srcset="assets/photos/webp/frame-09-900.webp 675w, assets/photos/webp/frame-09-1800.webp 1350w, assets/photos/webp/frame-09.webp 2400w" sizes="auto, (max-width:580px) 94vw, 65vw" data-full="assets/photos/webp/frame-09.webp" width="1350" height="1800"/></span>
+</button>
+<button aria-label="Open frame 10: Surface / Warm light" class="shot" data-index="9" type="button">
+<span class="shot-art"><img alt="Illustrative mock image for Surface / Warm light" decoding="async" loading="lazy" src="assets/photos/webp/frame-10-1800.webp" srcset="assets/photos/webp/frame-10-900.webp 900w, assets/photos/webp/frame-10-1800.webp 1800w, assets/photos/webp/frame-10.webp 3200w" sizes="auto, (max-width:580px) 94vw, 65vw" data-full="assets/photos/webp/frame-10.webp" width="1800" height="1350"/></span>
+</button>
+</div>
+<div class="spread spread--ending">
+<button aria-label="Open frame 11: Concrete / silence" class="shot" data-index="10" type="button">
+<span class="shot-art"><img alt="Illustrative mock image for Concrete / silence" decoding="async" loading="lazy" src="assets/photos/webp/frame-11-1800.webp" srcset="assets/photos/webp/frame-11-900.webp 675w, assets/photos/webp/frame-11-1800.webp 1350w, assets/photos/webp/frame-11.webp 2400w" sizes="auto, (max-width:580px) 94vw, 65vw" data-full="assets/photos/webp/frame-11.webp" width="1350" height="1800"/></span>
+</button>
+<button aria-label="Open frame 12: The final frame" class="shot" data-index="11" type="button">
+<span class="shot-art"><img alt="Illustrative mock image for The final frame" decoding="async" loading="lazy" src="assets/photos/webp/frame-12-1800.webp" srcset="assets/photos/webp/frame-12-900.webp 675w, assets/photos/webp/frame-12-1800.webp 1350w, assets/photos/webp/frame-12.webp 2400w" sizes="auto, (max-width:580px) 94vw, 65vw" data-full="assets/photos/webp/frame-12.webp" width="1350" height="1800"/></span>
+</button>
+</div>
+</section>
+</main>
+<footer aria-label="Look closer" class="archive-footer">
+<div class="archive-marquee">
+<div aria-hidden="true" class="archive-marquee__track">
+<span class="archive-marquee__repeat">LOOK CLOSER <i>/</i> LOOK CLOSER <i>/</i> LOOK CLOSER <i>/</i> LOOK CLOSER <i>/</i></span>
+<span class="archive-marquee__repeat">LOOK CLOSER <i>/</i> LOOK CLOSER <i>/</i> LOOK CLOSER <i>/</i> LOOK CLOSER <i>/</i></span>
+</div>
+</div>
+</footer>
+<dialog aria-label="Full-size photograph" class="viewer" id="viewer">
+<div class="viewer-layout">
+<img alt="" class="viewer-image" id="viewer-image" decoding="async"/>
+<img alt="" aria-hidden="true" class="viewer-flight" id="viewer-flight" decoding="async"/>
+</div>
+</dialog>
+
+<button class="back-to-top" type="button" aria-label="Back to top" inert><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d="M6 12l6-6 6 6M12 6v13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+</body>
 </html>

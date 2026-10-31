@@ -1,5 +1,32 @@
 (() => {
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+  const homeReturnScrollKey = "portfolio-home-return-scroll";
+  const isHomePage = document.body.classList.contains("portfolio-home") &&
+    !document.body.classList.contains("blank-page");
+
+  if (isHomePage) {
+    const savedScroll = sessionStorage.getItem(homeReturnScrollKey);
+    if (savedScroll !== null) {
+      sessionStorage.removeItem(homeReturnScrollKey);
+      const restoreScroll = () => {
+        const top = Number(savedScroll);
+        if (!Number.isFinite(top)) return;
+        const previousScrollBehavior = document.documentElement.style.scrollBehavior;
+        document.documentElement.style.scrollBehavior = "auto";
+        window.scrollTo({ top, left: 0, behavior: "auto" });
+        document.documentElement.style.scrollBehavior = previousScrollBehavior;
+      };
+      restoreScroll();
+    }
+
+    document.addEventListener("click", (event) => {
+      const link = event.target.closest('a[href="photos.html"], a[href="misc.html"]');
+      if (link && !event.defaultPrevented) {
+        sessionStorage.setItem(homeReturnScrollKey, String(window.scrollY));
+      }
+    });
+  }
+
   // Paint only a viewport of the document-aligned grid; keep the mask near the pointer.
   const grid = document.createElement("div");
   grid.className = "page-grid";
@@ -7,7 +34,9 @@
   document.body.prepend(grid);
   const gridPointer = matchMedia("(hover: hover) and (pointer: fine)");
   let gridFrame = null;
+  let gridScrollFrame = null;
   let gridBounds = null;
+  let gridScrollY = null;
   let gridPosition = null;
   let gridTarget = null;
   const measureGrid = () => {
@@ -15,8 +44,15 @@
     gridBounds = { left: rect.left, top: rect.top, x: grid.clientWidth / rect.width, y: grid.clientHeight / rect.height };
   };
   const scrollGrid = () => {
-    if (!gridBounds) measureGrid();
-    grid.style.setProperty("--grid-scroll-y", `${-window.scrollY * gridBounds.y}px`);
+    if (gridScrollFrame !== null) return;
+    gridScrollFrame = requestAnimationFrame(() => {
+      gridScrollFrame = null;
+      if (!gridBounds) measureGrid();
+      const nextScrollY = -window.scrollY * gridBounds.y;
+      if (nextScrollY === gridScrollY) return;
+      gridScrollY = nextScrollY;
+      grid.style.setProperty("--grid-scroll-y", `${nextScrollY}px`);
+    });
   };
   scrollGrid();
   window.addEventListener("scroll", scrollGrid, { passive: true });
@@ -79,14 +115,11 @@
   const year = document.getElementById("year");
   if (year) year.textContent = new Date().getFullYear();
   const clock = document.querySelector("[data-shanghai-time]");
+  const clockFormat = clock ? new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Asia/Shanghai", hour: "2-digit", minute: "2-digit", hour12: false,
+  }) : null;
   const updateTime = () => {
-    if (clock)
-      clock.textContent = new Intl.DateTimeFormat("en-GB", {
-        timeZone: "Asia/Shanghai",
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false,
-      }).format(new Date());
+    if (clock) clock.textContent = clockFormat.format(new Date());
   };
   updateTime();
   if (clock) setInterval(updateTime, 60000);
@@ -167,7 +200,7 @@
   });
 
   const progress = document.querySelector(".page-progress");
-  const backToTop = document.createElement("button");
+  const backToTop = document.querySelector(".back-to-top") || document.createElement("button");
   backToTop.type = "button";
   backToTop.className = "back-to-top";
   backToTop.setAttribute("aria-label", "Back to top");
@@ -178,24 +211,33 @@
     window.scrollTo({ top: 0, behavior: reducedMotion.matches ? "instant" : "smooth" });
   });
   const links = [...document.querySelectorAll('.portfolio-nav a[href^="#"]')];
+  const sections = links.map(link => document.querySelector(link.getAttribute("href")));
   let scrollFrame = 0;
+  let previousBackToTop = null;
+  let previousActive = null;
   const updateScroll = () => {
     scrollFrame = 0;
-    const showBackToTop = scrollY > 400;
-    backToTop.classList.toggle("is-visible", showBackToTop);
-    backToTop.inert = !showBackToTop;
-    const length = document.documentElement.scrollHeight - innerHeight;
-    if (progress)
-      progress.style.transform = `scaleX(${length > 0 ? scrollY / length : 0})`;
+    const top = scrollY;
+    const showBackToTop = top > 400;
+    const length = progress ? document.documentElement.scrollHeight - innerHeight : 0;
     let active;
-    links.forEach((link) => {
-      const section = document.querySelector(link.getAttribute("href"));
-      if (section?.getBoundingClientRect().top <= 180) active = link;
+    // Collect geometry before mutating classes, attributes or progress styles.
+    sections.forEach((section, index) => {
+      if (section?.getBoundingClientRect().top <= 180) active = links[index];
     });
-    links.forEach((link) => {
-      if (link === active) link.setAttribute("aria-current", "true");
-      else link.removeAttribute("aria-current");
-    });
+    if (showBackToTop !== previousBackToTop) {
+      backToTop.classList.toggle("is-visible", showBackToTop);
+      backToTop.inert = !showBackToTop;
+      previousBackToTop = showBackToTop;
+    }
+    if (progress) progress.style.transform = `scaleX(${length > 0 ? top / length : 0})`;
+    if (active !== previousActive) {
+      links.forEach(link => {
+        if (link === active) link.setAttribute("aria-current", "true");
+        else link.removeAttribute("aria-current");
+      });
+      previousActive = active;
+    }
   };
   addEventListener(
     "scroll",

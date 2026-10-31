@@ -78,8 +78,18 @@ const setupNavigation = () => {
     updateActiveLink();
   }
 
-  window.addEventListener("scroll", updateActiveLink, { passive: true });
-  window.addEventListener("resize", updateActiveLink);
+  if (sections.length) {
+    let navigationFrame = null;
+    const scheduleActiveLink = () => {
+      if (navigationFrame !== null) return;
+      navigationFrame = requestAnimationFrame(() => {
+        navigationFrame = null;
+        updateActiveLink();
+      });
+    };
+    window.addEventListener("scroll", scheduleActiveLink, { passive: true });
+    window.addEventListener("resize", scheduleActiveLink);
+  }
 };
 
 const playgroundDisclosureControls = new WeakMap();
