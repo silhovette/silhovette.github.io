@@ -32,12 +32,8 @@
         const root = document.documentElement;
         const motion = matchMedia('(prefers-reduced-motion: reduce)');
         let played = false;
-        let animation = null;
 
         function completeImmediately() {
-          if (animation) { animation.cancel(); animation = null; }
-          const hero = document.querySelector('.hero');
-          if (hero) hero.style.clipPath = 'none';
           root.dataset.pageFade = 'complete';
         }
 
@@ -46,35 +42,7 @@
           played = true;
           if (motion.matches) { completeImmediately(); return; }
 
-          const hero = document.querySelector('.hero');
-          if (hero && typeof hero.animate === 'function') {
-            // Match the slanted edge of the two existing cut corners.
-            // offsetWidth/Height are intentionally used because the body has zoom: .95.
-            const panel = hero.querySelector('.hero-color');
-            const css = getComputedStyle(hero);
-            const x = (parseFloat(css.getPropertyValue('--corner-x')) || 32) / 100;
-            const y = (parseFloat(css.getPropertyValue('--corner-y')) || 36) / 100;
-            const w = hero.offsetWidth;
-            const h = hero.offsetHeight;
-            const pw = panel?.offsetWidth || w / 2;
-            const ph = panel?.offsetHeight || h;
-            const run = h * pw * x / (ph * y);
-            const polygon = (top, bottom) => `polygon(0 0, ${top.toFixed(2)}px 0, ${bottom.toFixed(2)}px 100%, 0 100%)`;
-            try {
-              animation = hero.animate([
-                {clipPath: polygon(0, -run)},
-                {clipPath: polygon(w + run, w)}
-              ], {duration: 1340, easing: 'cubic-bezier(.48, .04, .19, 1)', fill:'both'});
-              animation.finished.then(() => {
-                hero.style.clipPath = 'none';
-                animation.cancel();
-                animation = null;
-              }).catch(() => {});
-            } catch (e) { hero.style.clipPath = 'none'; }
-          } else if (hero) {
-            hero.style.clipPath = 'none';
-          }
-          // Fade the white top-layer curtain while the diagonal sweep runs underneath.
+          // Fade the white top-layer curtain over the page.
           root.dataset.pageFade = 'revealing';
           setTimeout(() => {
             if (root.dataset.pageFade === 'revealing') root.dataset.pageFade = 'complete';
