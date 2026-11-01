@@ -3,16 +3,6 @@
   const terraSlides = [...document.querySelectorAll('.terra-slideshow img')];
   const terraCaptions = [...document.querySelectorAll('.terra-caption')];
   const terraSlideshow = document.querySelector('.terra-slideshow');
-  if (terraSlideshow && 'IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    terraSlideshow.classList.add('reveal-pending');
-    const revealObserver = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting) {
-        terraSlideshow.classList.add('is-visible');
-        revealObserver.disconnect();
-      }
-    }, {threshold: .1});
-    revealObserver.observe(terraSlideshow);
-  }
   if (terraSlides.length > 1) {
     let terraCurrent = 0, terraTimer, visible = false;
     const updateTimer = () => {
@@ -185,20 +175,21 @@
  const backToTop=document.querySelector('.back-to-top');
  const chapters=[...document.querySelectorAll('.photo-chapter')];
  root.classList.add('photo-enhanced');
- const carousels=[...document.querySelectorAll('.materia-carousel, .archive-footer')];
- if('IntersectionObserver' in window){
-   const carouselObserver=new IntersectionObserver(entries=>{
+ const carouselObserver='IntersectionObserver' in window
+   ? new IntersectionObserver(entries=>{
      entries.forEach(entry=>{
        if(entry.isIntersecting){
          entry.target.classList.add('is-visible');
          carouselObserver.unobserve(entry.target);
        }
      });
-   },{threshold:.1,rootMargin:'0px 0px -40px 0px'});
-   carousels.forEach(carousel=>carouselObserver.observe(carousel));
- }else{
-   carousels.forEach(carousel=>carousel.classList.add('is-visible'));
+   },{threshold:.1,rootMargin:'0px 0px -40px 0px'})
+   : null;
+ function observeReveal(target){
+   if(carouselObserver)carouselObserver.observe(target);
+   else target.classList.add('is-visible');
  }
+ document.querySelectorAll('.archive-footer').forEach(observeReveal);
  let previousBackToTop=null;
  const reducedMotion=matchMedia('(prefers-reduced-motion:reduce)');
  const gridPointer=matchMedia('(hover:hover) and (pointer:fine)');
@@ -267,7 +258,15 @@
      }),
      ...[...stop.target.querySelectorAll('img')].map(image=>image.decode()),
    ]);
-   stop.chapter.querySelector('.chapter-gallery-slot').classList.add('is-visible');
+   const gallery=stop.chapter.querySelector('.chapter-gallery-slot');
+   gallery.classList.add('is-visible');
+   // Each slideshow follows its own gallery, including its delayed fade and
+   // image decoding. Only then can entering the viewport reveal the slideshow.
+   await Promise.allSettled([
+     ...gallery.getAnimations().map(animation=>animation.finished),
+     ...[...gallery.querySelectorAll('img')].map(image=>image.decode()),
+   ]);
+   stop.chapter.querySelectorAll('.materia-carousel, .terra-slideshow').forEach(observeReveal);
  }
  function paintScroll(now=performance.now()){
    scrollFrame=null;
