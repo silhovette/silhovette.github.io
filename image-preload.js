@@ -8,9 +8,6 @@
   const sources = [
     "assets/avatar/IMG_9119-optimized.webp",
     "assets/photos/webp/avatar.webp",
-    "assets/photos/1materia/hero.webp",
-    "assets/photos/2terra/hero.webp",
-    "assets/photos/3mechanica/hero.webp",
     "assets/projects/octonest-overview.webp",
     "assets/projects/chainlora-overview.webp",
     "assets/projects/sict-overview.webp",
@@ -24,6 +21,15 @@
     "assets/icons/portfolio.svg",
   ];
 
+  const chapterSizes = '(max-width: 760px) 90vw, (max-width: 1460px) 53vw, 780px';
+  for (const chapter of ['1materia', '2terra', '3mechanica']) {
+    sources.push({
+      src: `assets/photos/${chapter}/hero-banner-1800.webp`,
+      srcset: `assets/photos/${chapter}/hero-banner-900.webp 900w, assets/photos/${chapter}/hero-banner-1800.webp 1800w`,
+      sizes: chapterSizes,
+    });
+  }
+
   // Warm the browser's normal image/HTTP cache immediately, without adding DOM nodes
   // or making the page's entry animation wait for other pages' images.
   const pending = new Set();
@@ -34,6 +40,15 @@
     image.fetchPriority = "low";
     image.onload = image.onerror = () => pending.delete(image);
     pending.add(image);
-    image.src = new URL(source, base).href;
+    if (typeof source === "string") {
+      image.src = new URL(source, base).href;
+    } else {
+      image.sizes = source.sizes;
+      image.srcset = source.srcset.split(', ').map(candidate => {
+        const [url, width] = candidate.split(' ');
+        return `${new URL(url, base).href} ${width}`;
+      }).join(', ');
+      image.src = new URL(source.src, base).href;
+    }
   }
 })();

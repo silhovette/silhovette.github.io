@@ -3,7 +3,8 @@
 <html lang="en" data-page-fade="pending">
 <head>
 <meta charset="utf-8"/>
-    <script src="image-preload.js?v=1"></script>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+    <script src="image-preload.js?v=2"></script>
     <style id="page-fade-style">
       /* White curtain sits over the entire UI, including the sticky header.
          Placing it on the root avoids inheriting body { zoom: .95 }. */
@@ -17,7 +18,7 @@
         pointer-events: none;
         background: #fff;
         opacity: 0;
-        transition: opacity 1200ms cubic-bezier(.42, 0, .58, 1);
+        transition: opacity 450ms cubic-bezier(.42, 0, .58, 1);
       }
       html[data-page-fade="pending"]::after { opacity: 1; }
       html[data-page-fade="revealing"]::after,
@@ -47,7 +48,7 @@
           root.dataset.pageFade = 'revealing';
           setTimeout(() => {
             if (root.dataset.pageFade === 'revealing') root.dataset.pageFade = 'complete';
-          }, 1250);
+          }, 500);
         }
 
         if (!motion.matches) {
@@ -67,12 +68,11 @@
         });
       })();
     </script>
-<meta content="width=device-width,initial-scale=1" name="viewport"/>
 <meta content="#f5f3ec" name="theme-color"/>
 <title>Photos | Yuhua Luo</title>
 <link rel="icon" type="image/svg+xml" href="assets/icons/portfolio.svg"/>
-<link rel="stylesheet" href="photos.css?v=11"/>
-<script src="photos-gallery.js?v=14" defer></script>
+<link rel="stylesheet" href="photos.css?v=31"/>
+<script src="photos-gallery.js?v=26" defer></script>
 </head>
 <body class="portfolio-home blank-page"><a class="skip-link" href="#main">Skip to content</a><div aria-hidden="true" class="page-grid"></div>
 <header class="portfolio-header">
@@ -94,13 +94,61 @@
 <div class="photo-chapters">
 <section class="photo-chapter photo-chapter--materia" aria-labelledby="materia-title" id="materia">
   <div class="chapter-subhero">
-    <div class="chapter-image"><img src="assets/photos/1materia/hero.webp" alt="Framed Giorgio Morandi exhibition posters" width="3200" height="2400" loading="eager" decoding="async"/></div>
+    <div class="chapter-image"><div class="chapter-image-reveal"><img src="assets/photos/1materia/hero-banner-1800.webp" srcset="assets/photos/1materia/hero-banner-900.webp 900w, assets/photos/1materia/hero-banner-1800.webp 1800w" sizes="(max-width: 760px) 90vw, (max-width: 1460px) 53vw, 780px" alt="Framed Giorgio Morandi exhibition posters" width="1800" height="529" loading="eager" decoding="async"/></div></div>
     <div class="chapter-copy">
       <h2 id="materia-title">MATERIA.</h2>
       <p>We keep giving our thoughts a shape. Strange how they sometimes end up saying something else.</p>
     </div>
   </div>
-  <div class="chapter-gallery-slot"></div>
+  <div class="chapter-gallery-slot">
+    <!-- Photo containers and sample copy; replace with final content later. -->
+    <div class="chapter-content-photo chapter-content-photo--portrait" data-content="materia-portrait"><img src="assets/photos/1materia/02-display-600.webp" srcset="assets/photos/1materia/02-display-600.webp 600w, assets/photos/1materia/02-display-1200.webp 1200w" sizes="(max-width: 760px) 90vw, (max-width: 1460px) 40vw, 560px" width="600" height="682" alt="Materia photograph 02" loading="lazy" decoding="async"/></div>
+    <div class="chapter-content-photo chapter-content-photo--landscape" data-content="materia-landscape"><img src="assets/photos/1materia/01-display-720.webp" srcset="assets/photos/1materia/01-display-720.webp 720w, assets/photos/1materia/01-display-1440.webp 1440w" sizes="(max-width: 760px) 90vw, (max-width: 1460px) 49vw, 700px" width="720" height="301" alt="Materia photograph 01" loading="lazy" decoding="async"/></div>
+    <div class="chapter-content-text" data-content="materia-text">
+      <p>I've never been particularly fond of going out or socializing face to face. Fortunately, there are people who find other ways to communicate with the world — through architecture, art, and the things they create.</p>
+      <p>There's something comforting about that. I find a quiet sense of reassurance in these forms of expression, and in the possibility of understanding someone without ever having to meet them.</p>
+    </div>
+  </div>
+  <section class="materia-carousel" aria-label="Materia photo stories" aria-roledescription="carousel">
+    <!-- Replace the sample copy with the story for each photograph. -->
+    <div class="materia-carousel__media">
+      <div class="materia-carousel__photo is-current" data-slide="0"><img src="assets/photos/1materia/frame-01.webp" alt="Framed artworks and objects displayed in a gallery" loading="lazy" decoding="async"/></div>
+      <div class="materia-carousel__photo" data-slide="1"><img src="assets/photos/1materia/frame-02.webp" alt="Materia photograph 2" loading="lazy" decoding="async"/></div>
+      <div class="materia-carousel__photo" data-slide="2"><img src="assets/photos/1materia/frame-03.webp" alt="Materia photograph 3" loading="lazy" decoding="async"/></div>
+      <div class="materia-carousel__photo" data-slide="3"><img src="assets/photos/1materia/frame-05.webp" alt="Materia photograph 5" loading="lazy" decoding="async"/></div>
+      <div class="materia-carousel__photo" data-slide="4"><img src="assets/photos/1materia/frame-06.webp" alt="Materia photograph 6" loading="lazy" decoding="async"/></div>
+      <div class="materia-carousel__photo" data-slide="5"><img src="assets/photos/1materia/frame-07.webp" alt="Materia photograph 7" loading="lazy" decoding="async"/></div>
+    </div>
+    <div class="materia-carousel__stories">
+      <article class="materia-carousel__story is-current" data-slide="0">
+        <h3>MARSALA.</h3>
+        <p>There is a certain elegance in colors that never demand attention. Warm yet restrained, Marsala possesses a quiet richness that feels especially at home in Giorgio Morandi's world, accentuating a subtle yet somehow unforgettable presence.</p>
+      </article>
+      <article class="materia-carousel__story" data-slide="1" aria-hidden="true">
+        <h3>TABLEAU.</h3>
+        <p>An exhibition is never quite complete without its visitors. Art, architecture, and the people passing through them become part of a composition of their own. Some may question the objectifying gaze directed at unsuspecting strangers. But who is to say where the exhibition ends and its audience begins?</p>
+      </article>
+      <article class="materia-carousel__story" data-slide="2" aria-hidden="true">
+        <h3>HEPHAESTUS.</h3>
+        <p>Every material has a character of its own, and every craft is a quiet negotiation with it. There is a certain elegance in knowing when to shape, when to yield, and when to let something unexpected take form.</p>
+      </article>
+      <article class="materia-carousel__story" data-slide="3" aria-hidden="true">
+        <h3>TEMPORAL PARADOX.</h3>
+        <p>Came across this piece at an exhibition of works by preschool children. Perhaps I've underestimated what someone so young is capable of. Still, the possibility that its creator had somehow traveled through time seems strangely convincing. I suppose some mysteries are better left unsolved.</p>
+      </article>
+      <article class="materia-carousel__story" data-slide="4" aria-hidden="true">
+        <h3>AFTERLIFE.</h3>
+        <p>Few could have imagined that a slaughterhouse built nearly a century ago would one day be celebrated for its symphony of light and shade. Time has a curious way of changing what we find beautiful, and what we choose to remember.</p>
+      </article>
+      <article class="materia-carousel__story" data-slide="5" aria-hidden="true">
+        <h3>VANITAS.</h3>
+        <p>Art does not always begin with artistic intent. Sometimes, it is simply a matter of how others choose to see it. Imagine spending everything you have saved on a modest home, only to watch its value fall by half five years later. There is a certain tragic absurdity in that arithmetic, one that few contemporary art exhibitions could ever hope to rival.</p>
+      </article>
+    </div>
+    <button class="materia-carousel__arrow materia-carousel__arrow--prev" type="button" aria-label="Previous photo story" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 6l-6 6 6 6M8 12h12"/></svg></button>
+    <button class="materia-carousel__arrow materia-carousel__arrow--next" type="button" aria-label="Next photo story" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 6l6 6-6 6M16 12H4"/></svg></button>
+    <span class="materia-carousel__status" aria-live="polite" aria-atomic="true">Photo story 1 of 6</span>
+  </section>
 </section>
 <section class="photo-chapter photo-chapter--terra" aria-labelledby="terra-title" id="terra">
   <div class="chapter-subhero">
@@ -108,27 +156,41 @@
       <h2 id="terra-title">TERRA.</h2>
       <p>The world keeps changing the light, as if it hasn't quite decided what it wants to look like.</p>
     </div>
-    <div class="chapter-image"><img src="assets/photos/2terra/hero.webp" alt="Sunlit red flowers beneath tree branches" width="2400" height="3200" loading="eager" decoding="async"/></div>
+    <div class="chapter-image"><div class="chapter-image-reveal"><img src="assets/photos/2terra/hero-banner-1800.webp" srcset="assets/photos/2terra/hero-banner-900.webp 900w, assets/photos/2terra/hero-banner-1800.webp 1800w" sizes="(max-width: 760px) 90vw, (max-width: 1460px) 53vw, 780px" alt="Sunlit red flowers beneath tree branches" width="1800" height="529" loading="eager" decoding="async"/></div></div>
   </div>
-  <div class="chapter-gallery-slot"></div>
+  <div class="chapter-gallery-slot">
+    <div class="chapter-content-photo chapter-content-photo--portrait" data-content="terra-portrait"></div>
+    <div class="chapter-content-photo chapter-content-photo--landscape" data-content="terra-landscape"></div>
+    <div class="chapter-content-text" data-content="terra-text">
+      <p>Light moves across the landscape, changing what comes forward and what slips away. The same place can hold a different photograph each time.</p>
+      <p>A few moments collected along the way: leaves against the sky, a distant horizon, a patch of colour that made me stop.</p>
+    </div>
+  </div>
 </section>
 <section class="photo-chapter photo-chapter--mechanica" aria-labelledby="mechanica-title" id="mechanica">
   <div class="chapter-subhero">
-    <div class="chapter-image"><img src="assets/photos/3mechanica/hero.webp" alt="Sports cars displayed beneath suspended technical drawings" width="2400" height="3200" loading="eager" decoding="async"/></div>
+    <div class="chapter-image"><div class="chapter-image-reveal"><img src="assets/photos/3mechanica/hero-banner-1800.webp" srcset="assets/photos/3mechanica/hero-banner-900.webp 900w, assets/photos/3mechanica/hero-banner-1800.webp 1800w" sizes="(max-width: 760px) 90vw, (max-width: 1460px) 53vw, 780px" alt="Sports cars displayed beneath suspended technical drawings" width="1800" height="529" loading="eager" decoding="async"/></div></div>
     <div class="chapter-copy">
       <h2 id="mechanica-title">MECHANICA.</h2>
       <p>Everyone needs something to keep them grounded. Funny how mine usually have wheels.</p>
     </div>
   </div>
-  <div class="chapter-gallery-slot"></div>
+  <div class="chapter-gallery-slot">
+    <div class="chapter-content-photo chapter-content-photo--portrait" data-content="mechanica-portrait"></div>
+    <div class="chapter-content-photo chapter-content-photo--landscape" data-content="mechanica-landscape"></div>
+    <div class="chapter-content-text" data-content="mechanica-text">
+      <p>Curves, joints, reflections. There is a rhythm to the things we build, even when they are standing still.</p>
+      <p>These photographs linger on the details of movement: a line drawn through metal, a wheel catching the light, the space around a machine at rest.</p>
+    </div>
+  </div>
 </section>
 </div>
 </main>
-<footer aria-label="Look closer" class="archive-footer">
+<footer aria-label="Do not ignore" class="archive-footer">
 <div class="archive-marquee">
 <div aria-hidden="true" class="archive-marquee__track">
-<span class="archive-marquee__repeat">LOOK CLOSER <i>/</i> LOOK CLOSER <i>/</i> LOOK CLOSER <i>/</i> LOOK CLOSER <i>/</i></span>
-<span class="archive-marquee__repeat">LOOK CLOSER <i>/</i> LOOK CLOSER <i>/</i> LOOK CLOSER <i>/</i> LOOK CLOSER <i>/</i></span>
+<span class="archive-marquee__repeat">DO NOT IGNORE <i>/</i> DO NOT IGNORE <i>/</i> DO NOT IGNORE <i>/</i> DO NOT IGNORE <i>/</i></span>
+<span class="archive-marquee__repeat">DO NOT IGNORE <i>/</i> DO NOT IGNORE <i>/</i> DO NOT IGNORE <i>/</i> DO NOT IGNORE <i>/</i></span>
 </div>
 </div>
 </footer>

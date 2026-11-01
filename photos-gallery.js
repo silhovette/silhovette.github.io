@@ -136,6 +136,20 @@
  const backToTop=document.querySelector('.back-to-top');
  const chapters=[...document.querySelectorAll('.photo-chapter')];
  root.classList.add('photo-enhanced');
+ const carousels=[...document.querySelectorAll('.materia-carousel')];
+ if('IntersectionObserver' in window){
+   const carouselObserver=new IntersectionObserver(entries=>{
+     entries.forEach(entry=>{
+       if(entry.isIntersecting){
+         entry.target.classList.add('is-visible');
+         carouselObserver.unobserve(entry.target);
+       }
+     });
+   },{threshold:.1,rootMargin:'0px 0px -40px 0px'});
+   carousels.forEach(carousel=>carouselObserver.observe(carousel));
+ }else{
+   carousels.forEach(carousel=>carousel.classList.add('is-visible'));
+ }
  let previousBackToTop=null;
  const reducedMotion=matchMedia('(prefers-reduced-motion:reduce)');
  const gridPointer=matchMedia('(hover:hover) and (pointer:fine)');
@@ -153,11 +167,11 @@
  const fromHex=value=>value.trim().replace('#','').match(/../g).map(part=>parseInt(part,16));
  const luminance=color=>color.map(value=>{const channel=value/255;return channel<=.04045?channel/12.92:((channel+.055)/1.055)**2.4;}).reduce((sum,value,index)=>sum+value*[.2126,.7152,.0722][index],0);
  const darkBrightness=luminance(darkInk),lightBrightness=luminance(lightInk);
- const rootColors=new Map(),chapterColors=new WeakMap();
- function setRootColor(name,value){
-   if(rootColors.get(name)===value)return;
-   rootColors.set(name,value);
-   root.style.setProperty(name,value);
+ const paletteColors=new Map(),chapterColors=new WeakMap();
+ function setPaletteColor(target,name,value){
+   if(paletteColors.get(name)===value)return;
+   paletteColors.set(name,value);
+   target.style.setProperty(name,value);
  }
  function measurePalette(top){
    // Cache document coordinates in viewport pixels, including the existing body zoom.
@@ -174,7 +188,8 @@
      const transitionStart=(entry+nearHeader)/2-innerHeight*.37;
      const start=Math.min(maxScroll-1,Math.max(0,transitionStart));
      const duration=innerHeight*.28;
-     previousBottom=top+bounds.bottom;
+     // Include gallery content when spacing the next chapter's palette entrance.
+     previousBottom=top+chapter.getBoundingClientRect().bottom;
      // The last palette must also finish when a tall viewport reaches the footer.
      const style=getComputedStyle(chapter);
      const ink=fromHex(style.getPropertyValue('--chapter-ink'));
@@ -188,6 +203,23 @@
    paletteDirty=false;
  }
  function measureGrid(){const r=grid.getBoundingClientRect();gridBounds={left:r.left,top:r.top,x:grid.clientWidth/r.width,y:grid.clientHeight/r.height};}
+ async function revealChapter(stop){
+   stop.target.classList.add('is-visible');
+   // Overlap the final 880ms of the entrance, while still waiting for the banner
+   // to decode. A failed image must not hide the copy.
+   const entrances=stop.target.getAnimations({subtree:true});
+   await Promise.allSettled([
+     ...entrances.map(animation=>{
+       const remaining=animation.effect.getComputedTiming().endTime-(animation.currentTime||0);
+       return Promise.race([
+         animation.finished,
+         new Promise(resolve=>setTimeout(resolve,Math.max(0,remaining-880))),
+       ]);
+     }),
+     ...[...stop.target.querySelectorAll('img')].map(image=>image.decode()),
+   ]);
+   stop.chapter.querySelector('.chapter-gallery-slot').classList.add('is-visible');
+ }
  function paintScroll(now=performance.now()){
    scrollFrame=null;
    const top=window.scrollY;
@@ -224,11 +256,15 @@
      const darkContrast=(brightness+.05)/(darkBrightness+.05);
      const ink=lightContrast>darkContrast?lightInk:darkInk;
      const isPaper=color.every((value,index)=>value===initialColor[index]);
-     setRootColor('--page-background',background);
-     setRootColor('--page-header-ink',rgb(ink));
-     setRootColor('--page-header-muted',isPaper?'#625b58':rgb(blend(ink,color,.12)));
-     setRootColor('--page-header-line',isPaper?'#d6cfcd':rgb(blend(color,ink,.22)));
-     setRootColor('--page-grid-color',isPaper?'#8b807d':rgb(ink));
+     // Background colors do not inherit; scope the remaining live variables to
+     // their consumers instead of invalidating styles across the entire page.
+     root.style.backgroundColor=background;
+     document.body.style.backgroundColor=background;
+     setPaletteColor(header,'--page-background',background);
+     setPaletteColor(header,'--page-header-ink',rgb(ink));
+     setPaletteColor(header,'--page-header-muted',isPaper?'#625b58':rgb(blend(ink,color,.12)));
+     setPaletteColor(header,'--page-header-line',isPaper?'#d6cfcd':rgb(blend(color,ink,.22)));
+     setPaletteColor(grid,'--page-grid-color',isPaper?'#8b807d':rgb(ink));
      // Keep already revealed copy readable when scrolling back between palettes.
      paletteStops.forEach(stop=>{
        const textBrightness=stop.brightness;
@@ -241,14 +277,13 @@
      });
      lastPaletteColor=background;
    }
-   // Start the whole Sub-Hero entrance only after the painted palette has settled.
-   if(!unsettled){
-     paletteStops.forEach(stop=>{
-       if(top>=stop.end&&!stop.target.classList.contains('is-visible')&&color.every((value,index)=>value===stop.color[index])){
-         stop.target.classList.add('is-visible');
-       }
-     });
-   }
+   // The scroll threshold starts each entrance once. Waiting for an exact painted
+   // color delayed it during momentum scrolling and could skip earlier chapters.
+   paletteStops.forEach(stop=>{
+     if(top>=stop.end&&!stop.target.classList.contains('is-visible')){
+       void revealChapter(stop);
+     }
+   });
    if(gridScroll!==lastGridScroll){grid.style.setProperty('--grid-scroll-y',`${gridScroll}px`);grid.style.setProperty('--grid-offset-y',`${gridScroll%40}px`);lastGridScroll=gridScroll;}
    if(unsettled)scrollGrid();
  }
@@ -270,4 +305,80 @@
  const clock=document.querySelector('[data-shanghai-time]');
  const clockFmt=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Shanghai',hour:'2-digit',minute:'2-digit',hour12:false});
  function tick(){clock.textContent=clockFmt.format(new Date());}tick();setInterval(tick,60000);
+})();
+
+(() => {
+ 'use strict';
+ const reduced=matchMedia('(prefers-reduced-motion:reduce)');
+ document.querySelectorAll('.materia-carousel').forEach(carousel=>{
+   const photos=[...carousel.querySelectorAll('.materia-carousel__photo')];
+   const stories=[...carousel.querySelectorAll('.materia-carousel__story')];
+   const status=carousel.querySelector('.materia-carousel__status');
+   const previous=carousel.querySelector('.materia-carousel__arrow--prev');
+   const next=carousel.querySelector('.materia-carousel__arrow--next');
+   let current=0,busy=false;
+   const pending=[];
+   let autoTimer;
+   let pointerInside=false;
+   function restartAuto(){
+     clearInterval(autoTimer);
+     if(pointerInside)return;
+     autoTimer=setInterval(()=>{
+       if(!document.hidden&&!busy)void change(1);
+     },20000);
+   }
+   async function change(direction){
+     pending.push(direction);
+     if(busy)return;
+     busy=true;
+     while(pending.length){
+     direction=pending.shift();
+     const index=(current+direction+photos.length)%photos.length;
+     const outgoing=photos[current],incoming=photos[index];
+     const oldCopy=stories[current],newCopy=stories[index];
+     const duration=reduced.matches?0:760;
+     const animate=async(element,frames,ms)=>{
+       const animation=element.animate(frames,{duration:ms,easing:'cubic-bezier(.22,1,.36,1)',fill:'both'});
+       try {await animation.finished;}catch(e){}finally{animation.cancel();}
+     };
+     incoming.classList.add('is-current');
+     await Promise.all([
+       animate(outgoing,[{transform:'translateX(0)'},{transform:`translateX(${-direction*100}%)`}],duration),
+       animate(incoming,[{transform:`translateX(${direction*100}%)`},{transform:'translateX(0)'}],duration),
+       (async()=>{
+         await animate(oldCopy,[{opacity:1},{opacity:0}],reduced.matches?0:180);
+         oldCopy.classList.remove('is-current');
+         oldCopy.setAttribute('aria-hidden','true');
+         newCopy.classList.add('is-current');
+         newCopy.removeAttribute('aria-hidden');
+         await animate(newCopy,[{opacity:0},{opacity:1}],reduced.matches?0:380);
+       })(),
+     ]);
+     outgoing.classList.remove('is-current');
+     current=index;
+     status.textContent=`Photo story ${current+1} of ${photos.length}`;
+     }
+     busy=false;
+   }
+   previous.hidden=next.hidden=false;
+   carousel.addEventListener('pointerenter',event=>{
+     if(event.pointerType!=='mouse')return;
+     pointerInside=true;
+     clearInterval(autoTimer);
+   });
+   carousel.addEventListener('pointerleave',event=>{
+     if(event.pointerType!=='mouse')return;
+     pointerInside=false;
+     restartAuto();
+   });
+   previous.addEventListener('click',()=>{restartAuto();void change(-1);});
+   next.addEventListener('click',()=>{restartAuto();void change(1);});
+   carousel.addEventListener('keydown',event=>{
+     if(event.key!=='ArrowLeft'&&event.key!=='ArrowRight')return;
+     event.preventDefault();
+     restartAuto();
+     void change(event.key==='ArrowRight'?1:-1);
+   });
+   restartAuto();
+ });
 })();
