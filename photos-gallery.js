@@ -192,6 +192,7 @@
  document.querySelectorAll('.archive-footer').forEach(observeReveal);
  let previousBackToTop=null;
  const reducedMotion=matchMedia('(prefers-reduced-motion:reduce)');
+ const mobileLayout=matchMedia('(max-width:760px)');
  const gridPointer=matchMedia('(hover:hover) and (pointer:fine)');
  backToTop.addEventListener('click',()=>{
    window.scrollTo({top:0,behavior:reducedMotion.matches?'instant':'smooth'});
@@ -216,6 +217,7 @@
  function measurePalette(top){
    // Cache document coordinates in viewport pixels, including the existing body zoom.
    const headerHeight=header.getBoundingClientRect().height;
+   const contentHeight=Math.max(1,innerHeight-headerHeight);
    const maxScroll=Math.max(1,document.documentElement.scrollHeight-innerHeight);
    let previousBottom=0;
    paletteStops=chapters.map((chapter,index)=>{
@@ -225,20 +227,30 @@
      // Balance viewport entry with approaching the header, allowing for short chapters.
      const entry=Math.max(0,anchor-innerHeight*.95,index?previousBottom-headerHeight:0);
      const nearHeader=Math.max(0,anchor-headerHeight-innerHeight*.2);
-     const transitionStart=(entry+nearHeader)/2-innerHeight*.37;
+     // Stacked mobile chapters take over the canvas as their banner crosses
+     // the middle of the usable viewport, after the preceding content moves up.
+     const transitionStart=mobileLayout.matches
+       ? anchor-headerHeight-contentHeight*.5
+       : (entry+nearHeader)/2-innerHeight*.37;
      const start=Math.min(maxScroll-1,Math.max(0,transitionStart));
-     const duration=innerHeight*.28;
+     const duration=mobileLayout.matches?contentHeight*.3:innerHeight*.28;
+     // Let mobile banners enter near the bottom without waiting for the
+     // background to finish changing near the top.
+     const revealStart=mobileLayout.matches
+       ? Math.max(0,anchor-headerHeight-contentHeight*.8)
+       : Math.min(maxScroll,Math.max(start+1,transitionStart+duration));
      // Include gallery content when spacing the next chapter's palette entrance.
      previousBottom=top+chapter.getBoundingClientRect().bottom;
      // The last palette must also finish when a tall viewport reaches the footer.
      const style=getComputedStyle(chapter);
      const ink=fromHex(style.getPropertyValue('--chapter-ink'));
-     return {start,end:Math.min(maxScroll,Math.max(start+1,transitionStart+duration)),chapter,target,color:fromHex(style.getPropertyValue('--chapter-background')),ink,brightness:luminance(ink)};
+     return {start,end:Math.min(maxScroll,Math.max(start+1,transitionStart+duration)),revealStart,chapter,target,color:fromHex(style.getPropertyValue('--chapter-background')),ink,brightness:luminance(ink)};
    });
    paletteStops.slice(0,-1).forEach((stop,index)=>{
      const nextStart=paletteStops[index+1].start;
      const breathingRoom=Math.min(innerHeight*.16,(nextStart-stop.start)*.22);
      stop.end=Math.max(stop.start+1,Math.min(stop.end,nextStart-breathingRoom));
+     if(!mobileLayout.matches)stop.revealStart=stop.end;
    });
    paletteDirty=false;
  }
@@ -328,7 +340,7 @@
    // The scroll threshold starts each entrance once. Waiting for an exact painted
    // color delayed it during momentum scrolling and could skip earlier chapters.
    paletteStops.forEach(stop=>{
-     if(top>=stop.end&&!stop.target.classList.contains('is-visible')){
+     if(top>=stop.revealStart&&!stop.target.classList.contains('is-visible')){
        void revealChapter(stop);
      }
    });

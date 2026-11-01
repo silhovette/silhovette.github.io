@@ -46,10 +46,16 @@ a:focus-visible, button:focus-visible {outline:2px solid #b9472c;outline-offset:
 .hero h1 span {display:block;}
 
 /* Chapters share the page canvas; image backgrounds remain visible while loading. */
+/* Match width to zoom so descendants retain their original layout and wrapping.
+   An auto/full-width zoomed block would expand its internal layout instead. */
+.photo-scale {zoom:.8;width:80%;margin-inline:auto;display:flow-root;}
 .photo-chapters {zoom:.9;margin-top:clamp(80px,9vw,132px);}
 .photo-chapter {
   padding-top:clamp(96px,9vw,144px);
   color:var(--chapter-readable-ink,var(--chapter-ink));
+}
+.photo-chapter + .photo-chapter {
+  padding-top:calc(clamp(96px,9vw,144px) + clamp(24px,3vw,40px));
 }
 .photo-chapter--materia {--chapter-background:#403233;--chapter-ink:#F3ECE5;--chapter-placeholder:#635756;}
 .photo-chapter--terra {--chapter-background:#E9DFB7;--chapter-ink:#2B2521;--chapter-placeholder:#c7bea0;}
@@ -63,7 +69,7 @@ a:focus-visible, button:focus-visible {outline:2px solid #b9472c;outline-offset:
 .chapter-copy {min-width:0;container-type:inline-size;text-align:left;}
 .chapter-copy h2 {margin:0;font:300 clamp(36px,20cqw,108px)/.95 var(--font-display);letter-spacing:-.065em;white-space:nowrap;}
 .photo-chapter--mechanica h2 {font-size:clamp(30px,17.5cqw,100px);}
-.chapter-copy p {margin:14px 0 0;font:400 clamp(18px,1.7vw,25px)/1.4 var(--font-body);text-wrap:pretty;}
+.chapter-copy p {margin:14px 0 0;font:400 clamp(22px,1.7vw,26px)/1.4 var(--font-body);text-wrap:pretty;}
 .photo-chapter--terra .chapter-copy {text-align:right;}
 /* Normal document flow lets content push every later subhero and its measured
    palette timing together. Rows can grow when real copy is added. */
@@ -91,7 +97,7 @@ a:focus-visible, button:focus-visible {outline:2px solid #b9472c;outline-offset:
 }
 .chapter-content-photo--portrait {grid-area:portrait;min-height:calc((100cqw - var(--content-gap)) * 50 / 99);}
 .chapter-content-photo--landscape {grid-area:landscape;min-height:calc((100cqw - var(--content-gap)) * 23 / 99);}
-.chapter-content-text {grid-area:text;min-height:clamp(180px,15vw,290px);font:400 clamp(17px,1.45vw,21px)/1.6 var(--font-body);text-wrap:pretty;}
+.chapter-content-text {grid-area:text;min-height:clamp(180px,15vw,290px);font:400 clamp(21px,1.45vw,25px)/1.6 var(--font-body);text-wrap:pretty;}
 .chapter-content-text p {max-width:38em;margin:0;}
 .chapter-content-text p + p {margin-top:1em;}
 .terra-slideshow {position:relative;overflow:hidden;aspect-ratio:2.55 / 1;margin-top:clamp(24px,3vw,40px);background:var(--chapter-placeholder);}
@@ -122,8 +128,8 @@ a:focus-visible, button:focus-visible {outline:2px solid #b9472c;outline-offset:
 .materia-carousel__stories {position:relative;top:calc(-1 * clamp(12px,2vw,28px));display:grid;margin-left:64%;padding:clamp(32px,4vw,64px) clamp(62px,6vw,90px) clamp(32px,4vw,64px) clamp(20px,2.3vw,36px);}
 .materia-carousel__story {grid-area:1 / 1;min-width:0;opacity:0;visibility:hidden;}
 .materia-carousel__story.is-current {opacity:1;visibility:visible;}
-.materia-carousel__story h3 {margin:0 0 clamp(24px,2.2vw,32px);font:300 clamp(36px,3.4vw,54px)/.95 var(--font-display);letter-spacing:-.065em;text-wrap:balance;}
-.materia-carousel__story p {margin:0;font:400 clamp(13px,1.1vw,16px)/1.5 var(--font-body);text-wrap:pretty;}
+.materia-carousel__story h3 {margin:0 0 clamp(24px,2.2vw,32px);font:300 clamp(40px,3.4vw,56px)/.95 var(--font-display);letter-spacing:-.065em;text-wrap:balance;}
+.materia-carousel__story p {margin:0;font:400 clamp(16px,1.1vw,18px)/1.5 var(--font-body);text-wrap:pretty;}
 .materia-carousel__arrow {position:absolute;top:50%;z-index:3;transform:translateY(-50%);width:40px;height:40px;display:grid;place-items:center;padding:9px;border:1px solid rgb(34 34 34 / .12);border-radius:50%;background:rgb(255 255 255 / .18);color:#302d29;cursor:pointer;transition:opacity 200ms ease,background 200ms ease,border-color 200ms ease;}
 @media (hover:hover) and (pointer:fine) {
  .materia-carousel__arrow {opacity:0;pointer-events:none;}
@@ -168,6 +174,7 @@ html.photo-enhanced .is-visible .chapter-copy p {opacity:1;transform:none;}
 @media(max-width:760px) {
  .photo-chapters {margin-top:72px;}
  .photo-chapter {padding-top:80px;}
+ .photo-chapter + .photo-chapter {padding-top:112px;}
  .chapter-subhero,.photo-chapter--terra .chapter-subhero {grid-template-columns:minmax(0,1fr);gap:26px;}
  .photo-chapter--terra .chapter-image {grid-row:1;}
  .chapter-copy h2 {font-size:clamp(44px,13cqw,84px);}
@@ -362,6 +369,7 @@ body::before,body::after {display:none;}
 
 /* Match the homepage back-to-top control. */
 .back-to-top {
+  zoom:.8;
   position: fixed;
   right: 28px;
   bottom: calc(28px + env(safe-area-inset-bottom, 0px));
