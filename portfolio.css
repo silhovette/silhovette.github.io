@@ -1206,7 +1206,7 @@ a, button { transition: color 180ms ease-out, background-color 180ms ease-out, b
   filter: saturate(1.1);
 }
 .play-card h3 {
-  font: 500 18px var(--font-display);
+  font: 400 20px var(--font-display);
   letter-spacing: -0.03em;
   margin-top: 16px;
 }
@@ -1832,7 +1832,7 @@ body:not(.portfolio-home) .work-detail p {
     height: 180px;
   }
   .play-card h3 {
-    font-size: 16px;
+    font-size: 18px;
   }
   .play-card p {
     font-size: 13px;

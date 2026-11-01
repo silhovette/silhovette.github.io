@@ -1,5 +1,54 @@
 (() => {
   'use strict';
+  const terraSlides = [...document.querySelectorAll('.terra-slideshow img')];
+  const terraCaptions = [...document.querySelectorAll('.terra-caption')];
+  const terraSlideshow = document.querySelector('.terra-slideshow');
+  if (terraSlideshow && 'IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    terraSlideshow.classList.add('reveal-pending');
+    const revealObserver = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting) {
+        terraSlideshow.classList.add('is-visible');
+        revealObserver.disconnect();
+      }
+    }, {threshold: .1});
+    revealObserver.observe(terraSlideshow);
+  }
+  if (terraSlides.length > 1) {
+    let terraCurrent = 0, terraTimer, visible = false;
+    const updateTimer = () => {
+      clearInterval(terraTimer);
+      if (!visible || document.hidden) return;
+      terraTimer = setInterval(() => {
+        terraSlides[terraCurrent].classList.remove('is-current');
+        terraCaptions[terraCurrent].classList.remove('is-current');
+        terraCaptions[terraCurrent].setAttribute('aria-hidden', 'true');
+        terraCurrent = (terraCurrent + 1) % terraSlides.length;
+        terraSlideshow.classList.toggle('has-caption-blur', terraCurrent === 1 || terraCurrent === 5);
+        terraSlides[terraCurrent].classList.add('is-current');
+        terraCaptions[terraCurrent].classList.add('is-current');
+        terraCaptions[terraCurrent].removeAttribute('aria-hidden');
+      }, 5000);
+    };
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(entries => {
+        visible = entries[0].isIntersecting && entries[0].intersectionRatio >= .1;
+        updateTimer();
+      }, {threshold: .1}).observe(terraSlideshow);
+    } else { visible = true; updateTimer(); }
+    document.addEventListener('visibilitychange', updateTimer);
+    window.addEventListener('pageshow', event => {
+      if (!event.persisted) return;
+      terraSlides[terraCurrent].classList.remove('is-current');
+      terraCaptions[terraCurrent].classList.remove('is-current');
+      terraCaptions[terraCurrent].setAttribute('aria-hidden', 'true');
+      terraCurrent = 0;
+      terraSlides[0].classList.add('is-current');
+      terraCaptions[0].classList.add('is-current');
+      terraCaptions[0].removeAttribute('aria-hidden');
+      terraSlideshow.classList.remove('has-caption-blur');
+      updateTimer();
+    });
+  }
   const shots=[...document.querySelectorAll('.shot')].sort((a,b)=>Number(a.dataset.index)-Number(b.dataset.index));
   const viewer=document.getElementById('viewer');
   const full=document.getElementById('viewer-image');
@@ -136,7 +185,7 @@
  const backToTop=document.querySelector('.back-to-top');
  const chapters=[...document.querySelectorAll('.photo-chapter')];
  root.classList.add('photo-enhanced');
- const carousels=[...document.querySelectorAll('.materia-carousel')];
+ const carousels=[...document.querySelectorAll('.materia-carousel, .archive-footer')];
  if('IntersectionObserver' in window){
    const carouselObserver=new IntersectionObserver(entries=>{
      entries.forEach(entry=>{
@@ -319,10 +368,10 @@
    let current=0,busy=false;
    const pending=[];
    let autoTimer;
-   let pointerInside=false;
+   let pointerInside=false, visible=false;
    function restartAuto(){
      clearInterval(autoTimer);
-     if(pointerInside)return;
+     if(pointerInside||!visible||document.hidden)return;
      autoTimer=setInterval(()=>{
        if(!document.hidden&&!busy)void change(1);
      },20000);
@@ -379,6 +428,12 @@
      restartAuto();
      void change(event.key==='ArrowRight'?1:-1);
    });
-   restartAuto();
+   if('IntersectionObserver' in window){
+     new IntersectionObserver(entries=>{
+       visible=entries[0].isIntersecting;
+       restartAuto();
+     }).observe(carousel);
+   }else{visible=true;restartAuto();}
+   document.addEventListener('visibilitychange',restartAuto);
  });
 })();

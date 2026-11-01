@@ -1,5 +1,9 @@
 "use strict";
 CF.ui = {
+  canvasSizes: new WeakMap(),
+  invalidateCanvas(canvas) {
+    this.canvasSizes.delete(canvas);
+  },
   chartSummaries: new WeakMap(),
   invalidateChart(chart) {
     this.chartSummaries.delete(chart);
@@ -168,17 +172,21 @@ CF.ui = {
     });
   },
   fit(canvas) {
-    const r = canvas.getBoundingClientRect(),
-      dpr = Math.min(devicePixelRatio || 1, 2);
-    if (
-      canvas.width !== Math.round(r.width * dpr) ||
-      canvas.height !== Math.round(r.height * dpr)
-    ) {
-      canvas.width = Math.round(r.width * dpr);
-      canvas.height = Math.round(r.height * dpr);
+    const dpr = Math.min(devicePixelRatio || 1, 2);
+    let size = this.canvasSizes.get(canvas);
+    if (!size || size.dpr !== dpr) {
+      const r = canvas.getBoundingClientRect();
+      size = { ctx: canvas.getContext("2d"), w: r.width, h: r.height, dpr };
+      this.canvasSizes.set(canvas, size);
     }
-    const ctx = canvas.getContext("2d");
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    return { ctx, w: r.width, h: r.height };
+    if (
+      canvas.width !== Math.round(size.w * dpr) ||
+      canvas.height !== Math.round(size.h * dpr)
+    ) {
+      canvas.width = Math.round(size.w * dpr);
+      canvas.height = Math.round(size.h * dpr);
+    }
+    size.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return size;
   },
 };

@@ -485,9 +485,13 @@ class ParticleSculpture {
 
   resize() {
     const rect = this.canvas.getBoundingClientRect();
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    if (this.width === rect.width && this.height === rect.height && this.dpr === dpr
+      && this.canvas.width === Math.round(rect.width * dpr)
+      && this.canvas.height === Math.round(rect.height * dpr)) return;
     this.width = rect.width;
     this.height = rect.height;
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    this.dpr = dpr;
     this.canvas.width = Math.round(this.width * dpr);
     this.canvas.height = Math.round(this.height * dpr);
     this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -504,7 +508,7 @@ class ParticleSculpture {
     if (this.frame !== null) cancelAnimationFrame(this.frame);
     this.frame = null;
     this.previous = null;
-    this.draw();
+    if (!this.suspended && !document.hidden) this.draw();
     if (this.shouldAnimate()) this.frame = requestAnimationFrame(this.tick);
   }
 
@@ -582,7 +586,7 @@ class ParticleSculpture {
     const ink = themed
       ? getComputedStyle(document.documentElement).getPropertyValue("--theme-sculpture-rgb").trim() || "185, 71, 44"
       : "161,62,35";
-    const colorPrefix = `rgba(${ink},${themed ? " " : ""}`;
+    ctx.fillStyle = `rgb(${ink})`;
     if (this.depthBuckets) {
       // Preview particles share 16 depth layers: one canvas fill per layer,
       // rather than a sort and a separate style/path/fill for every particle.
@@ -595,7 +599,9 @@ class ParticleSculpture {
         if (!bucket.length) return;
         const depth = (layer + 0.5) / 16;
         const radius = (0.65 + depth * 0.65) * pointScale * 0.912;
-        ctx.fillStyle = `${colorPrefix}${0.19 + depth * 0.62})`;
+        // Match the original rgba color's 8-bit alpha without parsing a new
+        // CSS color for every particle. Geometry and paint order stay identical.
+        ctx.globalAlpha = Math.round((0.19 + depth * 0.62) * 255) / 255;
         ctx.beginPath();
         for (const index of bucket) {
           const x = projected[index * 3], y = projected[index * 3 + 1];
@@ -604,17 +610,19 @@ class ParticleSculpture {
         }
         ctx.fill();
       });
+      ctx.globalAlpha = 1;
       return;
     }
     this.depthOrder.sort((a, b) => projected[a * 3 + 2] - projected[b * 3 + 2]);
     for (const index of this.depthOrder) {
       const offset = index * 3;
       const depth = Math.max(0, Math.min(1, (projected[offset + 2] + 1.65) / 3.3));
-      ctx.fillStyle = `${colorPrefix}${0.19 + depth * 0.62})`;
+      ctx.globalAlpha = Math.round((0.19 + depth * 0.62) * 255) / 255;
       ctx.beginPath();
       ctx.arc(projected[offset], projected[offset + 1], (0.65 + depth * 0.65) * pointScale * 0.912, 0, TAU);
       ctx.fill();
     }
+    ctx.globalAlpha = 1;
   }
 }
 
@@ -717,7 +725,11 @@ function setupGallery(canvas, sculpture, dialog) {
   });
   dialog.addEventListener("close", () => {
     clearTimeout(pauseBackgroundTimer);
-    previews.forEach(engine => setSuspended(engine, true));
+    previews.forEach(engine => {
+      setSuspended(engine, true);
+      // Keep geometry and rotation, release hidden gallery backing bitmaps.
+      engine.canvas.width = engine.canvas.height = 0;
+    });
     setSuspended(sculpture, false);
     document.body.style.overflow = previousOverflow;
     dialog.getAnimations().forEach(animation => animation.cancel());

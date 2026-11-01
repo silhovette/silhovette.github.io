@@ -216,15 +216,22 @@
   let scrollFrame = 0;
   let previousBackToTop = null;
   let previousActive = null;
+  let scrollGeometry = null;
   const updateScroll = () => {
     scrollFrame = 0;
     const top = scrollY;
     const showBackToTop = top > 400;
-    const length = progress ? document.documentElement.scrollHeight - innerHeight : 0;
+    if (!scrollGeometry) {
+      scrollGeometry = {
+        length: progress ? document.documentElement.scrollHeight - innerHeight : 0,
+        positions: sections.map(section => section ? section.getBoundingClientRect().top + top : Infinity),
+      };
+    }
+    const { length, positions } = scrollGeometry;
     let active;
     // Collect geometry before mutating classes, attributes or progress styles.
-    sections.forEach((section, index) => {
-      if (section?.getBoundingClientRect().top <= 180) active = links[index];
+    positions.forEach((position, index) => {
+      if (position <= top + 180) active = links[index];
     });
     if (showBackToTop !== previousBackToTop) {
       backToTop.classList.toggle("is-visible", showBackToTop);
@@ -240,15 +247,19 @@
       previousActive = active;
     }
   };
-  addEventListener(
-    "scroll",
-    () => {
-      if (!scrollFrame) scrollFrame = requestAnimationFrame(updateScroll);
-    },
-    { passive: true },
-  );
+  const scheduleScroll = () => {
+    if (!scrollFrame) scrollFrame = requestAnimationFrame(updateScroll);
+  };
+  const invalidateScrollGeometry = () => { scrollGeometry = null; scheduleScroll(); };
+  addEventListener("scroll", scheduleScroll, { passive: true });
+  addEventListener("resize", invalidateScrollGeometry, { passive: true });
+  const scrollLayoutObserver = new ResizeObserver(invalidateScrollGeometry);
+  scrollLayoutObserver.observe(document.body);
+  sections.filter(Boolean).forEach(section => scrollLayoutObserver.observe(section));
+  document.fonts?.ready.then(invalidateScrollGeometry);
+  document.addEventListener("site-language-change", invalidateScrollGeometry);
   updateScroll();
-  addEventListener("pageshow", updateScroll);
+  addEventListener("pageshow", invalidateScrollGeometry);
   const figureDialog = document.getElementById("figure-dialog");
   document.querySelectorAll("[data-figure]").forEach((button) =>
     button.addEventListener("click", () => {

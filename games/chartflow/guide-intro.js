@@ -20,9 +20,13 @@ CF.GuideIntro = class {
     this.reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
     this.start = performance.now() - (settled ? 7000 : 0);
     this.frame = requestAnimationFrame(this.tick);
+    this.layoutObserver = new ResizeObserver(() => this.resize());
+    this.layoutObserver.observe(root);
+    this.layoutObserver.observe(this.title);
   }
   stop() {
     cancelAnimationFrame(this.frame);
+    this.layoutObserver.disconnect();
   }
   ease(t) {
     t = Math.max(0, Math.min(1, t));
@@ -41,9 +45,12 @@ CF.GuideIntro = class {
     const revealStart = openingEnd + (4.8 - 2.05) / laterSpeed;
     const reveal = this.ease((elapsed - revealStart) / 1.15);
     const titleTravel = this.ease((elapsed - revealStart) / 1.3);
-    const w = this.root.clientWidth,
-      h = this.root.clientHeight,
-      dpr = Math.min(devicePixelRatio || 1, 2);
+    if (!this.layout) this.layout = {
+      w: this.root.clientWidth, h: this.root.clientHeight,
+      titleWidth: this.title.getBoundingClientRect().width,
+    };
+    const { w, h, titleWidth } = this.layout;
+    const dpr = Math.min(devicePixelRatio || 1, 2);
     if (
       this.canvas.width !== Math.round(w * dpr) ||
       this.canvas.height !== Math.round(h * dpr)
@@ -57,7 +64,6 @@ CF.GuideIntro = class {
     const scale = Math.min(w / 900, h / 650, 1.15);
     const morph = this.ease((t - 2.05) / 2.25);
     const alpha = this.ease((t - 0.35) / 0.85);
-    const titleWidth = this.title.getBoundingClientRect().width;
     const logoScale = Math.min(1, w / 650, h / 400),
       logoWidth = 72 * logoScale,
       gap = 42 * logoScale;
@@ -214,7 +220,9 @@ CF.GuideIntro = class {
     this.frame = requestAnimationFrame(this.tick);
   }
   resize() {
+    this.layout = null;
     if (this.done && (this.reduced || this.hold)) {
+      cancelAnimationFrame(this.frame);
       this.frame = requestAnimationFrame(() => this.draw(this.settledAt));
     }
   }

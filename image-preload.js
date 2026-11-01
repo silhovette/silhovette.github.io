@@ -19,15 +19,30 @@
     "assets/playground/cover/photo_collection.webp",
     "assets/playground/cover/V2C.webp",
     "assets/icons/portfolio.svg",
+    "assets/photos/1materia/02-display-600.webp",
+    "assets/photos/1materia/02-display-1200.webp",
+    "assets/photos/1materia/01-display-720.webp",
+    "assets/photos/1materia/01-display-1440.webp",
+    "assets/photos/1materia/frame-01.webp",
+    "assets/photos/1materia/frame-02.webp",
+    "assets/photos/1materia/frame-03.webp",
+    "assets/photos/1materia/frame-05.webp",
+    "assets/photos/1materia/frame-06.webp",
+    "assets/photos/1materia/frame-07.webp",
+    "assets/photos/2terra/left1.webp",
+    "assets/photos/2terra/right1.webp",
+    "assets/photos/3mechanica/left1.webp",
+    "assets/photos/3mechanica/right1.webp",
   ];
 
-  const chapterSizes = '(max-width: 760px) 90vw, (max-width: 1460px) 53vw, 780px';
   for (const chapter of ['1materia', '2terra', '3mechanica']) {
-    sources.push({
-      src: `assets/photos/${chapter}/hero-banner-1800.webp`,
-      srcset: `assets/photos/${chapter}/hero-banner-900.webp 900w, assets/photos/${chapter}/hero-banner-1800.webp 1800w`,
-      sizes: chapterSizes,
-    });
+    sources.push(`assets/photos/${chapter}/hero-banner-1800.webp`);
+    if (chapter !== '3mechanica') {
+      sources.push(`assets/photos/${chapter}/hero-banner-900.webp`);
+    }
+  }
+  for (let index = 1; index <= 8; index++) {
+    sources.push(`assets/photos/2terra/${index}.webp`);
   }
 
   // Warm the browser's normal image/HTTP cache immediately, without adding DOM nodes
@@ -40,15 +55,6 @@
     image.fetchPriority = "low";
     image.onload = image.onerror = () => pending.delete(image);
     pending.add(image);
-    if (typeof source === "string") {
-      image.src = new URL(source, base).href;
-    } else {
-      image.sizes = source.sizes;
-      image.srcset = source.srcset.split(', ').map(candidate => {
-        const [url, width] = candidate.split(' ');
-        return `${new URL(url, base).href} ${width}`;
-      }).join(', ');
-      image.src = new URL(source.src, base).href;
-    }
+    image.src = new URL(source, base).href;
   }
 })();

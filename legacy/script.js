@@ -12,8 +12,11 @@ const setupNavigation = () => {
     .filter(Boolean);
   const activeLockDuration = 700;
   let activeLockUntil = 0;
+  let activeSectionId = null;
 
   const setActiveLink = (id) => {
+    if (activeSectionId === id) return;
+    activeSectionId = id;
     navLinks.forEach((link) => {
       link.classList.toggle("is-active", link.getAttribute("href") === `#${id}`);
     });
@@ -76,8 +79,15 @@ const setupNavigation = () => {
     updateActiveLink();
   }
 
-  window.addEventListener("scroll", updateActiveLink, { passive: true });
-  window.addEventListener("resize", updateActiveLink);
+  if (sections.length) {
+    let frame = null;
+    const schedule = () => {
+      if (frame !== null) return;
+      frame = requestAnimationFrame(() => { frame = null; updateActiveLink(); });
+    };
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+  }
 };
 
 
@@ -502,6 +512,11 @@ const setupHeroPolyhedron = () => {
       length: Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]),
     };
   });
+  // Reuse projected vertices and hit-test segments throughout the animation.
+  const projected = vertices.map(() => ({ x: 0, y: 0, z: 0 }));
+  currentSegments = edgeData.map(({ first, second }, index) => ({
+    index, first, second, depth: 0, frontDepth: 0, x1: 0, y1: 0, x2: 0, y2: 0,
+  }));
   const graph = vertices.map(() => []);
 
   edgeData.forEach(({ first, second, length }) => {
@@ -517,28 +532,6 @@ const setupHeroPolyhedron = () => {
     canvas.width = Math.floor(width * pixelRatio);
     canvas.height = Math.floor(height * pixelRatio);
     context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
-  };
-
-  const rotatePoint = ([x, y, z], time) => {
-    const yAngle = time * 0.00005;
-    const xAngle = time * 0.00008;
-    const zAngle = time * 0.0000;
-    const cosY = Math.cos(yAngle);
-    const sinY = Math.sin(yAngle);
-    const cosX = Math.cos(xAngle);
-    const sinX = Math.sin(xAngle);
-    const cosZ = Math.cos(zAngle);
-    const sinZ = Math.sin(zAngle);
-    const yRotatedX = x * cosY + z * sinY;
-    const yRotatedZ = -x * sinY + z * cosY;
-    const xRotatedY = y * cosX - yRotatedZ * sinX;
-    const xRotatedZ = y * sinX + yRotatedZ * cosX;
-
-    return [
-      yRotatedX * cosZ - xRotatedY * sinZ,
-      yRotatedX * sinZ + xRotatedY * cosZ,
-      xRotatedZ,
-    ];
   };
 
   const smoothstep = (edge0, edge1, value) => {
@@ -705,17 +698,21 @@ const setupHeroPolyhedron = () => {
     const radius = Math.min(width, height) * 0.46;
     const centerX = width * 0.76;
     const centerY = height * 0.26;
-    const projected = vertices.map((vertex) => {
-      const [x, y, z] = rotatePoint(vertex, rotationTime);
-      const perspective = 1.55 / (2.35 - z);
-
-      return {
-        x: centerX + x * radius * perspective,
-        y: centerY + y * radius * perspective,
-        z,
-      };
-    });
-    currentSegments = [];
+    // Rotation is shared by every vertex in this frame.
+    const cosY = Math.cos(rotationTime * 0.00005), sinY = Math.sin(rotationTime * 0.00005);
+    const cosX = Math.cos(rotationTime * 0.00008), sinX = Math.sin(rotationTime * 0.00008);
+    for (let i = 0; i < vertices.length; i++) {
+      const [x, y, z] = vertices[i];
+      const rotatedX = x * cosY + z * sinY;
+      const rotatedZ = -x * sinY + z * cosY;
+      const rotatedY = y * cosX - rotatedZ * sinX;
+      const depth = y * sinX + rotatedZ * cosX;
+      const perspective = 1.55 / (2.35 - depth);
+      const point = projected[i];
+      point.x = centerX + rotatedX * radius * perspective;
+      point.y = centerY + rotatedY * radius * perspective;
+      point.z = depth;
+    }
 
     context.lineWidth = 1.25;
     context.lineCap = "round";
@@ -736,22 +733,18 @@ const setupHeroPolyhedron = () => {
       context.moveTo(a.x, a.y);
       context.lineTo(b.x, b.y);
       context.stroke();
-      currentSegments.push({
-        index,
-        first,
-        second,
-        depth,
-        frontDepth: Math.max(a.z, b.z),
-        x1: a.x,
-        y1: a.y,
-        x2: b.x,
-        y2: b.y,
-      });
+      const segment = currentSegments[index];
+      segment.depth = depth;
+      segment.frontDepth = Math.max(a.z, b.z);
+      segment.x1 = a.x;
+      segment.y1 = a.y;
+      segment.x2 = b.x;
+      segment.y2 = b.y;
     });
 
     drawPulseLayer(timestamp || performance.now(), projected);
 
-    if (!reduceMotion && isVisible) {
+    if (!reduceMotion && isVisible && !document.hidden) {
       animationFrame = window.requestAnimationFrame(draw);
     } else {
       animationFrame = null;
@@ -759,7 +752,7 @@ const setupHeroPolyhedron = () => {
   };
 
   const startAnimation = () => {
-    if (!reduceMotion && animationFrame === null) {
+    if (!reduceMotion && isVisible && !document.hidden && animationFrame === null) {
       lastFrameTime = null;
       animationFrame = window.requestAnimationFrame(draw);
     }

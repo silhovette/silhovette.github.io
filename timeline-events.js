@@ -4,12 +4,6 @@
   "use strict";
   window.siteTimelineMarkup = `
 <li>
-          <span class="timeline-date">2006</span>
-          <div class="timeline-event">
-            <h3>print("Hello, World!")</h3>
-          </div>
-        </li>
-<li>
           <span class="timeline-date">2012–2017</span>
           <div class="timeline-event">
             <h3 data-i18n="timeline_bilingual_school">Shanghai International Studies University Bilingual School</h3>

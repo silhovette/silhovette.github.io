@@ -408,7 +408,9 @@ function updateActiveLaneCount(forceRender = false) {
   renderBindList();
 }
 
+let playfieldGradient = null;
 function resizeCanvas() {
+  playfieldGradient = null;
   // Resizing resets context state. Retain the following frame as well, so
   // cached lane strokes match the steady rendering state of the original loop.
   pendingGameFrames = 2;
@@ -1334,11 +1336,13 @@ function draw(songTime) {
 
   ctx.clearRect(0, 0, width, height);
 
-  const gradient = ctx.createLinearGradient(0, 0, 0, height);
-  gradient.addColorStop(0, "rgba(255,255,255,0.04)");
-  gradient.addColorStop(0.72, "rgba(207,118,95,0.03)");
-  gradient.addColorStop(1, "rgba(255,179,92,0.05)");
-  ctx.fillStyle = gradient;
+  if (!playfieldGradient) {
+    playfieldGradient = ctx.createLinearGradient(0, 0, 0, height);
+    playfieldGradient.addColorStop(0, "rgba(255,255,255,0.04)");
+    playfieldGradient.addColorStop(0.72, "rgba(207,118,95,0.03)");
+    playfieldGradient.addColorStop(1, "rgba(255,179,92,0.05)");
+  }
+  ctx.fillStyle = playfieldGradient;
   ctx.fillRect(0, 0, width, height);
 
   for (let lane = 0; lane < laneCount; lane += 1) {

@@ -4,7 +4,7 @@
   const units = [...document.querySelectorAll([
     ".portfolio-section > .section-top", ".about-statement", ".about-signature", ".about-body",
     ".interest-item", ".project-card", ".paper-row", ".honors-title", ".honor-row", ".profile-timeline",
-    ".play-card", ".contact-top", ".contact-main", ".contact-bottom", ".secondary-footer-inner",
+    ".contact-top", ".contact-main", ".contact-bottom", ".secondary-footer-inner",
     ".archive-heading", ".research-copy", ".research-figure", ".archive-section-title", ".other-projects-list > li",
     ".timeline-section > .section-top", ".personal-timeline > li",
     "#playground-intro > .section-heading", ".playground-summary", ".photo-toolbar", ".photo-strip",

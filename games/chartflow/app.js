@@ -28,8 +28,15 @@
       frameHandle = requestAnimationFrame(frame);
   }
   app.requestFrame = scheduleFrame;
-  const canvasObserver = new ResizeObserver(scheduleFrame);
-  window.addEventListener("resize", scheduleFrame);
+  const canvasObserver = new ResizeObserver(entries => {
+    entries.forEach(entry => CF.ui.invalidateCanvas(entry.target));
+    scheduleFrame();
+  });
+  window.addEventListener("resize", () => {
+    const canvas = $("#main canvas");
+    if (canvas) CF.ui.invalidateCanvas(canvas);
+    scheduleFrame();
+  });
   function saveStatus(text) {
     const status = $("#save-status");
     status.hidden = text === "All changes saved";
