@@ -89,7 +89,7 @@
         <li>
           <time class="timeline-date" datetime="2026-11">Nov 2026</time>
           <div class="timeline-event">
-            <h3><span class="timeline-reviewer" tabindex="0" aria-label="Reviewer, Secondary reviewer" data-tooltip="Secondary reviewer">Reviewer</span>, ACL Rolling Review</h3>
+            <h3>Reviewer, ACL Rolling Review</h3>
             <p>Association for Computational Linguistics (ACL)</p>
           </div>
         </li>
