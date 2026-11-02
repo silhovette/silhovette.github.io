@@ -27,7 +27,6 @@ a:focus-visible, button:focus-visible {outline:2px solid #b9472c;outline-offset:
 .back:hover {color:#b9472c;}
 
 /* HERO — equal height, rotationally related inner cuts */
-/* The white page curtain handles entry; the Hero itself stays fully visible. */
 
 @property --corner-x { syntax:'<percentage>'; inherits:true; initial-value:32%; }
 @property --corner-y { syntax:'<percentage>'; inherits:true; initial-value:36%; }
@@ -44,6 +43,25 @@ a:focus-visible, button:focus-visible {outline:2px solid #b9472c;outline-offset:
 .hero-color {background:var(--coral);clip-path:polygon(var(--corner-x) 0,100% 0,100% 100%,0 100%,0 var(--corner-y));display:flex;align-items:center;justify-content:flex-end;padding:clamp(25px,4.3vw,67px);padding-left:clamp(30px,4.5vw,75px);text-align:right;}
 .hero h1 {width:100%;font:700 clamp(36px,5.9vw,90px)/.91 var(--font-body);letter-spacing:-.045em;margin:0;text-wrap:nowrap;}
 .hero h1 span {display:block;}
+
+@media (prefers-reduced-motion:no-preference) {
+  .hero-entering .hero-photo::after {
+    content:"";position:absolute;inset:0;pointer-events:none;opacity:0;
+    background:linear-gradient(150deg,#f5f3ec 12%,rgba(245,243,236,.78) 84%);
+    animation:photo-develop 860ms cubic-bezier(.4,0,.18,1) backwards;
+  }
+  .hero-entering .hero-copy h1 {animation:title-settle 600ms cubic-bezier(.32,0,.2,1) 80ms backwards;}
+  .hero-entering .hero-note {animation:note-appear 440ms ease-in-out 220ms backwards;}
+}
+@keyframes title-settle {
+  from {opacity:.58;transform:translateY(.08em);}
+  to {opacity:1;transform:translateY(0);}
+}
+@keyframes note-appear {from {opacity:0;} to {opacity:1;}}
+@keyframes photo-develop {
+  from {opacity:.94;}
+  to {opacity:0;}
+}
 
 /* Chapters share the page canvas; image backgrounds remain visible while loading. */
 /* Match width to zoom so descendants retain their original layout and wrapping.

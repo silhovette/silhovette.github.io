@@ -1155,6 +1155,24 @@ a, button { transition: color 180ms ease-out, background-color 180ms ease-out, b
 .timeline-preview-list h4 { margin: 0; font: 400 15.5px/1.55 var(--font-body); }
 .timeline-preview-list p { font: 400 14px/1.7 var(--font-body); color: var(--muted); margin-top: 4px; }
 .timeline-preview-list strong { font-weight: 400; }
+.timeline-reviewer { position: relative; display: inline-block; cursor: help; }
+.timeline-reviewer::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% - 4px);
+  left: calc(50% + 8px);
+  transform: translateX(-50%);
+  padding: 2px 6px;
+  color: var(--muted);
+  background: var(--bg);
+  font: 400 10px/1.5 var(--font-body);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 180ms ease-in-out;
+}
+.timeline-reviewer:hover::after,
+.timeline-reviewer:focus-visible::after { opacity: 1; }
 @media (prefers-reduced-motion: reduce) {
   .timeline-preview-track { gap: 0 !important; transform: none !important; will-change: auto; }
   .timeline-preview-window { overflow-y: auto; scrollbar-width: thin; mask-image: none; }

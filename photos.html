@@ -36,6 +36,7 @@
         let played = false;
 
         function completeImmediately() {
+          root.classList.remove('hero-entering');
           root.dataset.pageFade = 'complete';
         }
 
@@ -45,6 +46,7 @@
           if (motion.matches) { completeImmediately(); return; }
 
           // Fade the white top-layer curtain over the page.
+          root.classList.add('hero-entering');
           root.dataset.pageFade = 'revealing';
           setTimeout(() => {
             if (root.dataset.pageFade === 'revealing') root.dataset.pageFade = 'complete';
@@ -71,7 +73,7 @@
 <meta content="#f5f3ec" name="theme-color"/>
 <title>Photos | Yuhua Luo</title>
 <link rel="icon" type="image/svg+xml" href="assets/icons/portfolio.svg"/>
-<link rel="stylesheet" href="photos.css?v=43"/>
+<link rel="stylesheet" href="photos.css?v=47"/>
 <script src="photos-gallery.js?v=36" defer></script>
 </head>
 <body class="portfolio-home blank-page"><a class="skip-link" href="#main">Skip to content</a><div aria-hidden="true" class="page-grid"></div>

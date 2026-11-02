@@ -86,6 +86,13 @@
             <p data-i18n="timeline_sjtu">Shanghai Jiao Tong University</p>
           </div>
         </li>
+        <li>
+          <time class="timeline-date" datetime="2026-11">Nov 2026</time>
+          <div class="timeline-event">
+            <h3><span class="timeline-reviewer" tabindex="0" aria-label="Reviewer, Secondary reviewer" data-tooltip="Secondary reviewer">Reviewer</span>, ACL Rolling Review</h3>
+            <p>Association for Computational Linguistics (ACL)</p>
+          </div>
+        </li>
         <li class="timeline-present">
           <span class="timeline-date" data-i18n="timeline_present">Present</span>
           <div class="timeline-event">
