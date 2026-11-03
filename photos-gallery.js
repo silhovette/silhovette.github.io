@@ -256,7 +256,6 @@
  }
  function measureGrid(){const r=grid.getBoundingClientRect();gridBounds={left:r.left,top:r.top,x:grid.clientWidth/r.width,y:grid.clientHeight/r.height};}
  async function revealChapter(stop){
-   stop.target.classList.add('is-visible');
    // Overlap the final 880ms of the entrance, while still waiting for the banner
    // to decode. A failed image must not hide the copy.
    const entrances=stop.target.getAnimations({subtree:true});
@@ -332,19 +331,21 @@
        const readable=rgb(contrast>=4.5?stop.ink:ink);
        if(chapterColors.get(stop.chapter)!==readable){
          chapterColors.set(stop.chapter,readable);
-         stop.chapter.style.setProperty('--chapter-readable-ink',readable);
+         // A native color update avoids invalidating an inherited custom property
+         // throughout the chapter, including its images and independent carousel.
+         stop.chapter.style.color=readable;
        }
      });
      lastPaletteColor=background;
    }
    // The scroll threshold starts each entrance once. Waiting for an exact painted
    // color delayed it during momentum scrolling and could skip earlier chapters.
-   paletteStops.forEach(stop=>{
-     if(top>=stop.revealStart&&!stop.target.classList.contains('is-visible')){
-       void revealChapter(stop);
-     }
-   });
+   const entering=paletteStops.filter(stop=>top>=stop.revealStart&&!stop.target.classList.contains('is-visible'));
+   entering.forEach(stop=>stop.target.classList.add('is-visible'));
    if(gridScroll!==lastGridScroll){grid.style.setProperty('--grid-scroll-y',`${gridScroll}px`);grid.style.setProperty('--grid-offset-y',`${gridScroll%40}px`);lastGridScroll=gridScroll;}
+   // Start all entrances before reading animation state, so a fast scroll only
+   // needs one style update even when it crosses several chapters at once.
+   entering.forEach(stop=>{void revealChapter(stop);});
    if(unsettled)scrollGrid();
  }
  function scrollGrid(){if(scrollFrame===null)scrollFrame=requestAnimationFrame(paintScroll);}

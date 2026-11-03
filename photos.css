@@ -70,7 +70,7 @@ a:focus-visible, button:focus-visible {outline:2px solid #b9472c;outline-offset:
 .photo-chapters {zoom:.9;margin-top:clamp(80px,9vw,132px);}
 .photo-chapter {
   padding-top:clamp(96px,9vw,144px);
-  color:var(--chapter-readable-ink,var(--chapter-ink));
+  color:var(--chapter-ink);
 }
 .photo-chapter + .photo-chapter {
   padding-top:calc(clamp(96px,9vw,144px) + clamp(24px,3vw,40px));
@@ -183,7 +183,9 @@ html.photo-enhanced .chapter-gallery-slot.is-visible,
 html.photo-enhanced .materia-carousel.is-visible,
 html.photo-enhanced .terra-slideshow.is-visible,
 html.photo-enhanced .archive-footer.is-visible {opacity:1;transition:opacity 1000ms var(--motion) 650ms;}
-html.photo-enhanced .materia-carousel.is-visible {transition-delay:350ms;}
+html.photo-enhanced .chapter-gallery-slot.is-visible,
+html.photo-enhanced .materia-carousel.is-visible,
+html.photo-enhanced .terra-slideshow.is-visible {transition-duration:1200ms;transition-delay:80ms;}
 html.photo-enhanced .archive-footer.is-visible {transition-delay:0ms;}
 html.photo-enhanced .is-visible .chapter-image-reveal,
 html.photo-enhanced .is-visible .chapter-image img {transform:translateX(0);}

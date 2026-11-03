@@ -73,8 +73,8 @@
 <meta content="#f5f3ec" name="theme-color"/>
 <title>Photos | Yuhua Luo</title>
 <link rel="icon" type="image/svg+xml" href="assets/icons/portfolio.svg"/>
-<link rel="stylesheet" href="photos.css?v=47"/>
-<script src="photos-gallery.js?v=36" defer></script>
+<link rel="stylesheet" href="photos.css?v=50"/>
+<script src="photos-gallery.js?v=37" defer></script>
 </head>
 <body class="portfolio-home blank-page"><a class="skip-link" href="#main">Skip to content</a><div aria-hidden="true" class="page-grid"></div>
 <header class="portfolio-header">
@@ -83,7 +83,12 @@
 <span aria-label="Shanghai local time" class="header-clock mono">SHANGHAI <span data-shanghai-time="">—:—</span></span>
 </div>
 <div class="header-controls">
-<a class="contact-link" data-i18n="back_to_homepage" href="index.html">Back to homepage</a>
+<a class="contact-link" data-i18n="back_to_homepage" href="index.html" style="display: none;">Back to homepage</a>
+<script>
+  if (new URLSearchParams(window.location.search).get('from') === 'home') {
+    document.currentScript.previousElementSibling.style.removeProperty('display');
+  }
+</script>
 </div>
 </div>
 </header>
