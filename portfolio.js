@@ -406,28 +406,24 @@
   });
   document.addEventListener("site-language-change", renderSearch);
 
-  const relayCarousel = document.querySelector("[data-relay-carousel]");
-  if (relayCarousel) {
-    const relayImages = [...relayCarousel.querySelectorAll("img")];
-    let relayIndex = 0;
-    let relayTimer;
-    const showNextRelayImage = () => {
-      relayImages[relayIndex].style.opacity = "0";
-      relayIndex = (relayIndex + 1) % relayImages.length;
-      relayImages[relayIndex].style.opacity = "1";
+  document.querySelectorAll("[data-relay-carousel]").forEach((carousel) => {
+    const images = [...carousel.querySelectorAll("img")];
+    let index = 0;
+    let timer;
+    const showNextImage = () => {
+      images[index].style.opacity = "0";
+      index = (index + 1) % images.length;
+      images[index].style.opacity = "1";
     };
-    const startRelayCarousel = () => {
-      if (document.hidden || relayImages.length < 2) return;
-      clearInterval(relayTimer);
-      relayTimer = setInterval(showNextRelayImage, 3500);
+    const startCarousel = () => {
+      clearInterval(timer);
+      if (document.hidden || reducedMotion.matches || images.length < 2) return;
+      timer = setInterval(showNextImage, 3500);
     };
-    const stopRelayCarousel = () => clearInterval(relayTimer);
-    startRelayCarousel();
-    document.addEventListener("visibilitychange", () => {
-      if (document.hidden) stopRelayCarousel();
-      else startRelayCarousel();
-    });
-  }
+    startCarousel();
+    document.addEventListener("visibilitychange", startCarousel);
+    reducedMotion.addEventListener("change", startCarousel);
+  });
 
 
 })();
