@@ -80,6 +80,20 @@
           </div>
         </li>
         <li>
+          <time class="timeline-date" datetime="2026-07">Jul 2026</time>
+          <div class="timeline-event">
+            <h3 data-i18n="timeline_first_patent">Filed my first patent application</h3>
+            <p data-i18n="timeline_co_inventor">Co-inventor</p>
+          </div>
+        </li>
+        <li>
+          <time class="timeline-date" datetime="2026-09">Sep 2026</time>
+          <div class="timeline-event">
+            <h3 data-i18n="timeline_first_journal_paper">Published my first journal paper</h3>
+            <p>IET Renewable Power Generation</p>
+          </div>
+        </li>
+        <li>
           <time class="timeline-date" datetime="2026-10">Oct 2026</time>
           <div class="timeline-event">
             <h3 data-i18n="timeline_merit">Merit Student</h3>
