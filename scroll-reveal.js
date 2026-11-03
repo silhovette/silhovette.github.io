@@ -104,14 +104,14 @@
       element.classList.add("is-reveal-pending");
     }
 
-    const hero = [...document.querySelectorAll(".intro-line, .cover h1, .cover-tagline, .cover-description, .cover-actions")];
+    const hero = [...document.querySelectorAll(".intro-line, .cover h1, .cover-tagline, .cover-description, .cover-links, .cover-actions")];
     const revealHero = () => {
       heroObserver?.disconnect();
       if (motion.matches || (location.hash && location.hash !== "#hero") || scrollY > 80) return;
       const pageFading = document.documentElement.getAttribute("data-page-fade") === "revealing";
       hero.filter(inView).forEach((element, index) => {
         // During the global fade, animate position only to avoid doubled opacity fades.
-        play(element, index * (distance() === 8 ? 45 : 65), pageFading);
+        play(element, (element.matches(".cover-links") ? index - 0.5 : index) * (distance() === 8 ? 45 : 65), pageFading);
       });
     };
     if (document.documentElement.getAttribute("data-page-fade") === "pending") {

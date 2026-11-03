@@ -551,6 +551,42 @@ a, button { transition: color 180ms ease-out, background-color 180ms ease-out, b
   max-width: 370px;
   color: var(--muted);
 }
+.cover-tagline,
+.cover-description,
+.cover-links {
+  margin-left: 12px;
+}
+.cover-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 32px;
+  margin-top: 11px;
+  color: var(--muted);
+  font-size: 13px;
+}
+.cover-links a {
+  position: relative;
+  white-space: nowrap;
+}
+.cover-links a::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 2px;
+  left: 0;
+  height: 1px;
+  background: var(--red);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 350ms ease;
+}
+.cover-links a:hover::after,
+.cover-links a:focus-visible::after {
+  transform: scaleX(1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .cover-links a::after { transition: none; }
+}
 .cover-actions {
   display: flex;
   gap: 22px;
