@@ -1346,10 +1346,12 @@ a, button { transition: color 180ms ease-out, background-color 180ms ease-out, b
   max-width: 100%;
 }
 .email-link {
+  min-width: 0;
   font: 400 clamp(22px, 3.7vw, 46px) / 1.25 var(--font-body);
   border-bottom: 0;
   padding-bottom: 0;
   letter-spacing: 0.01em;
+  overflow-wrap: anywhere;
 }
 .copy-button {
   display: inline-grid;
@@ -1365,6 +1367,37 @@ a, button { transition: color 180ms ease-out, background-color 180ms ease-out, b
 }
 .copy-button:hover {
   background: var(--theme-color-eba2551ea6);
+}
+.contact-secondary {
+  display: grid;
+  gap: 4px;
+  max-width: 100%;
+}
+.contact-secondary-email {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.contact-secondary-label,
+.contact-delivery-note {
+  color: var(--theme-color-8fdbd7ebe2);
+}
+.contact-secondary-link {
+  border-bottom: 1px solid var(--theme-color-aa17d42905);
+  padding-bottom: 1px;
+  transition: color 180ms ease-out, border-color 180ms ease-out;
+}
+.contact-secondary-link:hover {
+  color: var(--theme-color-247cf7759c);
+  border-color: currentColor;
+}
+.contact-delivery-note {
+  max-width: 52ch;
+  font-size: 12.5px;
+  line-height: 1.5;
 }
 .social-links {
   display: flex;
@@ -1894,6 +1927,7 @@ body:not(.portfolio-home) .work-detail p {
   }
   .contact-email-row {
     gap: 10px;
+    width: 100%;
   }
   .email-link {
     font-size: clamp(18px, 5.4vw, 30px);

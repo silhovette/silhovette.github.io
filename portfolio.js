@@ -327,11 +327,11 @@
     ?.addEventListener("click", async () => {
       hideConstructionNotice();
       try {
-        await navigator.clipboard.writeText("silhovette@sjtu.edu.cn");
+        await navigator.clipboard.writeText("luoyuhua2006@gmail.com");
         toast.textContent =
           window.siteI18n?.t("portfolio_copied") || "Email copied";
       } catch {
-        toast.textContent = "silhovette@sjtu.edu.cn";
+        toast.textContent = "luoyuhua2006@gmail.com";
       }
       hideConstructionNotice();
       toast.classList.add("visible");

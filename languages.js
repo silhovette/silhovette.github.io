@@ -101,6 +101,8 @@
     "portfolio_mod_meta": ["MODS & CUSTOM LIVERIES / AZX777", "模组与自定义涂装 / AZX777", "模組與自訂塗裝 / AZX777"],
     "portfolio_game_meta": ["PLAY / BUILD / EXPLORE", "节奏游戏 / 交互实验", "節奏遊戲 / 互動實驗"],
     "portfolio_next": ["CONTACT", "联系方式", "聯絡方式"],
+    "portfolio_contact_also_at": ["Also at", "也可联系", "亦可聯絡"],
+    "portfolio_contact_delivery_note": ["where delivery may be unreliable. Please use Gmail for important messages.", "此邮箱可能无法正常接收邮件，重要邮件请发送至 Gmail。", "此信箱可能無法正常收取郵件，重要郵件請寄至 Gmail。"],
     "portfolio_copied": ["Email copied to clipboard", "邮箱已复制", "信箱已複製"],
     "portfolio_menu": ["Menu", "菜单", "選單"],
     "sculpture_label": ["{shape} particle sculpture. Click or press Enter to transform.", "{shape} 粒子雕塑。点击或按 Enter 键切换形态。", "{shape} 粒子雕塑。點擊或按 Enter 鍵切換形態。"],
