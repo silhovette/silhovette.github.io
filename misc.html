@@ -1,11 +1,11 @@
 <!doctype html>
-<html lang="en" data-page-fade="complete">
+<html lang="en" class="misc-page" data-page-fade="complete">
   <head>
     <meta charset="UTF-8" />
     <script src="image-preload.js?v=3"></script>
     <script src="theme.js?v=1"></script>
     <style id="page-fade-style">
-      html[data-page-fade] { background: #f5f3ec; }
+      html[data-page-fade] { background: #252524; }
       html[data-page-fade="pending"] body,
       html[data-page-fade="revealing"] body { transition: opacity 700ms cubic-bezier(0.22, 1, 0.36, 1) !important; }
       html[data-page-fade="pending"] body { opacity: 0 !important; }
@@ -37,7 +37,7 @@
     </script>
     <script src="page-fade.js?v=1" defer></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#f5f3ec" />
+    <meta name="theme-color" content="#252524" />
     <title>Miscellaneous | Yuhua Luo</title>
     <link rel="icon" type="image/svg+xml" href="assets/icons/portfolio.svg" />
     <link rel="preload" href="assets/fonts/SpaceGrotesk-Variable.ttf" as="font" type="font/ttf" crossorigin />
@@ -46,11 +46,13 @@
     <link rel="stylesheet" href="portfolio.css?v=52" />
     <link rel="stylesheet" href="scrollbars.css?v=2" />
     <link rel="stylesheet" href="theme.css?v=1" />
+    <link rel="stylesheet" href="misc.css?v=1" />
     <script src="languages.js?v=38" defer></script>
     <script src="script.js?v=17" defer></script>
     <script src="portfolio.js?v=15" defer></script>
+    <script src="misc.js?v=1" defer></script>
   </head>
-  <body class="portfolio-home blank-page">
+  <body class="portfolio-home blank-page misc-page">
     <a class="skip-link" href="#main" data-i18n="skip_to_content">Skip to content</a>
     <header class="portfolio-header">
       <div class="header-inner wrap">
@@ -70,7 +72,122 @@
         </div>
       </div>
     </header>
-    <main id="main"></main>
+    <main id="main" class="misc-main">
+      <section class="misc-hero" aria-labelledby="mods-hero-title">
+        <div class="misc-hero__image" data-parallax-speed="0.18" aria-hidden="true">
+          <img src="assets/papers/Visual2Craft.webp" alt="" width="1600" height="900" fetchpriority="high" decoding="async" />
+        </div>
+        <div class="misc-hero__veil" aria-hidden="true"></div>
+        <div class="misc-hero__content wrap">
+          <h1 id="mods-hero-title">BUILD<br /><em>BEYOND</em><br />THE FRAME.</h1>
+          <p class="misc-hero__summary">Small systems, strange mechanics and visual experiments that turn Minecraft into a medium for making.</p>
+        </div>
+      </section>
+
+      <section class="portfolio-section wrap misc-section" id="mods" aria-labelledby="mods-title">
+        <div class="section-top">
+          <div>
+            <div class="section-kicker mono"><b>01</b><span>MINECRAFT MODS</span></div>
+            <h2 id="mods-title">Minecraft mods</h2>
+          </div>
+        </div>
+
+        <div class="misc-mod-grid">
+          <article class="misc-mod-card misc-mod-card--wide">
+            <div class="misc-mod-card__visual">
+              <img src="assets/papers/Visual2Craft.webp" alt="Visual2Craft Minecraft construction pipeline diagram" width="1600" height="900" loading="lazy" decoding="async" />
+              <span class="misc-mod-card__index mono">MOD / 01</span>
+              <span class="misc-mod-card__status mono">IN DEVELOPMENT</span>
+            </div>
+            <div class="misc-mod-card__body">
+              <h3>Visual2Craft</h3>
+              <p>Construction videos become a persistent, editable Minecraft scene through frame analysis, blueprint queries and datapack compilation.</p>
+              <span class="misc-chip mono">VIDEO → VOXELS</span>
+            </div>
+          </article>
+          <article class="misc-mod-card">
+            <div class="misc-mod-card__visual misc-mod-card__visual--dark">
+              <div class="misc-placeholder-diagram" aria-hidden="true"><span></span><span></span><span></span><i></i></div>
+              <span class="misc-mod-card__index mono">MOD / 02</span>
+              <span class="misc-mod-card__status mono">PLACEHOLDER</span>
+            </div>
+            <div class="misc-mod-card__body">
+              <h3>Mechanic / Field Notes</h3>
+              <p>Rules, machines and environmental behaviours collected as a modular test bed for future builds.</p>
+              <span class="misc-chip mono">SYSTEMS / PLAY</span>
+            </div>
+          </article>
+          <article class="misc-mod-card">
+            <div class="misc-mod-card__visual misc-mod-card__visual--chart">
+              <img src="assets/misc/cover/V2C.webp" alt="ChartFlow placeholder title card" width="3999" height="2249" loading="lazy" decoding="async" />
+              <span class="misc-mod-card__index mono">MOD / 03</span>
+              <span class="misc-mod-card__status mono">PLACEHOLDER</span>
+            </div>
+            <div class="misc-mod-card__body">
+              <h3>ChartFlow / World Tools</h3>
+              <p>A visual control surface for sequencing, inspecting and replaying the state of a living world.</p>
+              <span class="misc-chip mono">TOOLS / PROTOTYPE</span>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="portfolio-section wrap misc-section misc-section--works" id="personal-works" aria-labelledby="personal-works-title">
+        <div class="section-top">
+          <div>
+            <div class="section-kicker mono"><b>02</b><span>PERSONAL WORKS</span></div>
+            <h2 id="personal-works-title">Other works</h2>
+          </div>
+        </div>
+
+        <div class="paper-list misc-work-list">
+          <article class="paper-row">
+            <span class="paper-number">01</span>
+            <div>
+              <h3>ChartFlow: A Browser-Based Rhythm Sketchbook</h3>
+              <p>A configurable play-and-build space for arranging falling-note patterns, testing timing and turning small ideas into playable forms.</p>
+            </div>
+            <div class="paper-meta">
+              <span class="paper-badge">WEB APP · 2026</span>
+              <div class="paper-links"><a href="games/chartflow/index.html">OPEN</a><a href="index.html#playground">ABOUT</a></div>
+            </div>
+          </article>
+          <article class="paper-row">
+            <span class="paper-number">02</span>
+            <div>
+              <h3>RELAY: Visual Notes on Shared Systems</h3>
+              <p>An evolving visual study of handoffs, feedback loops and the small gestures that make collaboration legible.</p>
+            </div>
+            <div class="paper-meta">
+              <span class="paper-badge">VISUAL STUDY · 2025</span>
+              <div class="paper-links"><a href="photos.html#mechanica">VIEW</a></div>
+            </div>
+          </article>
+          <article class="paper-row">
+            <span class="paper-number">03</span>
+            <div>
+              <h3>Visual2Craft: Incremental Blueprint Construction</h3>
+              <p>A Minecraft-oriented construction workflow exploring how visual evidence, structured state and reversible edits can coexist.</p>
+            </div>
+            <div class="paper-meta">
+              <span class="paper-badge">MINECRAFT TOOL · 2026</span>
+              <div class="paper-links"><a href="index.html#playground">PROJECT</a></div>
+            </div>
+          </article>
+          <article class="paper-row">
+            <span class="paper-number">04</span>
+            <div>
+              <h3>Photography / Art / Design</h3>
+              <p>A slower collection of images, objects and visual fragments gathered around material, place and the act of looking again.</p>
+            </div>
+            <div class="paper-meta">
+              <span class="paper-badge">ARCHIVE · ONGOING</span>
+              <div class="paper-links"><a href="photos.html">ENTER</a></div>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
   <button class="back-to-top" type="button" aria-label="Back to top" inert><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d="M6 12l6-6 6 6M12 6v13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
 </body>
 </html>

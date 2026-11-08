@@ -322,21 +322,30 @@
     });
   }
 
+  const copyEmailToClipboard = (email) => async (event) => {
+    event.preventDefault();
+    hideConstructionNotice();
+    try {
+      await navigator.clipboard.writeText(email);
+      toast.textContent =
+        window.siteI18n?.t("portfolio_copied") || "Email copied";
+    } catch {
+      toast.textContent = email;
+    }
+    hideConstructionNotice();
+    toast.classList.add("visible");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove("visible"), 910);
+  };
+
   document
     .querySelector("[data-copy-email]")
-    ?.addEventListener("click", async () => {
-      hideConstructionNotice();
-      try {
-        await navigator.clipboard.writeText("luoyuhua2006@gmail.com");
-        toast.textContent =
-          window.siteI18n?.t("portfolio_copied") || "Email copied";
-      } catch {
-        toast.textContent = "luoyuhua2006@gmail.com";
-      }
-      hideConstructionNotice();
-      toast.classList.add("visible");
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => toast.classList.remove("visible"), 910);
+    ?.addEventListener("click", copyEmailToClipboard("luoyuhua2006@gmail.com"));
+  document
+    .querySelector("[data-copy-email-value]")
+    ?.addEventListener("click", (event) => {
+      const email = event.currentTarget.dataset.copyEmailValue;
+      copyEmailToClipboard(email)(event);
     });
 
   const searchInput = document.getElementById("portfolio-search");

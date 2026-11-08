@@ -16,7 +16,7 @@
     "assets/papers/RELAY2.webp",
     "assets/papers/RELAY3.webp",
     "assets/papers/Visual2Craft.webp?v=3",
-    "assets/playground/cover/V2C.webp",
+    "assets/misc/cover/V2C.webp",
     "assets/icons/portfolio.svg",
     "assets/photos/1materia/02-display-600.webp",
     "assets/photos/1materia/02-display-1200.webp",
