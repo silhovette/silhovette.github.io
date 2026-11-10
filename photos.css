@@ -298,7 +298,7 @@ html.photo-enhanced .is-visible .chapter-copy p {opacity:1;transform:none;}
  --display:var(--font-display);
  --text:var(--font-body);
 }
-@font-face {font-family:'Space Grotesk';src:url('assets/fonts/SpaceGrotesk-Variable.ttf') format('truetype');font-weight:300 700;font-display:swap;}
+@font-face {font-family:'Space Grotesk';src:url('assets/fonts/SpaceGrotesk-Variable.woff2') format('woff2'),url('assets/fonts/SpaceGrotesk-Variable.ttf') format('truetype');font-weight:300 700;font-display:swap;}
 @font-face {font-family:'Instrument Sans';src:url('assets/fonts/InstrumentSans-Latin.woff2') format('woff2');font-weight:400 700;font-display:swap;}
 body.portfolio-home {isolation:isolate;font:15.5px/1.75 var(--font-body);color:var(--ink);background:var(--page-background);}
 body::before,body::after {display:none;}

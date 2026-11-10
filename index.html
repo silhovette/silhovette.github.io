@@ -2,7 +2,7 @@
 <html lang="en" data-page-fade="complete">
   <head>
     <meta charset="UTF-8" />
-    <script src="image-preload.js?v=3"></script>
+    <script src="image-preload.js?v=4" defer></script>
     <script src="theme.js?v=1"></script>
     <style id="page-fade-style">
       html[data-page-fade] { background: #f5f3ec; }
@@ -50,18 +50,17 @@
     <link rel="icon" type="image/svg+xml" href="assets/icons/portfolio.svg" />
     <link
       rel="preload"
-      href="assets/fonts/SpaceGrotesk-Variable.ttf"
+      href="assets/fonts/SpaceGrotesk-Variable.woff2"
       as="font"
-      type="font/ttf"
+      type="font/woff2"
       crossorigin
     />
     <link rel="preload" href="assets/fonts/InstrumentSans-Latin.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="stylesheet" href="fonts.css?v=2" />
-  <link rel="stylesheet" href="portfolio.css?v=59" />
+    <link rel="stylesheet" href="fonts.css?v=3" />
+  <link rel="stylesheet" href="portfolio.css?v=63" />
     <script src="timeline-events.js?v=5" defer></script>
     <script src="languages.js?v=39" defer></script>
     <script src="portfolio.js?v=17" defer></script>
-    <script src="sculpture.js?v=37" defer></script>
     <script src="scroll-reveal.js?v=7" defer></script>
     <script src="timeline-preview.js?v=6" defer></script>
   <link rel="stylesheet" href="scrollbars.css?v=2" />
@@ -76,16 +75,6 @@
       <div class="header-inner wrap">
         <div class="header-left">
         <span class="header-clock mono" aria-label="Shanghai local time">SHANGHAI <span data-shanghai-time>—:—</span></span>
-        <div class="theme-switcher" data-theme-switcher>
-          <button class="theme-trigger" type="button" aria-label="Choose theme" aria-haspopup="menu" aria-expanded="false">
-            <span class="theme-trigger__icon" aria-hidden="true"></span>
-          </button>
-          <div class="theme-menu" role="menu" aria-label="Theme">
-            <button type="button" role="menuitemradio" aria-checked="false" data-theme-choice="original">Original</button>
-            <button type="button" role="menuitemradio" aria-checked="false" data-theme-choice="inverse">Inverse</button>
-            <button type="button" role="menuitemradio" aria-checked="false" data-theme-choice="legacy">Legacy</button>
-          </div>
-        </div>
       </div>
         <nav class="portfolio-nav" id="portfolio-nav" aria-label="Primary navigation">
           <a href="#about" data-i18n="about">About</a>
@@ -133,15 +122,12 @@
               <a href="https://orcid.org/0009-0008-1363-1932" target="_blank" rel="noopener noreferrer">ORCID</a>
             </nav>
           </div>
-          <div class="orbital-art">
-            <canvas
-              id="agent-orbit"
-              aria-label="Torus particle sculpture. Click or press Enter to transform."
-              role="button"
-              tabindex="0"
-              aria-busy="false"
-            ></canvas>
-            <span class="sr-only" data-orbit-status role="status" aria-live="polite"></span>
+          <div class="tree-art">
+            <iframe
+              class="pixel-tree"
+              src="assets/index/PixelTree.html?embed=1&v=2"
+              title="Interactive pixel autumn tree"
+            ></iframe>
           </div>
         </div>
         <div class="cover-bottom">
@@ -354,9 +340,9 @@
           <article class="project-card">
             <a href="works.html#relay" aria-label="RELAY: A Heterogeneous Multi-Agent Architecture for Long-Horizon Dynamic Coordination and Multi-Device Control: project details"
               ><div class="project-visual project-visual--image relay-carousel" data-relay-carousel>
-                <img src="assets/papers/RELAY1.webp" alt="RELAY project preview" loading="eager" decoding="async" />
-                <img src="assets/papers/RELAY2.webp" alt="" loading="eager" decoding="async" aria-hidden="true" />
-                <img src="assets/papers/RELAY3.webp" alt="" loading="eager" decoding="async" aria-hidden="true" />
+                <img src="assets/papers/RELAY1.webp" alt="RELAY project preview" loading="lazy" decoding="async" />
+                <img src="assets/papers/RELAY2.webp" alt="" loading="lazy" decoding="async" aria-hidden="true" />
+                <img src="assets/papers/RELAY3.webp" alt="" loading="lazy" decoding="async" aria-hidden="true" />
               </div>
               <div class="project-info">
                 <div class="project-title-row">
@@ -522,7 +508,7 @@
         <div class="playground-grid playground-grid--pair">
           <a class="play-card" href="photos.html?from=home"
             ><div class="play-image">
-              <img src="assets/photos/1materia/hero-banner-1800.webp" alt="Photography, art and design collection" width="1800" height="529" loading="eager" decoding="async" />
+              <img src="assets/photos/1materia/hero-banner-1800.webp" alt="Photography, art and design collection" width="1800" height="529" loading="lazy" decoding="async" />
             </div>
             <h3 data-i18n="photo_collection">Aesthetics</h3>
             <p data-i18n="portfolio_photo_meta">
@@ -543,7 +529,7 @@
               MODS &amp; CUSTOM LIVERIES / AZX777
             </p></a
           ></template><a class="play-card" href="misc.html" data-playground-paused
-            ><div class="play-image play-image--chartflow"><img src="assets/misc/cover/V2C.webp" alt="Welcome to ChartFlow" width="3999" height="2249" loading="eager" decoding="async" /></div>
+            ><div class="play-image play-image--chartflow"><img src="assets/misc/cover/V2C.webp" alt="Welcome to ChartFlow" width="3999" height="2249" loading="lazy" decoding="async" /></div>
             <h3 data-i18n="off_script">Miscellaneous</h3>
             <p data-i18n="portfolio_game_meta">
               PLAY / BUILD / EXPLORE
@@ -589,14 +575,6 @@
         </div>
       </section>
     </main>
-    <dialog class="sculpture-gallery" id="sculpture-gallery" aria-labelledby="sculpture-gallery-title">
-      <div class="sculpture-gallery__heading">
-        <div>
-          <h2 id="sculpture-gallery-title" tabindex="-1" autofocus>Particle Sculptures</h2>
-        </div>
-      </div>
-      <div class="sculpture-gallery__grid"></div>
-    </dialog>
     <dialog
       class="figure-dialog"
       id="figure-dialog"

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-    <script src="../image-preload.js?v=3"></script>
+    <script src="../image-preload.js?v=4" defer></script>
   <script src="../theme.js?v=1"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta
@@ -25,16 +25,6 @@
         <label class="sr-only" for="site-search-input">Search this page</label>
         <input id="site-search-input" type="search" placeholder="Search" autocomplete="off" />
         <div class="site-search__results" role="listbox" aria-label="Search results"></div>
-      </div>
-      <div class="theme-switcher" data-theme-switcher>
-        <button class="theme-trigger" type="button" aria-label="Choose theme" aria-haspopup="menu" aria-expanded="false">
-          <span class="theme-trigger__icon" aria-hidden="true"></span>
-        </button>
-        <div class="theme-menu" role="menu" aria-label="Theme">
-          <button type="button" role="menuitemradio" aria-checked="false" data-theme-choice="original">Original</button>
-          <button type="button" role="menuitemradio" aria-checked="false" data-theme-choice="inverse">Inverse</button>
-          <button type="button" role="menuitemradio" aria-checked="false" data-theme-choice="legacy">Legacy</button>
-        </div>
       </div>
       <div class="nav-links">
         <a href="#about">About</a>

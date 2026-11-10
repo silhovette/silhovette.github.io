@@ -1,0 +1,933 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<meta name="theme-color" content="#F8F7F3" />
+<title>Terracotta Tree — Layered Canopy Edition V13</title>
+<style>
+  *{box-sizing:border-box}
+  html,body{width:100%;min-height:100%;margin:0}
+  body{background:#f8f7f3}
+  .frame{min-height:100svh;display:flex;align-items:center;justify-content:center}
+  .stage{width:min(100%,calc(100svh * 600 / 360));aspect-ratio:600/360;cursor:grab;touch-action:none;user-select:none}
+  .stage.grabbing{cursor:grabbing}
+  canvas{width:100%;height:100%;image-rendering:pixelated;display:block;pointer-events:none}
+  body.embed{background:transparent}
+  body.embed .stage{width:100%}
+</style>
+</head>
+<body>
+<main class="frame">
+  <div class="stage" id="stage" role="img" aria-label="一棵陶土红色的像素秋树，可拖动树冠与枝叶互动">
+    <canvas id="scene" width="600" height="360"></canvas>
+  </div>
+</main>
+<script>
+/*
+ * TERRACOTTA TREE · Layered Canopy Edition
+ * An original procedural pixel tree with articulated branches, distributed
+ * canopy foliage, travelling wind waves, and individual tumbling leaves.
+ * The bark uses a 1-bit alpha mask for genuinely sharp pixel boundaries.
+ * Pixel-exact CPU foliage compositing replaces thousands of per-frame canvas
+ * drawImage calls without changing geometry, color, physics or painter order.
+ * Runs fully offline. Embed with PixelTree.html?embed=1
+ */
+(() => {
+'use strict';
+const W=600,H=360;
+const stage=document.querySelector('#stage');
+const canvas=document.querySelector('#scene');
+let ctx=canvas.getContext('2d',{alpha:true});
+// The foreground context stays untouched while the wood is rasterized separately.
+const displayCtx=ctx;
+const barkCanvas=document.createElement('canvas');
+barkCanvas.width=W;barkCanvas.height=H;
+const barkCtx=barkCanvas.getContext('2d',{alpha:true,willReadFrequently:true});
+barkCtx.imageSmoothingEnabled=false;
+const embedded=new URLSearchParams(location.search).has('embed');
+if(embedded) document.body.classList.add('embed');
+const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+ctx.imageSmoothingEnabled=false;
+let seed=0xb9472c26;
+function rand(){seed=(Math.imul(seed,1664525)+1013904223)|0;return(seed>>>0)/4294967296}
+const r=(a,b)=>a+(b-a)*rand();
+const ri=(a,b)=>Math.floor(r(a,b+1));
+const clamp=(x,a,b)=>Math.min(b,Math.max(a,x));
+const choose=a=>a[Math.floor(rand()*a.length)];
+const PI=Math.PI;
+// Autumn palette restored closer to V9; depth now comes from canopy structure
+// and layered shading rather than from globally lightened leaves.
+const P={
+  darkest:'#763026',deep:'#913629',shadow:'#a33f2d',red:'#B9472C',
+  ember:'#c95a36',copper:'#d47046',orange:'#de8555',light:'#e7a172',
+  shine:'#edb58a',wood:'#2D2928',grass:'#78825b',grassLt:'#a1a574',soil:'#b9a789'
+};
+function block(x,y,w,h,color){ctx.fillStyle=color;ctx.fillRect(Math.round(x),Math.round(y),Math.max(1,Math.round(w)),Math.max(1,Math.round(h)))}
+function segment(x1,y1,x2,y2,width,color){
+  ctx.strokeStyle=color;ctx.lineWidth=width;ctx.lineCap='square';
+  ctx.beginPath();ctx.moveTo(Math.round(x1),Math.round(y1));ctx.lineTo(Math.round(x2),Math.round(y2));ctx.stroke();
+}
+const nodeList=[];
+const root={x:303,y:298,rx:303,ry:298,restA:-PI/2,worldA:-PI/2,angle:0,v:0,children:[],depth:0,parent:null};
+function add(parent,x,y,thickness,kind='limb'){
+ const dx=x-parent.rx,dy=y-parent.ry;
+ const node={parent,rx:x,ry:y,x,y,restA:Math.atan2(dy,dx),len:Math.hypot(dx,dy),angle:0,v:0,
+   worldA:Math.atan2(dy,dx),thickness,kind,children:[],depth:parent.depth+1,
+   random:r(-.5,.5),frequency:r(.6,1.8),phase:r(0,PI*2),id:nodeList.length};
+ nodeList.push(node);parent.children.push(node);return node;
+}
+function path(from,positions,thickness){
+ let p=from,arr=[];for(let i=0;i<positions.length;i++){
+   const t=thickness*Math.pow(0.79,i);
+   p=add(p,positions[i][0],positions[i][1],Math.max(.9,t),'limb');
+   arr.push(p);
+ }return arr;
+}
+const trunk=[];
+let p=root;
+for(const [x,y,w] of [[302,279,11],[305,257,10],[304,233,8],[309,209,7],[306,186,6],[304,163,4.5],[310,143,3.1]]){
+ p=add(p,x,y,w,'trunk');trunk.push(p);
+}
+// Unevenly staged primary scaffolds and offshoots: no paired left/right forks.
+// The key change in v6 is structural, not a distortion applied to the animation.
+const limbs=[
+ // First branches originate at different heights and grow at different pitches.
+ {id:'lowLeft', a:0, pts:[[281,272],[252,259],[217,252],[173,240]],w:6.15},
+ {id:'lowRight',a:1, pts:[[328,246],[361,226],[397,218],[446,198]],w:5.35},
+ {id:'midLeft', a:2, pts:[[286,216],[261,191],[238,166],[207,139],[173,125]],w:5.30},
+ {id:'midRight',a:3, pts:[[330,209],[355,184],[381,151],[406,126],[435,117]],w:5.65},
+ {id:'upperLeft', a:4, pts:[[290,165],[275,137],[260,103],[249,67]],w:3.85},
+ {id:'upperRight',a:5, pts:[[325,149],[347,116],[374,92],[404,79]],w:3.60},
+ {id:'crown',a:6, pts:[[311,118],[303,92],[291,62]],w:3.05},
+ // Forks grow *from existing branch nodes*, not from mirrored trunk levels.
+ {id:'lowLeftFork',from:'lowLeft',at:1,pts:[[238,228],[213,203],[184,191]],w:3.65},
+ {id:'lowRightFork',from:'lowRight',at:2,pts:[[421,236],[452,230]],w:2.6},
+ {id:'midLeftFork',from:'midLeft',at:1,pts:[[228,202],[197,191],[159,177]],w:3.65},
+ {id:'midRightFork',from:'midRight',at:1,pts:[[375,202],[410,204],[456,194]],w:3.0},
+ {id:'upperLeftFork',from:'upperLeft',at:1,pts:[[246,121],[221,106],[197,96]],w:2.75},
+ {id:'upperRightFork',from:'upperRight',at:0,pts:[[342,157],[365,145],[390,135]],w:2.5},
+ {id:'crownFork',from:'crown',at:1,pts:[[323,80],[337,60]],w:2.35},
+];
+const tips=[];
+const branchChains=[];
+const twigChains=[];
+const limbLookup=new Map();
+for(const [i,l] of limbs.entries()){
+ const anchor=l.from?limbLookup.get(l.from)?.[l.at]:trunk[l.a];
+ if(!anchor)throw new Error('Missing tree branch anchor: '+l.id);
+ const arr=path(anchor,l.pts,l.w);
+ limbLookup.set(l.id,arr);
+ branchChains.push({nodes:[anchor,...arr],base:l.w,index:i});
+ // Fine twig sprays remain independently animated and stay rooted in their branch.
+ for(let j=1;j<arr.length;j++){
+   const from=arr[j];
+   const n=j===arr.length-1?7:j===arr.length-2?5:3;
+   for(let k=0;k<n;k++){
+     const radius=j===arr.length-1?r(21,39):r(12,27);
+     const theta=r(0,2*PI);
+     const ox=Math.cos(theta)*radius;
+     const oy=Math.sin(theta)*radius*.77-r(1,6);
+     const tx=clamp(from.rx+ox,137,467);
+     const ty=clamp(from.ry+oy,58,246);
+     const mid=add(from,from.rx+(tx-from.rx)*.49+r(-4,4),from.ry+(ty-from.ry)*.49+r(-3,3),1.65,'twig');
+     const tip=add(mid,tx,ty,.85,'twig');
+     twigChains.push([from,mid,tip]);
+     tips.push({node:tip,layer:(i+k+j)%6<2?-1:1,weight:j===arr.length-1?1:.82,phase:r(0,PI*2),rx:r(15,23),ry:r(11,18)});
+   }
+ }
+}
+// Interior leaves connect the crown; the root and lower trunk stay visible.
+for(let i=0;i<22;i++){
+ const a=trunk[ri(3,6)];
+ const x=clamp(a.rx+r(-56,56),224,393),y=clamp(a.ry+r(-48,24),79,217);
+ const mid=add(a,a.rx+(x-a.rx)*.47,a.ry+(y-a.ry)*.46,1.4,'twig');
+ const tip=add(mid,x,y,.75,'twig');
+ twigChains.push([a,mid,tip]);
+ tips.push({node:tip,layer:i%3===0?-1:1,weight:.9,phase:r(0,PI*2),rx:r(16,25),ry:r(12,19)});
+}
+// Fill the open middle of the tree by growing secondary sprays from real joints.
+// This is a layered crown, not a static sprite: each new spray follows its own
+// articulated twig, so the previously sparse fork areas remain responsive.
+const crownBridges=[
+ [244,163,'midLeft',2,-1],[260,147,'upperLeft',1,1],
+ [274,133,'upperLeft',0,-1],[291,142,'crown',0,1],
+ [315,131,'crown',0,-1],[339,138,'upperRight',0,1],
+ [362,158,'midRight',2,-1],[388,181,'midRight',2,1],
+ [228,184,'midLeftFork',0,1],[252,190,'midLeft',1,-1],
+ [273,179,'midLeft',0,1],[295,171,'crown',0,-1],
+ [315,173,'midRight',0,1],[337,182,'midRight',1,-1],
+ [353,199,'midRightFork',0,1],[244,212,'lowLeftFork',0,-1],
+ [265,208,'midLeft',0,1],[286,204,'midLeft',0,1],
+ [307,194,'midRight',0,-1],[326,213,'lowRight',0,1],
+ [346,229,'lowRight',1,-1],[276,229,'lowLeft',0,1],
+ [298,222,'lowLeft',0,-1],[316,239,'lowRight',0,1],
+ [231,228,'lowLeftFork',0,-1],[375,222,'midRightFork',0,1],
+ [276,158,'upperLeft',0,1],[336,156,'upperRight',0,-1],
+ [294,113,'crown',1,1],[318,112,'crownFork',0,-1],
+ [330,95,'crownFork',0,-1],[348,98,'upperRight',1,1],
+ [362,108,'upperRight',1,-1],[345,118,'crownFork',0,1],
+ [250,242,'lowLeft',1,1],[361,246,'lowRight',1,-1]
+];
+for(const [x,y,id,index,layer] of crownBridges){
+ const anchor=limbLookup.get(id)[index];
+ const mid=add(anchor,anchor.rx+(x-anchor.rx)*.53+r(-3,3),anchor.ry+(y-anchor.ry)*.53+r(-3,3),1.35,'twig');
+ const tip=add(mid,x,y,.8,'twig');
+ twigChains.push([anchor,mid,tip]);
+ tips.push({node:tip,layer,weight:r(.97,1.17),phase:r(0,PI*2),rx:r(19,26),ry:r(13,20),bridge:true});
+}
+// Irregular shadow-filled recesses, all attached to the existing skeletal limbs.
+// Drawn behind the old foliage AND the wood. They fill openings without putting
+// generic dark blobs over branches or disturbing the front-lit crown silhouette.
+const understoryPositions=[
+ [219,184,'midLeftFork',0,21,14],[247,174,'midLeft',1,23,17],
+ [262,193,'midLeft',1,22,17],[278,157,'midLeft',2,20,17],
+ [290,184,'crown',0,23,17],[315,156,'crown',0,25,18],
+ [333,173,'midRight',0,24,18],[349,189,'midRight',1,23,18],
+ [377,196,'midRightFork',0,25,18],[402,210,'lowRight',2,23,15],
+ [343,213,'lowRight',0,25,17],[308,218,'lowRight',0,21,15],
+ [276,219,'lowLeft',0,24,17],[253,225,'lowLeftFork',0,23,14],
+ [222,214,'lowLeftFork',1,24,14],[187,204,'midLeftFork',1,22,14],
+ [256,129,'upperLeft',1,20,15],[286,119,'crown',0,22,16],
+ [322,115,'crown',1,23,16],[357,133,'upperRight',0,22,16],
+ [387,160,'midRight',2,24,17],[414,184,'midRightFork',1,22,14],
+ [241,204,'lowLeftFork',0,22,16],[365,224,'lowRight',1,22,16]
+];
+for(const [x,y,id,index,rx,ry] of understoryPositions){
+ const anchor=limbLookup.get(id)?.[index];
+ if(!anchor)throw new Error('Missing shadow foliage anchor: '+id);
+ const mid=add(anchor,anchor.rx+(x-anchor.rx)*.54,anchor.ry+(y-anchor.ry)*.54,1.15,'twig');
+ const tip=add(mid,x,y,.72,'twig');
+ twigChains.push([anchor,mid,tip]);
+ tips.push({node:tip,layer:-2,weight:r(.89,1.12),phase:r(0,PI*2),rx,ry,understory:true});
+}
+// Each foliage group is a spray of *individually animated*, small, hard-edged leaves.
+// Unlike a pre-rendered sprite, this means the silhouette keeps changing in the wind.
+const sprays=[];
+// A regrow advances the foliage generation instead of visiting every leaf.
+// Only tiles changed by shedding ever need restoring.
+let foliageGeneration=1;
+const changedTiles=new Set();
+const palette=[P.darkest,P.deep,P.shadow,P.red,P.ember,P.copper,P.orange,P.light,P.shine];
+// Deep interior foliage is a second material palette, not a dark transparent
+// overlay. This keeps fully opaque, crisp one-pixel edges when the tree moves.
+const innerPalette=['#4d241e','#60271e','#702b21','#7e3024','#8c3528','#9b3b29','#a9432d','#b84c32','#c75a37'];
+const leafCount=[96,140];
+for(let s=0;s<tips.length;s++){
+ const t=tips[s],leaves=[];
+ const count=Math.round(r(...leafCount)*(t.weight+.02)*(t.bridge?1.08:1)*(t.understory?1.08:1));
+ // Each spray has a dominant tone, but front/back, top/bottom, interior/exterior
+ // and local canopy pockets all shift its shade. This gives volume at small size.
+ const px=t.node.rx,py=t.node.ry;
+ const crownHeight=clamp((240-py)/174,0,1);
+ const sideLight=clamp((302-px)/232,-1,1);
+ const shadePatch=1.02*Math.sin(px*.041+py*.016)+.68*Math.cos(py*.077-px*.027);
+ const layerBias=t.layer===-2?-1.65:t.layer===-1?-1.48:.12;
+ const bridgeBias=t.bridge?.12:0;
+ const clusterTone=clamp(2.65+layerBias+crownHeight*1.35+sideLight*.19+shadePatch*.62+bridgeBias+r(-.6,.6),.35,7.15);
+ // More shade in low/inward-facing sprays, coherent per spray instead of random
+ // isolated black pixels. Shadow depth is stronger in the back-layer cavities.
+ const inward=clamp(1-Math.abs(px-301)/184,0,1);
+ const lowCrown=clamp((py-114)/143,0,1);
+ const shadowGroup=clamp((t.layer===-2?.94:t.layer===-1?.50:.07)+.25*lowCrown+.14*inward+r(-.09,.09),0,1);
+ for(let j=0;j<count;j++){
+   const a=r(0,2*PI),rad=Math.sqrt(rand());
+   // Lopsided lobes and tiny irregular holes generate maple-like broken edges.
+   const scallop=1+.16*Math.sin(3*a+s*.73)+.13*Math.cos(5*a+s*.31);
+   const x=Math.cos(a)*t.rx*rad*scallop;
+   const y=Math.sin(a)*t.ry*rad*(1+.11*Math.sin(4*a));
+   // Keep exterior edges broken, but close up the inner crown around branches.
+   if(rand()<(t.bridge?.018:.032) && rad>.86)continue;
+   const interiorDark=rad<.54?-.32:rad>.82?.23:0;
+   const topLight=-y/t.ry*.74;
+   const sideShift=-x/t.rx*.18;
+   const underside=clamp((y/t.ry+.1)*.42,0,.52);
+   const lightIndex=clamp(Math.floor(clusterTone+topLight+sideShift+interiorDark-underside+r(-1.05,1.12)),0,8);
+   const occluded=(rad<.76?1:.73)*(1+underside*.4);
+   const col=(rand()<shadowGroup*occluded ? innerPalette : palette)[lightIndex];
+   const size=r(0,1);
+   leaves.push({ox:x,oy:y,col,tone:lightIndex,
+     size:size<.10?1:size<.51?2:size<.92?3:4,shape:ri(0,4),phase:r(0,PI*2),
+     flutter:r(3.0,7.0),drift:r(.58,1.25),shift:r(.7,1.35)});
+ }
+ const tones=Array.from({length:9},()=>[]);
+ for(const l of leaves)tones[l.tone].push(l);
+ sprays.push({...t,leaves,tones});
+}
+const deepSprays=sprays.filter(s=>s.layer===-2).sort((a,b)=>a.node.ry-b.node.ry||a.node.rx-b.node.rx);
+const backSprays=sprays.filter(s=>s.layer===-1).sort((a,b)=>a.node.ry-b.node.ry||a.node.rx-b.node.rx);
+const frontSprays=sprays.filter(s=>s.layer===1).sort((a,b)=>a.node.ry-b.node.ry||a.node.rx-b.node.rx);
+// Tiny foliage tiles are independent moving leaflets, not one rigid crown image.
+// Every tile is 11x11 px: thousands of tiny elastic pieces can flutter smoothly.
+function tilePixel(c,x,y,w,h,color){c.fillStyle=color;c.fillRect(Math.round(x),Math.round(y),Math.round(w),Math.round(h))}
+const tileCanvas=document.createElement('canvas');
+tileCanvas.width=17;tileCanvas.height=17;
+const tileCtx=tileCanvas.getContext('2d',{willReadFrequently:true});
+function rebuildTile(tile){
+ const c=tileCtx;c.clearRect(0,0,17,17);
+ for(const l of tile.leaves){
+   if(l.gone===foliageGeneration)continue;
+   const x=Math.round(l.ox-tile.baseX)+3,y=Math.round(l.oy-tile.baseY)+3,sz=l.size;
+   if(l.shape===0)tilePixel(c,x,y,sz,sz,l.col);
+   else if(l.shape===1){tilePixel(c,x,y,sz,sz,l.col);if(sz>2)tilePixel(c,x+1,y-1,1,1,l.col)}
+   else if(l.shape===2){tilePixel(c,x,y,sz+1,1,l.col);tilePixel(c,x+1,y+1,sz>1?2:1,1,l.col)}
+   else if(l.shape===3){tilePixel(c,x,y,1,sz+1,l.col);tilePixel(c,x-1,y+1,2,1,l.col)}
+   else{tilePixel(c,x,y,sz,2,l.col);if(sz>2)tilePixel(c,x+2,y-1,1,1,l.col)}
+ }
+ compileTile(tile);
+}
+function pixelCurve(a,b,c){
+ const dx=c.x-a.x,dy=c.y-a.y;
+ const steps=Math.max(10,Math.ceil(Math.hypot(dx,dy)/1.2));
+ let px=1e9,py=1e9;
+ for(let i=0;i<=steps;i++){
+   const t=i/steps,mt=1-t;
+   const x=mt*mt*a.x+2*mt*t*b.x+t*t*c.x;
+   const y=mt*mt*a.y+2*mt*t*b.y+t*t*c.y;
+   const rx=Math.round(x),ry=Math.round(y);
+   if(rx===px&&ry===py)continue;
+   ctx.fillRect(rx,ry,1,1);px=rx;py=ry;
+ }
+}
+for(const s of sprays){
+ const bins=new Map();s.tiles=[];s.solo=[];
+ for(const l of s.leaves){
+   if(rand()<.09){s.solo.push(l);continue}
+   const bx=Math.floor((l.ox+s.rx)/11),by=Math.floor((l.oy+s.ry)/11),key=bx+','+by;
+   let tile=bins.get(key);
+   if(!tile){
+     const baseX=bx*11-s.rx,baseY=by*11-s.ry;
+     tile={baseX,baseY,x:baseX+5.5,y:baseY+5.5,phase:r(0,PI*2),rate:r(3.2,6.6),leaves:[]};
+     bins.set(key,tile);s.tiles.push(tile);
+   }
+   l.tile=tile;tile.leaves.push(l);
+ }
+ for(const tile of s.tiles)rebuildTile(tile);
+}
+// Pixel-exact foliage compositor. Each tiny tile is flattened ONCE into its
+// original opaque pixels; its integer position and layering are still evaluated
+// every frame. One 600x360 upload replaces thousands of 2D drawImage calls.
+// Colors/alpha and painter's order remain unchanged (no approximate sprites).
+const foliageCanvas=document.createElement('canvas');
+foliageCanvas.width=W;foliageCanvas.height=H;
+const foliageCtx=foliageCanvas.getContext('2d',{alpha:true});
+foliageCtx.imageSmoothingEnabled=false;
+const foliageImage=foliageCtx.createImageData(W,H);
+const foliagePixels=new Uint32Array(foliageImage.data.buffer);
+function packedColor(hex){
+ const c=parseInt(hex.substring(1),16);
+ return (0xff000000 | ((c&255)<<16) | (c&0x00ff00) | (c>>>16))>>>0;
+}
+for(const s of sprays){
+ for(const l of s.solo)l.pixelColor=packedColor(l.col);
+  for(const tile of s.tiles){
+    // Pixel-exact pristine tile, shared until the tile is actually modified.
+    // Restoring this typed-array reference requires no Canvas rasterization.
+    tile.pristinePixels=tile.pixelData;
+  }
+}
+function compileTile(tile){
+ const px=new Uint32Array(tileCtx.getImageData(0,0,17,17).data.buffer);
+ const out=[];
+ for(let y=0;y<17;y++)for(let x=0;x<17;x++){
+  const col=px[y*17+x];
+  if(col>>>24)out.push(y*W+x,col);
+ }
+ tile.pixelData=new Uint32Array(out);
+}
+function stampTile(tile,x,y){
+ const pixels=tile.pixelData;
+ if(x>=0&&y>=0&&x+17<=W&&y+17<=H){
+  const base=y*W+x;
+  for(let i=0;i<pixels.length;i+=2)foliagePixels[base+pixels[i]]=pixels[i+1];
+ }else{
+  for(let i=0;i<pixels.length;i+=2){
+   const dx=x+pixels[i]%W,dy=y+Math.floor(pixels[i]/W);
+   if(dx>=0&&dx<W&&dy>=0&&dy<H)foliagePixels[dy*W+dx]=pixels[i+1];
+  }
+ }
+}
+function foliageRect(x,y,w,h,c){
+ const x0=Math.max(0,x),x1=Math.min(W,x+w),y0=Math.max(0,y),y1=Math.min(H,y+h);
+ for(let yy=y0;yy<y1;yy++){
+  const a=yy*W;
+  for(let xx=x0;xx<x1;xx++)foliagePixels[a+xx]=c;
+ }
+}
+function stampSolo(x,y,l,stretch){
+ const xx=Math.round(x),yy=Math.round(y),size=l.size;
+ const w=Math.max(1,Math.round(size*stretch)),c=l.pixelColor;
+ switch(l.shape){
+  case 0: foliageRect(xx,yy,w,size,c);break;
+  case 1: foliageRect(xx,yy,size,w,c);if(size>2)foliageRect(xx+1,yy-1,1,1,c);break;
+  case 2: foliageRect(xx,yy,size+1,1,c);foliageRect(xx+1,yy+1,size>1?2:1,1,c);break;
+  case 3: foliageRect(xx,yy,1,size+1,c);foliageRect(xx-1,yy+1,2,1,c);break;
+  default: foliageRect(xx,yy,size,2,c);if(size>2)foliageRect(xx+2,yy-1,1,1,c);
+ }
+}
+// Falling particles remain lightweight; deposited leaves are painted once to an
+// accumulating raster so ground buildup has no per-frame particle draw cost.
+const flyers=[];
+const pileCanvas=document.createElement('canvas');
+pileCanvas.width=W;pileCanvas.height=H;
+const pileCtx=pileCanvas.getContext('2d',{alpha:true});
+pileCtx.imageSmoothingEnabled=false;
+const pileDepth=new Uint16Array(W);
+// The physical floor is perfectly horizontal, including outside the visible
+// leaf carpet; the floor itself is invisible in the artwork.
+const FLOOR_Y=300;
+const LITTER_VISUAL_RISE=1;
+const pileBase=new Float32Array(W);
+pileBase.fill(FLOOR_Y);
+const initialPileDepth=new Uint16Array(W);
+const initialPileCanvas=document.createElement('canvas');
+initialPileCanvas.width=W;initialPileCanvas.height=H;
+const initialPileCtx=initialPileCanvas.getContext('2d',{alpha:true});
+initialPileCtx.imageSmoothingEnabled=false;
+// Dedicated deterministic random stream: constructing the initial litter must
+// not perturb foliage, wind, particle physics or the random sequence elsewhere.
+let litterSeed=0xB9472C59;
+function litterRand(){litterSeed=(Math.imul(litterSeed,1664525)+1013904223)|0;return(litterSeed>>>0)/4294967296}
+const litterColors=[P.darkest,P.deep,P.shadow,P.red,P.ember,P.copper,P.orange,P.light,P.shine];
+// Original ground litter is visual-only: it is NOT in pileDepth or pileSurface.
+// Its visual baseline sits 6px above the old V12 image, covering the trunk base.
+for(let x=203;x<=403;x++){
+  const dx=x-303;
+  const main=Math.exp(-(dx*dx)/(64*64));
+  const left=Math.exp(-Math.pow((x-258)/33,2));
+  const right=Math.exp(-Math.pow((x-348)/30,2));
+  const centerCover=Math.exp(-(dx*dx)/(20*20));
+  const edge=Math.min(1,(x-202)/17,(404-x)/18);
+  const texture=.72*Math.sin(x*.137)+.53*Math.cos(x*.29+1.3);
+  let height=Math.round(Math.max(0,edge)*(1.0+3.6*main+.65*left+.75*right+.95*centerCover+texture+1.45*litterRand()));
+  height=Math.max(0,Math.min(height,9));
+  initialPileDepth[x]=height;
+  for(let row=0;row<height;row++){
+    const choice=row>=height-2 ? 2+Math.floor(litterRand()*7) : Math.floor(litterRand()*7);
+    initialPileCtx.fillStyle=litterColors[choice];
+    initialPileCtx.fillRect(x,FLOOR_Y-1-row-LITTER_VISUAL_RISE,1,1);
+  }
+}
+// The loose pre-existing flecks are painted only, with zero collision volume.
+for(let i=0;i<84;i++){
+  const x=207+Math.floor(litterRand()*192);
+  const cap=initialPileDepth[x];
+  if(!cap)continue;
+  const onTop=litterRand()<.35;
+  const y=FLOOR_Y-1-Math.floor(litterRand()*cap)-(onTop?1:0)-LITTER_VISUAL_RISE;
+  const c=litterColors[2+Math.floor(litterRand()*7)];
+  initialPileCtx.fillStyle=c;
+  initialPileCtx.fillRect(x,y,1,1);
+  // No collision geometry is added for this pre-painted leaf.
+}
+// New leaves start on an empty, perfectly horizontal floor. Neither the
+// original decorative litter nor the trunk contributes any collision volume.
+pileDepth.fill(0);
+// NEWLY fallen leaves form a physically supported, loose 1-D granular bed.
+// Original decorative litter and every part of the tree remain render-only.
+// In the previous algorithm a deposited leaf borrowed the MAX height of a
+// 3-5px footprint and drew only a horizontal top row. That created invisible
+// support columns, overhangs and long branch-like shapes after repeated drops.
+// Here each coloured pixel is one volume element, supported by the pixels
+// directly below it, with short-range gravity-driven relaxation.
+const pileColumns=Array.from({length:W},()=>[]);
+const MAX_PILE_DEPTH=68;
+const pileDirty=new Set();
+function pileSurface(x,radius=1){
+ // Retain the existing tiny 5%-core contact query: only accumulated fallen
+ // leaves and the invisible, level floor contribute to the height field.
+ const center=clamp(Math.round(x),0,W-1);
+ let top=FLOOR_Y;
+ for(let dx=-radius;dx<=radius;dx++){
+   const i=clamp(center+dx,0,W-1);
+   top=Math.min(top,FLOOR_Y-pileDepth[i]);
+ }
+ return top;
+}
+function pileHeight(x){return pileDepth[clamp(x,0,W-1)];}
+function shiftGrain(from,to){
+ const grain=pileColumns[from].pop();
+ pileColumns[to].push(grain);
+ pileDepth[from]--;pileDepth[to]++;
+ pileDirty.add(from);pileDirty.add(to);
+}
+function relaxPile(start){
+ // Angle of repose: neighbouring columns are never allowed to differ by more
+ // than one native canvas pixel. No bridges or isolated artificial towers.
+ // Work only near the deposited grain, so long-term piles remain inexpensive.
+ const work=[start-2,start-1,start,start+1,start+2];
+ let moves=0;
+ while(work.length && moves<190){
+   const x=work.pop();
+   if(x<1||x>=W-1||pileDepth[x]===0)continue;
+   const left=pileDepth[x-1],right=pileDepth[x+1],h=pileDepth[x];
+   if(h<=Math.min(left,right)+1)continue;
+   const to=left<right?x-1:right<left?x+1:(rand()<.5?x-1:x+1);
+   if(h-pileDepth[to]<=1)continue;
+   shiftGrain(x,to);moves++;
+   work.push(x-1,x,x+1,to-1,to,to+1);
+ }
+}
+function redrawPileDirty(){
+ // Rasterize only columns whose material has moved or grown; all unchanged
+ // deposits stay cached on pileCanvas, with no extra work in animation frames.
+ for(const x of pileDirty){
+   pileCtx.clearRect(x,0,1,FLOOR_Y+1);
+   const col=pileColumns[x];
+   for(let i=0;i<col.length;i++){
+     // A rare one-pixel gap inside deeper layers gives the loose-leaf texture
+     // while collision mass remains compact and connected to the floor.
+     const grain=col[i];
+     if(i>2 && grain.hole)continue;
+     pileCtx.fillStyle=grain.color;
+     pileCtx.fillRect(x,FLOOR_Y-1-i,1,1);
+   }
+ }
+ pileDirty.clear();
+}
+function depositLeaf(l){
+ const center=clamp(Math.round(l.contactX ?? l.x),2,W-3);
+ // Each leaf contributes a modest, approximately conserved amount of pixels.
+ // The old full-width horizontal ribbon made material appear from nowhere.
+ const pieces=l.size===1?1:l.size===2?2:3;
+ const drift=clamp(Math.round(l.vx*.5),-2,2);
+ for(let part=0;part<pieces;part++){
+   let x=clamp(center+drift+ri(-1,1),1,W-2);
+   // Prefer the low side of local slopes, as a light leaf naturally slides
+   // off a narrow peak rather than sticking on top of it.
+   for(let step=0;step<18;step++){
+     const h=pileDepth[x];
+     const left=pileHeight(x-1),right=pileHeight(x+1);
+     const low=Math.min(left,right);
+     if(h<=low+1)break;
+     const next=left<right?x-1:right<left?x+1:(rand()<.5?x-1:x+1);
+     if(next<1||next>=W-1||pileDepth[next]>=MAX_PILE_DEPTH)break;
+     x=next;
+   }
+   if(pileDepth[x]>=MAX_PILE_DEPTH){
+      const alternative=x+(pileDepth[x-1]<=pileDepth[x+1]?-1:1);
+      if(alternative>0 && alternative<W-1 && pileDepth[alternative]<MAX_PILE_DEPTH)x=alternative;
+      else continue;
+   }
+   const tint=part===0?l.color:(rand()<.72?l.color:palette[ri(1,7)]);
+   pileColumns[x].push({color:tint,hole:rand()<.055});
+   pileDepth[x]++;pileDirty.add(x);
+   relaxPile(x);
+ }
+ redrawPileDirty();
+}
+
+let time=0,last=0,wind=.32,clickGusts=[],globalFlow=0,frame=0,hoverFlow=0;
+let grabbed=null,pointer={x:0,y:0},prevPointer={x:0,y:0},touchVel=0;
+function windAt(x,y,t){
+ if(reduced && !grabbed)return 0;
+ const altitude=clamp((307-y)/240,.14,1.15);
+ const slow=Math.sin(t*.69-.35)*.24+Math.sin(t*.29+1.3)*.26;
+ const roll=Math.sin(t*1.57-x*.017+y*.011)*.25;
+ const wisp=Math.sin(t*2.92-x*.036-y*.026)*.14;
+ let total=wind*(.82+slow+roll+wisp);
+ for(const g of clickGusts){
+   const elapsed=t-g.start;
+   if(elapsed<0)continue;
+   // Wind front moves from one side of the canvas to the other, not all at once.
+   const waveX=g.dir===1?x:W-x;
+   const arrival=(waveX-110)/320*.58;
+   const age=elapsed-arrival;
+   if(age>0){const v=(1-Math.exp(-age*11))*Math.exp(-age*1.02);total+=g.dir*g.power*v;}
+ }
+ const cursorDistance=Math.hypot(x-pointer.x,y-pointer.y);
+ total+=hoverFlow*Math.exp(-cursorDistance*cursorDistance/(2*72*72))*.19;
+ return total*altitude;
+}
+function isAncestor(a,b){for(let p=b;p;p=p.parent)if(p===a)return true;return false;}
+function updateTree(dt){
+ for(const n of nodeList){
+   const local=windAt(n.rx,n.ry,time);
+   const isTrunk=n.kind==='trunk';
+   const d=n.depth;
+   let target=local*(isTrunk?.025+d*.0014:n.kind==='twig'?.165:.102);
+   // Travelling turbulent eddies hit thin twigs before slowly bending thick wood.
+   if(n.kind==='twig')target+=wind*.028*Math.sin(time*3.28-n.rx*.023+n.ry*.021+n.phase)*(.6+n.frequency*.22);
+   else if(!isTrunk)target+=wind*.006*Math.sin(time*1.6-n.rx*.013+n.phase);
+   if(grabbed){
+      const amount=clamp((pointer.x-grabbed.startX)/90,-.82,.82);
+      const pullY=clamp((pointer.y-grabbed.startY)/112,-.48,.48);
+      if(isAncestor(n,grabbed.node)){
+        const dist=grabbed.node.depth-n.depth;
+        target+=amount*(dist<2?.20:.09)*(.62+Math.min(n.depth,7)*.032)+pullY*.05;
+      }else if(isAncestor(grabbed.node,n)){
+        target+=amount*.15;
+      }
+   }
+   const stiffness=isTrunk?20+n.depth*1.75:n.kind==='twig'?44:30;
+   const damping=isTrunk?6.3:n.kind==='twig'?8.7:7.0;
+   n.v+=(target-n.angle)*stiffness*dt;
+   n.v*=Math.exp(-damping*dt);
+   n.angle=clamp(n.angle+n.v*dt,-.48,.48);
+   const offset=n.parent===root?0:n.parent.worldA-n.parent.restA;
+   n.worldA=n.restA+offset+n.angle;
+   n.x=n.parent.x+Math.cos(n.worldA)*n.len;
+   n.y=n.parent.y+Math.sin(n.worldA)*n.len;
+ }
+}
+// A branch is rendered as ONE continuously tapered organic ribbon.
+// The previous edition painted each physics segment separately, which created
+// hard squared joints, dark overlap bands and an unpleasant articulated look.
+// Smooth geometry changes the drawing, not the underlying wind simulation.
+const chainPoints=new WeakMap();
+function smoothChain(nodes,widths){
+ let pts=chainPoints.get(nodes);
+ if(!pts){pts=[];chainPoints.set(nodes,pts);}
+ let count=0;
+ for(let i=0;i<nodes.length-1;i++){
+   const p0=nodes[Math.max(0,i-1)],p1=nodes[i];
+   const p2=nodes[i+1],p3=nodes[Math.min(nodes.length-1,i+2)];
+   const d=Math.hypot(p2.x-p1.x,p2.y-p1.y);
+   const steps=Math.max(4,Math.ceil(d/2));
+   for(let j=0;j<steps;j++){
+     const t=j/steps,t2=t*t,t3=t2*t;
+     // Catmull-Rom through physical joints; first derivative stays continuous.
+     const tx=.5*(p2.x-p0.x),ty=.5*(p2.y-p0.y);
+     const ux=.5*(p3.x-p1.x),uy=.5*(p3.y-p1.y);
+     const h00=2*t3-3*t2+1,h10=t3-2*t2+t,h01=-2*t3+3*t2,h11=t3-t2;
+     const x=h00*p1.x+h10*tx+h01*p2.x+h11*ux;
+     const y=h00*p1.y+h10*ty+h01*p2.y+h11*uy;
+     const w=widths[i]+(widths[i+1]-widths[i])*(t*t*(3-2*t));
+     const point=pts[count]||(pts[count]={});
+     point.x=x;point.y=y;point.w=w;count++;
+   }
+ }
+ const n=nodes.at(-1);
+ const end=pts[count]||(pts[count]={});
+ end.x=n.x;end.y=n.y;end.w=widths.at(-1);
+ pts.length=count+1;
+ for(let i=0;i<pts.length;i++){
+   const prev=pts[Math.max(0,i-1)],next=pts[Math.min(pts.length-1,i+1)];
+   const dx=next.x-prev.x,dy=next.y-prev.y,dl=Math.hypot(dx,dy)||1;
+   pts[i].nx=-dy/dl;pts[i].ny=dx/dl;
+ }
+ return pts;
+}
+function ribbon(pts,thickness,fill,side=0){
+ ctx.beginPath();
+ // Both rails belong to the same polygon. No separate rectangular strokes.
+ for(let i=0;i<pts.length;i++){
+   const p=pts[i],w=p.w*thickness/2,offset=w*side;
+   const x=p.x+p.nx*(w+offset),y=p.y+p.ny*(w+offset);
+   const rx=Math.round(x),ry=Math.round(y); if(i===0)ctx.moveTo(rx,ry);else ctx.lineTo(rx,ry);
+ }
+ for(let i=pts.length-1;i>=0;i--){
+   const p=pts[i],w=p.w*thickness/2,offset=w*side;
+   ctx.lineTo(Math.round(p.x+p.nx*(-w+offset)),Math.round(p.y+p.ny*(-w+offset)));
+ }
+ ctx.closePath();ctx.fillStyle=fill;ctx.fill();
+}
+// Pixel Play-inspired graphic principle: wood reads as a single dark silhouette.
+// There is no outline, inside fill, highlight plane or bark-grain overlay.
+// Curves remain connected because every tapering path is filled in one pass;
+// the exact same ink is used across trunk, limbs, fine twigs and root flares.
+const WOOD_INK=P.wood;
+function branchSilhouette(nodes,widths){
+ const pts=smoothChain(nodes,widths);
+ ribbon(pts,1,WOOD_INK);
+}
+const trunkNodes=[root,...trunk];
+const trunkWidths=[15.5,12.8,11.2,9.2,7.5,6.3,4.8,2.3];
+for(const b of branchChains)b.widths=b.nodes.map((n,i)=>i===0?b.base*1.13:
+ i===b.nodes.length-1?Math.max(.75,n.thickness*.52):n.thickness);
+function wood(){
+ // Fine twigs grow out of each branch as one uninterrupted dark hairline.
+ // Their very narrow tips deliberately echo the original pixel-art sketch,
+ // while sharing exactly the same fill colour as the solid trunk.
+ ctx.fillStyle=WOOD_INK;
+ for(const chain of twigChains){
+   const [a,b,c]=chain;
+   const mx=(a.x+c.x)*.5,my=(a.y+c.y)*.5;
+   pixelCurve(a,{x:b.x*2-mx,y:b.y*2-my},c);
+ }
+ // Order makes the fork become one cohesive dark contour, not overlapping
+ // sticks with visible seams or contrasting colours.
+ for(const b of branchChains){
+   branchSilhouette(b.nodes,b.widths);
+ }
+ branchSilhouette(trunkNodes,trunkWidths);
+ // Soft asymmetric root flare using the very same ink.
+ branchSilhouette([{x:299,y:289},{x:296,y:296},{x:289,y:300}], [4.6,2.7,.8]);
+ branchSilhouette([{x:308,y:288},{x:312,y:296},{x:323,y:300}], [4.3,2.4,.7]);
+}
+
+// Keep the existing geometry and motion. Only change how the wood is rasterized.
+// A 2D vector path is normally antialiased even if the final canvas uses
+// "image-rendering: pixelated". Convert its partial-alpha boundary pixels to
+// fully on/off pixels before displaying it to prevent grey, blurry edges.
+// Sparse fibre strokes are attached to moving branch segments, so the grain
+// bends with the tree instead of scrolling across the silhouette.
+function grainHash(k){
+ let v=(Math.imul((k^0x61c88647)>>>0,2246822519)>>>0);
+ v^=v>>>13;v=Math.imul(v,3266489917)>>>0;v^=v>>>16;
+ return(v>>>0)/4294967296;
+}
+const barkGrain=[];
+function seedBarkGrain(chain,chainId,isTrunk=false){
+ for(let j=0;j<chain.length-1;j++){
+   const a=chain[j],b=chain[j+1];
+   const length=Math.hypot(b.rx-a.rx,b.ry-a.ry);
+   const width=isTrunk?Math.max(4,13-j*1.45):Math.max(1,b.thickness);
+   if(width<2.4)continue;
+   const count=Math.min(7,Math.max(1,Math.round(length/(isTrunk?5.5:9))));
+   for(let k=0;k<count;k++){
+      const key=chainId*809+j*71+k*13;
+      const u=.13+grainHash(key+1)*.7;
+      const offset=(grainHash(key+2)*2-1)*Math.max(.55,width*.24);
+      const run=(isTrunk?1.5:1)+grainHash(key+3)*(isTrunk?4:2.5);
+      const tone=grainHash(key+4);
+      barkGrain.push({a,b,u,offset,run,tone});
+   }
+ }
+}
+seedBarkGrain([root,...trunk],13,true);
+branchChains.forEach((chain,i)=>seedBarkGrain(chain.nodes,29+i,false));
+function drawBarkGrain(){
+ ctx.globalCompositeOperation='source-atop';
+ for(const mark of barkGrain){
+   const a=mark.a,b=mark.b,dx=b.x-a.x,dy=b.y-a.y;
+   const len=Math.hypot(dx,dy)||1;
+   const tx=dx/len,ty=dy/len,nx=-ty,ny=tx;
+   const x=a.x+dx*mark.u+nx*mark.offset;
+   const y=a.y+dy*mark.u+ny*mark.offset;
+   // Nearly monochrome grain; no contrasting edge/outline colour.
+   ctx.fillStyle=mark.tone<.27?'#262423':mark.tone<.85?'#3a3330':'#413831';
+   const steps=Math.round(mark.run);
+   for(let i=0;i<steps;i++){
+      // Occasional interruptions make fibres irregular, not parallel cartoon lines.
+      if(i===2 && mark.tone>.78)continue;
+      ctx.fillRect(Math.round(x+tx*i),Math.round(y+ty*i),1,1);
+   }
+ }
+ ctx.globalCompositeOperation='source-over';
+}
+// Work on the moving wood's tight pixel envelope instead of converting a large
+// fixed rectangle on every frame. A 14px guard includes twigs and root flares.
+function movingBarkCrop(){
+ let minX=289,maxX=323,minY=56,maxY=301;
+ for(const n of nodeList){
+  if(n.x<minX)minX=n.x;
+  if(n.x>maxX)maxX=n.x;
+  if(n.y<minY)minY=n.y;
+  if(n.y>maxY)maxY=n.y;
+ }
+ const x=clamp(Math.floor(minX-14),0,W-1);
+ const y=clamp(Math.floor(minY-14),0,H-1);
+ return {x,y,w:Math.min(W-x,Math.ceil(maxX+14)-x),h:Math.min(H-y,Math.ceil(maxY+14)-y)};
+}
+function drawPixelWood(){
+ const fg=ctx;
+ try{
+   ctx=barkCtx;
+   barkCtx.clearRect(0,0,W,H);
+   wood();
+   const {x,y,w,h}=movingBarkCrop();
+   const image=barkCtx.getImageData(x,y,w,h);
+   const px=new Uint32Array(image.data.buffer);
+   for(let i=0;i<px.length;i++){
+     px[i]=(px[i]>>>24)>=120?0xff28292d:0;
+   }
+   barkCtx.putImageData(image,x,y);
+   drawBarkGrain();
+ }finally{
+   ctx=fg;
+ }
+ // Trim a tiny amount off the trunk base with a clean horizontal cutoff.
+ barkCtx.clearRect(0,299,W,H-299);
+ fg.drawImage(barkCanvas,0,0);
+}
+
+function paintLeaf(x,y,l,stretch){
+ const xx=Math.round(x),yy=Math.round(y);
+ const s=l.size, w=Math.max(1,Math.round(s*stretch));
+ if(l.shape===0){ctx.fillRect(xx,yy,w,s)}
+ else if(l.shape===1){ctx.fillRect(xx,yy,s,w);if(s>2)ctx.fillRect(xx+1,yy-1,1,1)}
+ else if(l.shape===2){ctx.fillRect(xx,yy,s+1,1);ctx.fillRect(xx+1,yy+1,s>1?2:1,1)}
+ else if(l.shape===3){ctx.fillRect(xx,yy,1,s+1);ctx.fillRect(xx-1,yy+1,2,1)}
+ else{ctx.fillRect(xx,yy,s,2);if(s>2)ctx.fillRect(xx+2,yy-1,1,1)}
+}
+// Both rear layers are opaque pixels and share the same painter order.
+const rearSprays=[...deepSprays,...backSprays];
+function drawSprays(layer){
+ foliagePixels.fill(0);
+ const list=layer===1?frontSprays:rearSprays;
+ for(let i=0;i<list.length;i++){
+   const s=list[i];
+   const n=s.node;
+   const windHere=windAt(n.rx,n.ry,time);
+   const angleDelta=n.worldA-n.restA;
+   const cos=Math.cos(angleDelta*.72),sin=Math.sin(angleDelta*.72);
+   const phase=time*1.8-n.rx*.029-n.ry*.009+s.phase;
+   const ripple=Math.sin(phase)*Math.min(5.5,Math.abs(windHere)*5.3);
+   const rise=Math.cos(phase*.87)*Math.min(2.6,Math.abs(windHere)*2.1);
+   const cx=n.x+ripple,cy=n.y+rise;
+   const strength=Math.min(5.5,.4+Math.abs(windHere)*3.4);
+   for(const tile of s.tiles){
+     const ox=tile.x*cos-tile.y*sin,oy=tile.x*sin+tile.y*cos;
+     const offset=phase*1.3 -tile.x*.055+tile.y*.025;
+     const wave=Math.sin(offset+tile.phase*.22),flutter=Math.sin(time*tile.rate+tile.phase);
+     const ux=strength*(wave*.43+flutter*.25);
+     const uy=strength*(Math.cos(offset*.85)*.19+Math.sin(time*tile.rate*.9+tile.phase)*.18);
+     stampTile(tile,Math.round(cx+ox-8.5+ux),Math.round(cy+oy-8.5+uy));
+   }
+   // A scattering of completely independent leaves moves within each micro-tile layer.
+   for(const l of s.solo){
+     if(l.gone===foliageGeneration)continue;
+     let x=l.ox*cos-l.oy*sin, y=l.ox*sin+l.oy*cos;
+     const delay=x*.056-y*.027;
+     x+=strength*(Math.sin(phase*1.42-delay+l.phase*.18)*.42+Math.sin(time*l.flutter+l.phase+delay)*.32)*l.drift;
+     y+=strength*(Math.cos(phase*1.1+delay)*.24+Math.sin(time*l.flutter*1.3+l.phase)*.2);
+     const span=.52+.48*Math.abs(Math.sin(time*l.flutter*.55+l.phase));
+     stampSolo(cx+x,cy+y,l,span);
+   }
+ }
+ foliageCtx.putImageData(foliageImage,0,0);
+ ctx.drawImage(foliageCanvas,0,0);
+}
+function spawnLeaf(x,y,energy=0,dir=1){
+ // No artificial flyer limit: every released leaf can reach and join the pile.
+ flyers.push({x,y,vx:r(-.24,.28)+dir*energy*.34,vy:r(.12,.26)+energy*.025,
+   age:0,phase:r(0,PI*2),spin:r(3.1,7),size:ri(1,3),color:choose(palette.slice(1,8)),rot:r(0,PI*2),angVel:r(-2.5,2.5),pitch:r(.7,1.2),sway:r(.18,.82),swayRate:r(1.4,3.2),fall:r(.85,1.18),drag:r(.986,.995),terminal:r(1.25,2.05)});
+}
+function releaseFromSpray(s,energy=1,dir=1){
+ for(let tries=0;tries<8;tries++){
+    const l=choose(s.leaves);
+    if(l.gone===foliageGeneration)continue;
+    l.gone=foliageGeneration;
+    if(l.tile){changedTiles.add(l.tile);rebuildTile(l.tile);}
+    spawnLeaf(s.node.x+l.ox,s.node.y+l.oy,energy,dir);
+    return;
+ }
+}
+// Each selected node's descendant foliage is invariant across frames. Memoize
+// once to avoid repeated full-canopy ancestry walks during pointer dragging.
+const nearbyFoliage=new Map();
+function shedNear(node,n,energy=1,dir=Math.sign(globalFlow)||1){
+ let near=nearbyFoliage.get(node);
+ if(!near){near=sprays.filter(s=>s.node===node||isAncestor(node,s.node));nearbyFoliage.set(node,near);}
+ if(near.length===0)return;
+ for(let i=0;i<n;i++)releaseFromSpray(choose(near),energy,dir);
+}
+function updateParticles(dt){
+ const f=dt*60;
+ for(let i=flyers.length-1;i>=0;i--){
+   const l=flyers[i];l.age+=dt;
+   const w=windAt(l.x,l.y,time);
+   const horizontal=w*.095+Math.sin(time*2.6+l.phase)*.25;
+   l.vx+=(horizontal-l.vx*.03)*.03*f;
+   // Gravity is always positive. Air resistance caps descent, while flutter
+   // modulates falling SPEED rather than y-position (no upward animation).
+   l.vy=Math.min(l.terminal,l.vy+.018*l.fall*f);
+   l.vx*=Math.pow(l.drag,f);
+   l.x+=(l.vx+Math.cos(time*l.swayRate+l.phase)*l.sway)*f;
+   const flutter=.90+.1*Math.sin(time*(l.spin*.34)+l.phase);
+   l.y+=Math.max(.075,l.vy*flutter)*f;
+   l.rot+=l.angVel*dt;
+   // The contact region occupies only the central 5% of the visible leaf area.
+   // Its width and height each equal sqrt(.05) of the rendered leaf size.
+   // Test the centre and both horizontal ends, without a wider neighbour halo.
+   const leafStretch=Math.max(.22,Math.abs(Math.cos(l.rot)));
+   const leafW=Math.max(1,Math.round(l.size*leafStretch));
+   const leafH=Math.max(1,Math.round(l.size*(1.45-leafStretch)));
+   const coreHalfW=leafW*Math.sqrt(.05)*.5;
+   const coreHalfH=leafH*Math.sqrt(.05)*.5;
+   const contactX=l.x+leafW*.5;
+   const contactY=l.y+leafH*.5+coreHalfH;
+   if(contactX>=0&&contactX<W && contactY>=Math.min(
+       pileSurface(contactX-coreHalfW,0),pileSurface(contactX,0),pileSurface(contactX+coreHalfW,0))){
+     l.contactX=contactX;
+     depositLeaf(l);
+     flyers.splice(i,1);
+   }else if(l.y>H+12||l.x<-20||l.x>W+20){
+     flyers.splice(i,1);
+   }
+ }
+}
+function drawParticles(){
+ ctx.drawImage(initialPileCanvas,0,0);
+ ctx.drawImage(pileCanvas,0,0);
+ for(const l of flyers){
+   const stretch=Math.max(.22,Math.abs(Math.cos(l.rot)));
+   const w=Math.max(1,Math.round(l.size*stretch));
+   const h=Math.max(1,Math.round(l.size*(1.45-stretch)));
+   block(l.x,l.y,w,h,l.color);
+   if(l.size>2&&stretch>.55)block(l.x+1,l.y-1,1,1,l.color);
+ }
+}
+// The original grass / earth line is gone: the cached initial leaf carpet is
+// visually composed with new fallen leaves, without contributing to collision.
+function draw(){
+ ctx.clearRect(0,0,W,H);
+ drawSprays(-1);
+ drawPixelWood();
+ drawSprays(1);
+ drawParticles();
+}
+// Continue identical physics and shedding offscreen, but skip invisible raster work.
+// Repaint the latest state as soon as the tree enters the viewport.
+let renderVisible=true;
+if('IntersectionObserver' in window){
+ new IntersectionObserver(entries=>{
+   renderVisible=entries[0].isIntersecting;
+   if(renderVisible)draw();
+ }).observe(stage);
+}
+function frameStep(dt){
+ time+=dt;frame++;hoverFlow*=Math.exp(-dt*3.9);
+ clickGusts=clickGusts.filter(g=>time-g.start<6);
+ globalFlow=windAt(300,130,time);
+ updateTree(dt);
+ if(!reduced && frame%3===0){
+   // Natural continuous shedding is uncommon; forceful wind can release small drifts.
+   const p=Math.min(.65,Math.max(0,Math.abs(globalFlow)-.15)*.32);
+   if(rand()<p){releaseFromSpray(choose(sprays),.6,Math.sign(globalFlow)||1)}
+ }
+ updateParticles(dt);
+ if(renderVisible)draw();
+}
+function tick(now){
+ if(!last)last=now;
+ const dt=Math.min(.033,(now-last)/1000);last=now;
+ frameStep(reduced&&!grabbed?Math.min(dt,.002):dt);
+ requestAnimationFrame(tick);
+}
+function pos(e){const b=stage.getBoundingClientRect();return {x:(e.clientX-b.left)*W/b.width,y:(e.clientY-b.top)*H/b.height}}
+function down(e){
+ const v=pos(e);pointer=v;prevPointer=v;
+ let best=null,dMin=1e9;
+ for(const s of sprays){const d=Math.hypot((s.node.x-v.x)/s.rx,(s.node.y-v.y)/s.ry);if(d<dMin){dMin=d;best=s}}
+ if(best&&dMin<1.5){
+    grabbed={node:best.node,startX:v.x,startY:v.y};
+    stage.classList.add('grabbing');stage.setPointerCapture(e.pointerId);
+    shedNear(best.node,ri(16,26),.82);
+    e.preventDefault();
+ }else if(v.x>282&&v.x<327&&v.y>213&&v.y<297){
+    clickGusts.push({start:time,power:.85,dir:v.x<303?-1:1});
+ }
+}
+function move(e){const v=pos(e);const dx=v.x-prevPointer.x,dy=v.y-prevPointer.y;hoverFlow=clamp(hoverFlow+dx*.08,-2.5,2.5);if(grabbed){touchVel=.54*touchVel+.46*dx;const motion=Math.abs(dx)+Math.abs(dy);if(motion>1.6&&rand()<Math.min(.72,motion*.052))shedNear(grabbed.node,ri(4,7),.7+motion*.028,Math.sign(dx)||Math.sign(globalFlow)||1);}prevPointer=v;pointer=v;}
+function up(e){
+ if(!grabbed)return;
+ const n=grabbed.node;
+ let p=n;let atten=1;
+ while(p&&p!==root){p.v+=clamp(touchVel*.052,-.95,.95)*atten;p=p.parent;atten*=.80}
+ shedNear(n,ri(42,64),1.26);
+ grabbed=null;touchVel=0;stage.classList.remove('grabbing');
+ if(e&&stage.hasPointerCapture(e.pointerId))stage.releasePointerCapture(e.pointerId);
+}
+stage.addEventListener('pointerdown',down);
+stage.addEventListener('pointermove',move);
+stage.addEventListener('pointerup',up);
+stage.addEventListener('pointercancel',up);
+window.addEventListener('blur',()=>{grabbed=null;stage.classList.remove('grabbing')});
+if(reduced)wind=0;
+frameStep(1/60);requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>
