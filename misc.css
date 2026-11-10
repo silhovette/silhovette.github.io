@@ -301,3 +301,8 @@ html.misc-page ::selection {
  #mods .mc-interaction-note { display:none; }
 }
 @media(pointer:coarse) { .mc-viewer { pointer-events:none; } #mods .mc-interaction-note { display:none; } }
+
+.misc-fade-pending { opacity:0; }
+@media (prefers-reduced-motion: reduce), print {
+  .misc-fade-pending { opacity:1; }
+}

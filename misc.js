@@ -46,6 +46,77 @@
     const frame = viewers.find(item => item.contentWindow === event.source);
     if (!frame) return;
     if (event.data?.type === 'mc-viewer-ready') notify(frame);
+    if (event.data?.type === 'mc-viewer-painted' && frame.matches('.misc-hero__viewer')) {
+      document.dispatchEvent(new Event('misc-hero-ready'));
+    }
 
   });
+})();
+
+// Opacity-only entry effects. The first viewport shares the body's single fade;
+// units replay only after fully leaving the viewport in either scroll direction.
+(() => {
+  const motion = matchMedia('(prefers-reduced-motion: reduce)');
+  const units = [...document.querySelectorAll([
+    '.misc-hero__stage', '.misc-hero h1', '.misc-hero__summary',
+    '.misc-section > .section-top', '.mc-feature__copy > *', '.mc-video',
+    '.mc-weapon__viewer', '.mc-weapon__copy > *', '.mc-interaction-note',
+    '.mc-atlas__viewer', '.mc-atlas__title', '.mc-atlas__copy > *',
+    '.misc-work-list .paper-row > *'
+  ].join(','))];
+  const visible = new Set();
+  const animations = new Map();
+  let observer;
+  const show = element => {
+    animations.get(element)?.cancel();
+    animations.delete(element);
+    element.classList.remove('misc-fade-pending');
+  };
+  const reset = () => {
+    observer?.disconnect();
+    units.forEach(show);
+    visible.clear();
+  };
+  const start = () => {
+    reset();
+    if (motion.matches || !('IntersectionObserver' in window)) return;
+    observer = new IntersectionObserver(entries => {
+      for (const {target, isIntersecting} of entries) {
+        if (!isIntersecting) {
+          visible.delete(target);
+          show(target);
+          target.classList.add('misc-fade-pending');
+          continue;
+        }
+        if (visible.has(target)) continue;
+        visible.add(target);
+        show(target);
+        if (document.documentElement.dataset.pageFade !== 'complete') continue;
+        const animation = target.animate([{opacity:0}, {opacity:1}], {
+          duration:650, easing:'cubic-bezier(0.22, 1, 0.36, 1)'
+        });
+        animations.set(target, animation);
+        const cleanup = () => { if (animations.get(target) === animation) animations.delete(target); };
+        animation.finished.then(cleanup, cleanup);
+      }
+    });
+    for (const element of units) {
+      const rect = element.getBoundingClientRect();
+      if (rect.bottom > 0 && rect.top < innerHeight && rect.right > 0 && rect.left < innerWidth) {
+        visible.add(element);
+      } else element.classList.add('misc-fade-pending');
+      observer.observe(element);
+    }
+  };
+  document.addEventListener('focusin', event => {
+    for (const element of units) if (element.contains(event.target)) {
+      visible.add(element);
+      show(element);
+    }
+  });
+  motion.addEventListener('change', start);
+  addEventListener('beforeprint', reset);
+  addEventListener('afterprint', start);
+  addEventListener('pageshow', event => { if (event.persisted) start(); });
+  start();
 })();

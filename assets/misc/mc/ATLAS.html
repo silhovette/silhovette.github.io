@@ -19,7 +19,7 @@
   .fallback{display:none;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);color:#b7c2cf;text-align:center;font-size:14px;line-height:1.8}
   @media(max-width:620px){.hint{top:20px;right:20px;font-size:8px;letter-spacing:.10em}.name{font-size:9px;letter-spacing:.11em}}
 </style>
-<script src="viewer-embed.js?v=5"></script>
+<script src="viewer-embed.js?v=6"></script>
 </head>
 <body>
 <canvas tabindex="0" id="stage" aria-label="MK I, PLUS and PRO armor shells, from left to right; front-facing orthographic view; mouse-wheel zoom"></canvas>
@@ -632,7 +632,7 @@ function frame(ms){
  gl.enable(gl.BLEND);gl.blendFunc(gl.ONE,gl.ONE);gl.bindVertexArray(dustVao);gl.drawArrays(gl.POINTS,0,dustData.length/4);gl.disable(gl.BLEND);
  into(graded);use(pp);gl.uniform1f(pu.uTime,time);drawQuad();
  gl.bindFramebuffer(gl.FRAMEBUFFER,null);gl.viewport(0,0,width,height);use(fp);drawQuad();
- if(++frames===1){canvas.dataset.renderer=floating?'linear-hdr':'linear-ldr';canvas.dataset.ready='true';}
+ if(++frames===1){canvas.dataset.renderer=floating?'linear-hdr':'linear-ldr';canvas.dataset.ready='true';if(heroMode)mcViewer.painted();}
  mcViewer.request(frame);
 }
 

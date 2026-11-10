@@ -58,6 +58,9 @@ const mcViewer = (() => {
   });
   return {
     embed,
+    painted() {
+      if (embed) parent.postMessage({type:'mc-viewer-painted'}, targetOrigin);
+    },
     request(callback) {
       renderer = pending = callback;
       schedule();

@@ -21,6 +21,8 @@
         const motion = matchMedia("(prefers-reduced-motion: reduce)");
         if (motion.matches) return;
         let shown = false;
+        let contentReady = false;
+        let heroReady = false;
         const reveal = (immediate = false) => {
           if (shown && !immediate) return;
           shown = true;
@@ -29,7 +31,9 @@
           if (!immediate) setTimeout(() => root.setAttribute("data-page-fade", "complete"), 700);
         };
         const deadline = setTimeout(() => reveal(), 1800);
-        document.addEventListener("page-fade-ready", () => reveal(), { once: true });
+        const revealWhenReady = () => { if (contentReady && heroReady) reveal(); };
+        document.addEventListener("page-fade-ready", () => { contentReady = true; revealWhenReady(); }, { once: true });
+        document.addEventListener("misc-hero-ready", () => { heroReady = true; revealWhenReady(); }, { once: true });
         addEventListener("pageshow", event => { if (event.persisted) reveal(true); });
         motion.addEventListener("change", event => { if (event.matches) reveal(true); });
         root.setAttribute("data-page-fade", "pending");
@@ -46,11 +50,11 @@
     <link rel="stylesheet" href="portfolio.css?v=52" />
     <link rel="stylesheet" href="scrollbars.css?v=2" />
     <link rel="stylesheet" href="theme.css?v=1" />
-    <link rel="stylesheet" href="misc.css?v=9" />
+    <link rel="stylesheet" href="misc.css?v=10" />
     <script src="languages.js?v=38" defer></script>
     <script src="script.js?v=17" defer></script>
     <script src="portfolio.js?v=15" defer></script>
-    <script src="misc.js?v=7" defer></script>
+    <script src="misc.js?v=8" defer></script>
   </head>
   <body class="portfolio-home blank-page misc-page">
     <a class="skip-link" href="#main" data-i18n="skip_to_content">Skip to content</a>
@@ -75,7 +79,7 @@
     <main id="main" class="misc-main">
       <section class="misc-hero" aria-labelledby="mods-hero-title">
         <div class="misc-hero__stage" aria-hidden="true">
-          <iframe class="mc-viewer misc-hero__viewer" data-src="./assets/misc/mc/ATLAS.html?embed=1&amp;hero=1&amp;v=9" title="ATLAS — layered MK I, PLUS and PRO armor" tabindex="-1" loading="eager"></iframe>
+          <iframe class="mc-viewer misc-hero__viewer" data-src="./assets/misc/mc/ATLAS.html?embed=1&amp;hero=1&amp;v=10" title="ATLAS — layered MK I, PLUS and PRO armor" tabindex="-1" loading="eager"></iframe>
         </div>
         <div class="misc-hero__veil" aria-hidden="true"></div>
         <div class="misc-hero__content wrap">
