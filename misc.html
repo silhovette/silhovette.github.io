@@ -5,7 +5,7 @@
     <script src="image-preload.js?v=3"></script>
     <script src="theme.js?v=1"></script>
     <style id="page-fade-style">
-      html[data-page-fade] { background: #252524; }
+      html[data-page-fade] { background: #000; }
       html[data-page-fade="pending"] body,
       html[data-page-fade="revealing"] body { transition: opacity 700ms cubic-bezier(0.22, 1, 0.36, 1) !important; }
       html[data-page-fade="pending"] body { opacity: 0 !important; }
@@ -37,7 +37,7 @@
     </script>
     <script src="page-fade.js?v=1" defer></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#252524" />
+    <meta name="theme-color" content="#000" />
     <title>Miscellaneous | Yuhua Luo</title>
     <link rel="icon" type="image/svg+xml" href="assets/icons/portfolio.svg" />
     <link rel="preload" href="assets/fonts/SpaceGrotesk-Variable.ttf" as="font" type="font/ttf" crossorigin />
@@ -46,11 +46,11 @@
     <link rel="stylesheet" href="portfolio.css?v=52" />
     <link rel="stylesheet" href="scrollbars.css?v=2" />
     <link rel="stylesheet" href="theme.css?v=1" />
-    <link rel="stylesheet" href="misc.css?v=1" />
+    <link rel="stylesheet" href="misc.css?v=9" />
     <script src="languages.js?v=38" defer></script>
     <script src="script.js?v=17" defer></script>
     <script src="portfolio.js?v=15" defer></script>
-    <script src="misc.js?v=1" defer></script>
+    <script src="misc.js?v=7" defer></script>
   </head>
   <body class="portfolio-home blank-page misc-page">
     <a class="skip-link" href="#main" data-i18n="skip_to_content">Skip to content</a>
@@ -74,13 +74,13 @@
     </header>
     <main id="main" class="misc-main">
       <section class="misc-hero" aria-labelledby="mods-hero-title">
-        <div class="misc-hero__image" data-parallax-speed="0.18" aria-hidden="true">
-          <img src="assets/papers/Visual2Craft.webp" alt="" width="1600" height="900" fetchpriority="high" decoding="async" />
+        <div class="misc-hero__stage" aria-hidden="true">
+          <iframe class="mc-viewer misc-hero__viewer" data-src="./assets/misc/mc/ATLAS.html?embed=1&amp;hero=1&amp;v=9" title="ATLAS — layered MK I, PLUS and PRO armor" tabindex="-1" loading="eager"></iframe>
         </div>
         <div class="misc-hero__veil" aria-hidden="true"></div>
         <div class="misc-hero__content wrap">
           <h1 id="mods-hero-title">BUILD<br /><em>BEYOND</em><br />THE FRAME.</h1>
-          <p class="misc-hero__summary">Small systems, strange mechanics and visual experiments that turn Minecraft into a medium for making.</p>
+          <p class="misc-hero__summary">A collection of curious ideas, visual experiments, and things made for the joy of making.</p>
         </div>
       </section>
 
@@ -92,44 +92,65 @@
           </div>
         </div>
 
-        <div class="misc-mod-grid">
-          <article class="misc-mod-card misc-mod-card--wide">
-            <div class="misc-mod-card__visual">
-              <img src="assets/papers/Visual2Craft.webp" alt="Visual2Craft Minecraft construction pipeline diagram" width="1600" height="900" loading="lazy" decoding="async" />
-              <span class="misc-mod-card__index mono">MOD / 01</span>
-              <span class="misc-mod-card__status mono">IN DEVELOPMENT</span>
-            </div>
-            <div class="misc-mod-card__body">
-              <h3>Visual2Craft</h3>
-              <p>Construction videos become a persistent, editable Minecraft scene through frame analysis, blueprint queries and datapack compilation.</p>
-              <span class="misc-chip mono">VIDEO → VOXELS</span>
-            </div>
-          </article>
-          <article class="misc-mod-card">
-            <div class="misc-mod-card__visual misc-mod-card__visual--dark">
-              <div class="misc-placeholder-diagram" aria-hidden="true"><span></span><span></span><span></span><i></i></div>
-              <span class="misc-mod-card__index mono">MOD / 02</span>
-              <span class="misc-mod-card__status mono">PLACEHOLDER</span>
-            </div>
-            <div class="misc-mod-card__body">
-              <h3>Mechanic / Field Notes</h3>
-              <p>Rules, machines and environmental behaviours collected as a modular test bed for future builds.</p>
-              <span class="misc-chip mono">SYSTEMS / PLAY</span>
+        <article class="mc-feature">
+          <div class="mc-feature__copy">
+            <h3>Visual2Craft</h3>
+            <p>Turning construction videos into editable Minecraft worlds through visual understanding and automated building.</p>
+            <a class="mc-link" href="https://github.com/silhovette/Visual2Craft" target="_blank" rel="noreferrer">View on GitHub</a>
+          </div>
+          <div class="mc-video" role="img" aria-label="Visual2Craft demo video coming soon">
+            <svg viewBox="0 0 40 40" width="40" height="40" aria-hidden="true"><path d="M15 10l16 10-16 10z" fill="none" stroke="currentColor" stroke-width="1"/></svg>
+            <span class="mono">DEMO VIDEO / COMING SOON</span>
+          </div>
+        </article>
+
+        <div class="mc-weapons">
+          <article class="mc-weapon">
+            <iframe class="mc-viewer mc-weapon__viewer" data-src="./assets/misc/mc/CERBERUS.html?embed=1&amp;v=9" title="CERBERUS interactive rotating 3D model" loading="lazy"></iframe>
+            <div class="mc-weapon__copy">
+              <h3>CERBERUS</h3>
+              <p>A rapid-fire crossbow with multiple ammunition types and selectable firing modes.</p>
+              <a class="mc-link" href="./assets/misc/mc/mods/CERBERUS.jar" download="CERBERUS.jar">Download</a>
             </div>
           </article>
-          <article class="misc-mod-card">
-            <div class="misc-mod-card__visual misc-mod-card__visual--chart">
-              <img src="assets/misc/cover/V2C.webp" alt="ChartFlow placeholder title card" width="3999" height="2249" loading="lazy" decoding="async" />
-              <span class="misc-mod-card__index mono">MOD / 03</span>
-              <span class="misc-mod-card__status mono">PLACEHOLDER</span>
+          <article class="mc-weapon">
+            <iframe class="mc-viewer mc-weapon__viewer" data-src="./assets/misc/mc/CERBERUS-Proto.html?embed=1&amp;v=9" title="CERBERUS Prototype interactive rotating 3D model" loading="lazy"></iframe>
+            <div class="mc-weapon__copy">
+              <h3>CERBERUS Prototype</h3>
+              <p>An early experimental build exploring automated fire and unconventional weapon mechanics.</p>
+              <a class="mc-link" href="./assets/misc/mc/mods/CERBERUS-protp.jar" download="CERBERUS-protp.jar">Download</a>
             </div>
-            <div class="misc-mod-card__body">
-              <h3>ChartFlow / World Tools</h3>
-              <p>A visual control surface for sequencing, inspecting and replaying the state of a living world.</p>
-              <span class="misc-chip mono">TOOLS / PROTOTYPE</span>
+          </article>
+          <article class="mc-weapon">
+            <iframe class="mc-viewer mc-weapon__viewer" data-src="./assets/misc/mc/LONGINUS.html?embed=1&amp;v=9" title="LONGINUS interactive rotating 3D model" loading="lazy"></iframe>
+            <div class="mc-weapon__copy">
+              <h3>LONGINUS</h3>
+              <p>A precision weapon capable of instantly disintegrating targets and terrain.</p>
+              <a class="mc-link" href="./assets/misc/mc/mods/LONGINUS.jar" download="LONGINUS.jar">Download</a>
+            </div>
+          </article>
+          <article class="mc-weapon">
+            <iframe class="mc-viewer mc-weapon__viewer" data-src="./assets/misc/mc/BLACKOUT.html?embed=1&amp;v=9" title="BLACKOUT interactive rotating 3D model" loading="lazy"></iframe>
+            <div class="mc-weapon__copy">
+              <h3>BLACKOUT</h3>
+              <p>An electromagnetic suppression system designed to disable light, machinery and redstone mechanisms.</p>
+              <a class="mc-link" href="./assets/misc/mc/mods/BLACKOUT.jar" download="BLACKOUT.jar">Download</a>
             </div>
           </article>
         </div>
+        <p class="mc-interaction-note">Drag to explore · Auto-rotating models</p>
+
+        <article class="mc-atlas" aria-labelledby="atlas-title">
+          <iframe class="mc-viewer mc-atlas__viewer" data-src="./assets/misc/mc/ATLAS.html?embed=1&amp;v=7" title="ATLAS — PRO, PLUS and MK I powered armor, front view" loading="lazy"></iframe>
+          <div class="mc-atlas__title">
+            <h3 id="atlas-title">ATLAS</h3>
+            <p class="mono">MODULAR EXOSKELETON SYSTEM</p>
+          </div>
+          <div class="mc-atlas__copy">
+            <p>An evolving series of powered armor systems, from reinforced protection to active energy shielding.</p>
+            <a class="mc-link" href="./assets/misc/mc/mods/ATLAS.jar" download="ATLAS.jar">Download ATLAS</a>
+          </div>
+        </article>
       </section>
 
       <section class="portfolio-section wrap misc-section misc-section--works" id="personal-works" aria-labelledby="personal-works-title">

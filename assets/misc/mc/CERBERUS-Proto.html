@@ -77,6 +77,7 @@
     #lighting-rig { width:62vw; height:25vw; top:82%; }
   }
 </style>
+<script src="viewer-embed.js?v=5"></script>
 </head>
 <body>
 <div id="lighting-rig" aria-hidden="true">
@@ -95,6 +96,8 @@ const glowCanvas = document.getElementById('glow');
 function dec64(s) { const b=atob(s); const a=new Uint8Array(b.length); for(let i=0;i<b.length;i++)a[i]=b.charCodeAt(i); return a.buffer; }
 const verts = new Float32Array(dec64(DATA.verts));
 const indices = new Uint16Array(dec64(DATA.indices));
+// Binary buffers are retained; their encoded copies are no longer needed.
+DATA.verts=null;DATA.indices=null;
 const RING_SAMPLE_COUNT=24;
 const ringLights=new Float32Array(RING_SAMPLE_COUNT*3);
 const modelHeight=DATA.bounds[4]-DATA.bounds[1];
@@ -158,6 +161,9 @@ void main(){
   if(uEmissivePass>0.5 && vGlow<0.5) discard;
   vec4 tex=texture2D(uAtlas,vUV);
   if(tex.a<0.02) discard;
+  // Depth-only occlusion needs the same alpha cutout, but no surface lighting.
+  if(uEmissivePass<-.5){gl_FragColor=vec4(0.);return;}
+  if(uEmissivePass>.5){gl_FragColor=vec4(tex.rgb*1.12,tex.a*.24);return;}
 
   vec3 n=normalize(vNormal);
   vec3 viewDir=normalize(vec3(0.0,0.0,1.0));
@@ -217,10 +223,21 @@ function compile(gl,t,source){
 function makeRenderer(target,isGlow){
  const gl=target.getContext('webgl',{alpha:true,antialias:true,premultipliedAlpha:false,preserveDrawingBuffer:false});
  if(!gl)throw Error('WebGL unavailable');
- const prog=gl.createProgram();gl.attachShader(prog,compile(gl,gl.VERTEX_SHADER,SRC_VERTEX));gl.attachShader(prog,compile(gl,gl.FRAGMENT_SHADER,SRC_FRAGMENT));
- gl.linkProgram(prog);if(!gl.getProgramParameter(prog,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(prog));gl.useProgram(prog);
+ const prog=gl.createProgram(),vs=compile(gl,gl.VERTEX_SHADER,SRC_VERTEX),fs=compile(gl,gl.FRAGMENT_SHADER,SRC_FRAGMENT);gl.attachShader(prog,vs);gl.attachShader(prog,fs);
+ gl.linkProgram(prog);if(!gl.getProgramParameter(prog,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(prog));gl.useProgram(prog);gl.detachShader(prog,vs);gl.detachShader(prog,fs);gl.deleteShader(vs);gl.deleteShader(fs);
  const vb=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,vb);gl.bufferData(gl.ARRAY_BUFFER,verts,gl.STATIC_DRAW);
  const ib=gl.createBuffer();gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,ib);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,indices,gl.STATIC_DRAW);
+ let glowIndexBuffer=null,glowCount=0;
+ if(isGlow){
+  const emitted=[];
+  for(let i=0;i<indices.length;i+=3){
+   if(verts[indices[i]*9+8]>=.5 || verts[indices[i+1]*9+8]>=.5 || verts[indices[i+2]*9+8]>=.5)
+    emitted.push(indices[i],indices[i+1],indices[i+2]);
+  }
+  glowCount=emitted.length;glowIndexBuffer=gl.createBuffer();
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,glowIndexBuffer);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,new Uint16Array(emitted),gl.STATIC_DRAW);
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,ib);
+ }
  const names=['aPos','aUV','aNormal','aGlow'];const lens=[3,2,3,1];const offsets=[0,12,20,32];
  for(let i=0;i<names.length;i++){const loc=gl.getAttribLocation(prog,names[i]);gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,lens[i],gl.FLOAT,false,36,offsets[i]);}
  const tex=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,tex);
@@ -242,11 +259,17 @@ function makeRenderer(target,isGlow){
   gl.uniform3fv(ringLoc,ringLights);gl.uniform1f(energyLoc,RING_ENERGY);
   gl.uniform3fv(topLoc,topLights);gl.uniform1f(topEnergyLoc,TOP_ENERGY);
   gl.uniform1f(offsetLoc,MODEL_Y_OFFSET);
-  return {gl,tex,isGlow,passLoc,rotLoc:gl.getUniformLocation(prog,'uRotation'),viewLoc:gl.getUniformLocation(prog,'uView')};
+  gl.clearColor(0,0,0,0);
+  return {gl,tex,isGlow,passLoc,indexBuffer:ib,glowIndexBuffer,glowCount,width:0,height:0,halfW:NaN,halfH:NaN,rotLoc:gl.getUniformLocation(prog,'uRotation'),viewLoc:gl.getUniformLocation(prog,'uView')};
 }
+// A model without emissive geometry produces a fully transparent glow layer.
+// Leave that canvas empty instead of allocating another GL context and buffers.
+let hasEmission=false;
+for(let i=8;i<verts.length;i+=9){if(verts[i]>=.5){hasEmission=true;break;}}
+if(!hasEmission)glowCanvas.style.display='none';
 let renderers=[];
-try{ renderers=[makeRenderer(glowCanvas,true),makeRenderer(canvas,false)]; }
-catch(e){ console.error('3D viewer error:',e); document.body.style.background='#000'; }
+try{ renderers=hasEmission?[makeRenderer(glowCanvas,true),makeRenderer(canvas,false)]:[makeRenderer(canvas,false)]; }
+catch(e){ console.error('3D viewer error:',e); if(!mcViewer.embed)document.body.style.background='#000'; }
 
 function quatMul(a,b){return [a[3]*b[0]+a[0]*b[3]+a[1]*b[2]-a[2]*b[1],a[3]*b[1]-a[0]*b[2]+a[1]*b[3]+a[2]*b[0],a[3]*b[2]+a[0]*b[1]-a[1]*b[0]+a[2]*b[3],a[3]*b[3]-a[0]*b[0]-a[1]*b[1]-a[2]*b[2]];}
 function axisQ(axis,angle){let s=Math.sin(angle*.5);return [axis[0]*s,axis[1]*s,axis[2]*s,Math.cos(angle*.5)];}
@@ -269,10 +292,11 @@ function syncLightingRig(){
 }
 const pointers=new Map();let lastPinch=0;
 const AUTO_ROTATION_DELAY=0;
-function rot3(q){const [x,y,z,w]=q;const x2=x+x,y2=y+y,z2=z+z;
- return [1-(y*y2+z*z2),x*y2-z*w*2,x*z2+y*w*2,
-         x*y2+z*w*2,1-(x*x2+z*z2),y*z2-x*w*2,
-         x*z2-y*w*2,y*z2+x*w*2,1-(x*x2+y*y2)];}
+function rot3(q,out=new Float64Array(9)){const [x,y,z,w]=q;const x2=x+x,y2=y+y,z2=z+z;
+ out[0]=1-(y*y2+z*z2);out[1]=x*y2-z*w*2;out[2]=x*z2+y*w*2;
+ out[3]=x*y2+z*w*2;out[4]=1-(x*x2+z*z2);out[5]=y*z2-x*w*2;
+ out[6]=x*z2-y*w*2;out[7]=y*z2+x*w*2;out[8]=1-(x*x2+y*y2);return out;
+}
 function transform(m,p){return [m[0]*p[0]+m[1]*p[1]+m[2]*p[2],m[3]*p[0]+m[4]*p[1]+m[5]*p[2],m[6]*p[0]+m[7]*p[1]+m[8]*p[2]];}
 function fitSpan(m,aspect){
  const b=DATA.bounds;let minx=Infinity,maxx=-Infinity,miny=Infinity,maxy=-Infinity;
@@ -290,6 +314,7 @@ const modelRadius=Math.hypot(...modelHalfExtents);
 const defaultZoom=INITIAL_ZOOM;
 const initialRotation=rot3(initial);
 function fixedSpan(aspect){
+  if(mcViewer.embed)return (modelRadius+Math.abs(MODEL_Y_OFFSET))*1.16*Math.max(1,1/aspect)*defaultZoom;
   const initialFit=fitSpan(initialRotation,aspect);
   const safeFit=modelRadius*1.12*Math.max(1,1/aspect)*defaultZoom;
   return Math.max(initialFit,safeFit);
@@ -309,12 +334,12 @@ root.addEventListener('pointermove',e=>{
  lastInput=performance.now();
 });
 function stopPointer(e){pointers.delete(e.pointerId);lastPinch=0;lastInput=performance.now();}
-root.addEventListener('pointerup',stopPointer);root.addEventListener('pointercancel',stopPointer);
+root.addEventListener('pointerup',stopPointer);root.addEventListener('pointercancel',stopPointer);root.addEventListener('lostpointercapture',stopPointer);
 root.addEventListener('wheel',e=>{e.preventDefault();zoom=Math.max(.3,Math.min(7,zoom*Math.exp(-e.deltaY*.0011)));lastInput=performance.now();},{passive:false});
 root.addEventListener('dblclick',e=>{e.preventDefault();q=initial.slice();zoom=INITIAL_ZOOM;lastInput=performance.now();});
 root.addEventListener('contextmenu',e=>e.preventDefault());
 
-let atlas=null,tiles=[];
+let atlas=null,tiles=[],animatedTiles=[];
 function loadImage(src){return new Promise((resolve,reject)=>{let img=new Image();img.onload=()=>resolve(img);img.onerror=reject;img.src='data:image/png;base64,'+src;});}
 function frameToTile(tile,frame,nextBlend){
  const temp=tile.canvas;const ctx=tile.ctx;
@@ -329,18 +354,28 @@ async function initTextures(){
  const atlasC=document.createElement('canvas');atlasC.width=DATA.atlasW;atlasC.height=DATA.atlasH;
  const actx=atlasC.getContext('2d',{willReadFrequently:false});actx.imageSmoothingEnabled=false;
  tiles=DATA.textures.map((t,i)=>{
-  const temp=document.createElement('canvas');temp.width=temp.height=256;
-  const tile={...t,image:imgs[i],canvas:temp,ctx:temp.getContext('2d'),shown:-1};
-  frameToTile(tile,0,0);actx.drawImage(temp,t.x,t.y);
+  const {png,...metadata}=t;
+  const tile={...metadata,image:null,canvas:null,ctx:null,shown:-1};
+  if(t.frames>1 || fallback2D){
+   const temp=document.createElement('canvas');temp.width=temp.height=256;
+   tile.image=imgs[i];tile.canvas=temp;tile.ctx=temp.getContext('2d');
+   frameToTile(tile,0,0);actx.drawImage(temp,t.x,t.y);
+  }else{
+   // Same nearest-neighbor pixels, without a persistent canvas per static tile.
+   actx.drawImage(imgs[i],0,0,t.w,t.frameH,t.x,t.y,256,256);
+  }
   return tile;
  });
- atlas=atlasC;
+ animatedTiles=tiles.filter(t=>t.frames>1);
  for(const renderer of renderers){const gl=renderer.gl;gl.bindTexture(gl.TEXTURE_2D,renderer.tex);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,atlasC);}
+ // Only animated tiles (or the original software fallback) need decoded images.
+ DATA.textures=null;
+ atlasC.width=atlasC.height=1;
+ atlas=true;
 }
 function animTextures(ms){
  if(!atlas)return;
- for(const t of tiles){
-  if(t.frames<2)continue;
+ for(const t of animatedTiles){
   const time=ms/(t.frameTime*50);
   const frame=Math.floor(time)%t.frames;
   const interpolation=t.interpolate?Math.floor((time-Math.floor(time))*8)/8:0;
@@ -434,33 +469,40 @@ function softRender(mat,halfW,halfH,cw,ch){
   }
 }
 
+const drawRotation=new Float64Array(9),drawMatrix=new Float32Array(9);
 function draw(now){
+ if(!mcViewer.tick(now))return;
  const dt=Math.min(0.06,(now-lastFrame)/1000);lastFrame=now;
  syncLightingRig();
- if(pointers.size===0 && now-lastInput>=AUTO_ROTATION_DELAY){q=normQ(quatMul(axisQ([0,1,0],dt*.16),q));}
+ if(pointers.size===0 && now-lastInput>=AUTO_ROTATION_DELAY){const sin=Math.sin(dt*.08),cos=Math.cos(dt*.08);
+  const x=q[0],y=q[1],z=q[2],w=q[3];
+  q[0]=cos*x+sin*z;q[1]=cos*y+sin*w;q[2]=cos*z-sin*x;q[3]=cos*w-sin*y;
+  const length=Math.hypot(q[0],q[1],q[2],q[3]);for(let i=0;i<4;i++)q[i]/=length;}
  if(renderers.length){
   animTextures(now);
   const dpr=Math.min(window.devicePixelRatio||1,2);
   const cw=Math.max(1,Math.round(window.innerWidth*dpr));const ch=Math.max(1,Math.round(window.innerHeight*dpr));
-  const aspect=cw/ch,mat=rot3(q);
+  const aspect=cw/ch,mat=rot3(q,drawRotation);
   let halfH=fixedSpan(aspect)/zoom;
   let halfW=halfH*aspect;
   // matrix uniforms are column-major (transpose of the JS row-major matrix)
-  const matrix=new Float32Array([mat[0],mat[3],mat[6],mat[1],mat[4],mat[7],mat[2],mat[5],mat[8]]);
+  const matrix=drawMatrix;
+  matrix[0]=mat[0];matrix[1]=mat[3];matrix[2]=mat[6];matrix[3]=mat[1];matrix[4]=mat[4];matrix[5]=mat[7];matrix[6]=mat[2];matrix[7]=mat[5];matrix[8]=mat[8];
   for(const r of renderers){
    let gl=r.gl,el=gl.canvas;
-   if(el.width!==cw||el.height!==ch){el.width=cw;el.height=ch;}
-   gl.viewport(0,0,cw,ch);
-   gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+   if(r.width!==cw||r.height!==ch){el.width=cw;el.height=ch;r.width=cw;r.height=ch;gl.viewport(0,0,cw,ch);}
+   gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
    if(!atlas)continue;
    gl.uniformMatrix3fv(r.rotLoc,false,matrix);
-   gl.uniform2f(r.viewLoc,halfW,halfH);
+   if(r.halfW!==halfW||r.halfH!==halfH){gl.uniform2f(r.viewLoc,halfW,halfH);r.halfW=halfW;r.halfH=halfH;}
    if(r.isGlow){
      // Occlude glow behind the actual weapon geometry before additive bloom.
      gl.colorMask(false,false,false,false);gl.depthMask(true);gl.disable(gl.BLEND);
-     gl.uniform1f(r.passLoc,0);gl.drawElements(gl.TRIANGLES,indices.length,gl.UNSIGNED_SHORT,0);
+     gl.uniform1f(r.passLoc,-1);gl.drawElements(gl.TRIANGLES,indices.length,gl.UNSIGNED_SHORT,0);
      gl.colorMask(true,true,true,true);gl.depthMask(false);gl.enable(gl.BLEND);
-     gl.uniform1f(r.passLoc,1);gl.drawElements(gl.TRIANGLES,indices.length,gl.UNSIGNED_SHORT,0);
+     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,r.glowIndexBuffer);
+     gl.uniform1f(r.passLoc,1);gl.drawElements(gl.TRIANGLES,r.glowCount,gl.UNSIGNED_SHORT,0);
+     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,r.indexBuffer);
      gl.depthMask(true);
    }else{gl.drawElements(gl.TRIANGLES,indices.length,gl.UNSIGNED_SHORT,0);}
   }
@@ -468,14 +510,14 @@ function draw(now){
   lastSoftDraw=now;
   const dpr=Math.min(window.devicePixelRatio||1,1.5);
   const cw=Math.max(1,Math.round(window.innerWidth*dpr)),ch=Math.max(1,Math.round(window.innerHeight*dpr));
-  const aspect=cw/ch,mat=rot3(q);
+  const aspect=cw/ch,mat=rot3(q,drawRotation);
   const halfH=fixedSpan(aspect)/zoom;
   softRender(mat,halfH*aspect,halfH,cw,ch);
  }
- requestAnimationFrame(draw);
+ mcViewer.request(draw);
 }
 initTextures().catch(err=>console.error('Texture initialization failed',err));
-requestAnimationFrame(draw);
+mcViewer.request(draw);
 </script>
 </body>
 </html>
