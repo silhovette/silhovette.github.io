@@ -41,6 +41,9 @@ html {
   scroll-padding-top: 100px;
   background: var(--paper);
 }
+.portfolio-index > body > main {
+  padding-top: 7.5px;
+}
 /* The sticky search is already visible; reserve scroll offsets for page content. */
 html:has(.header-search:focus-within) {
   scroll-padding-top: 0;
@@ -524,6 +527,8 @@ a, button { transition: color 180ms ease-out, background-color 180ms ease-out, b
   padding: 37px 0 32px;
 }
 .intro-line {
+  position: relative;
+  top: 5px;
   font: 13px var(--font-body);
   letter-spacing: 0.035em;
   color: var(--muted);
