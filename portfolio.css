@@ -774,7 +774,7 @@ a, button { transition: color 180ms ease-out, background-color 180ms ease-out, b
 }
 .about-signature {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 14px;
   margin-top: 26px;
 }
@@ -795,14 +795,13 @@ a, button { transition: color 180ms ease-out, background-color 180ms ease-out, b
 }
 .about-news {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   gap: 8px;
   contain: inline-size;
   max-width: 450px;
   margin-top: 6px;
   color: var(--muted);
   font-size: 12px;
-  white-space: nowrap;
 }
 .about-news-dot {
   /* The page's 0.8 zoom renders this at 6.4px. */
@@ -817,8 +816,7 @@ a, button { transition: color 180ms ease-out, background-color 180ms ease-out, b
 }
 .about-news-content {
   min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow-wrap: anywhere;
 }
 @media (prefers-reduced-motion: reduce) {
   .about-news-dot { animation: none; }
