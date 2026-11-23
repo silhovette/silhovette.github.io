@@ -559,15 +559,14 @@ a, button { transition: color 180ms ease-out, background-color 180ms ease-out, b
   color: var(--muted);
 }
 .cover-tagline,
-.cover-description,
-.cover-links {
+.cover-description {
   margin-left: 12px;
 }
 .cover-links {
   display: flex;
   flex-wrap: wrap;
   gap: 4px 32px;
-  margin-top: 11px;
+  margin: 11px 0 0 18px;
   color: var(--muted);
   font-size: 13px;
 }
