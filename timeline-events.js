@@ -41,7 +41,7 @@
         <li>
           <time class="timeline-date" datetime="2024-09">Sep 2024</time>
           <div class="timeline-event">
-            <h3 data-i18n="timeline_monitor">Class Monitor of the First Undergraduate Class</h3>
+            <h3 data-i18n="timeline_monitor">Class President of the First Undergraduate Class</h3>
             <p data-i18n="timeline_sjtu_ai">School of Artificial Intelligence, Shanghai Jiao Tong University</p>
           </div>
         </li>
