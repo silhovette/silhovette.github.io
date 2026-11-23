@@ -796,7 +796,7 @@ a, button { transition: color 180ms ease-out, background-color 180ms ease-out, b
   align-items: baseline;
   gap: 8px;
   contain: inline-size;
-  max-width: 450px;
+  max-width: 505px;
   margin-top: 14px;
   color: var(--muted);
   font-size: 12px;
@@ -1817,6 +1817,9 @@ body:not(.portfolio-home) .work-detail p {
   .about-statement {
     font-size: 27px;
     max-width: 480px;
+  }
+  .about-news {
+    max-width: 472px;
   }
   .about-body > p {
     font-size: 15.5px;
