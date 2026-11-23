@@ -799,7 +799,7 @@ a, button { transition: color 180ms ease-out, background-color 180ms ease-out, b
   gap: 8px;
   contain: inline-size;
   max-width: 450px;
-  margin-top: 6px;
+  margin-top: 14px;
   color: var(--muted);
   font-size: 12px;
 }
