@@ -520,9 +520,10 @@ a, button { transition: color 180ms ease-out, background-color 180ms ease-out, b
   position: relative;
 }
 .cover-copy {
+  --cover-copy-offset: 22.25px;
   position: relative;
   top: 12.25px;
-  left: 22.25px;
+  left: var(--cover-copy-offset);
   z-index: 2;
   padding: 37px 0 32px;
 }
@@ -590,8 +591,44 @@ a, button { transition: color 180ms ease-out, background-color 180ms ease-out, b
 .cover-links a:focus-visible::after {
   transform: scaleX(1);
 }
+.cover-news {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  contain: inline-size;
+  max-width: 450px;
+  margin: 11px var(--cover-copy-offset) 0 12px;
+  color: var(--muted);
+  font-size: 13px;
+  white-space: nowrap;
+}
+.cover-news-dot {
+  /* The page's 0.8 zoom renders this at 6.4px. */
+  flex: 0 0 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #B9472C;
+  animation: cover-news-breathe 3s ease-in-out infinite;
+}
+@keyframes cover-news-breathe {
+  50% { opacity: 0.55; }
+}
+.cover-news-content {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+a.cover-news-content {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+a.cover-news-content:hover,
+a.cover-news-content:focus-visible {
+  color: var(--ink);
+}
 @media (prefers-reduced-motion: reduce) {
   .cover-links a::after { transition: none; }
+  .cover-news-dot { animation: none; }
 }
 .cover-actions {
   display: flex;
