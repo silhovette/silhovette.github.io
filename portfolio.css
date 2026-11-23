@@ -773,10 +773,12 @@ a, button { transition: color 180ms ease-out, background-color 180ms ease-out, b
   margin-top: 16px;
 }
 .about-signature {
+  margin-top: 26px;
+}
+.about-signature-person {
   display: flex;
   align-items: flex-start;
   gap: 14px;
-  margin-top: 26px;
 }
 .about-signature img {
   width: 44px;
@@ -784,10 +786,6 @@ a, button { transition: color 180ms ease-out, background-color 180ms ease-out, b
   object-fit: cover;
   border-radius: 50%;
   filter: saturate(0.55);
-}
-.about-signature-copy {
-  flex: 1;
-  min-width: 0;
 }
 .about-signature strong {
   font: 400 18px/1.4 var(--font-display);
