@@ -13,7 +13,7 @@ function setup({ reduced = false, noObserver = false, failObserve = false, fade 
     }
     getBoundingClientRect() { return { top: this.top, bottom: this.top + 200, left: 0, right: 600, width: 600, height: 200 }; }
     contains(target) { return this.children.includes(target); }
-    matches() { return this.figure; }
+    matches(selector) { return selector === this.selector || (selector === ".research-figure" && this.figure); }
     setAttribute(key, value) { this.attributes.set(key, value); }
     animate(frames, options) {
       let done;
@@ -23,11 +23,13 @@ function setup({ reduced = false, noObserver = false, failObserve = false, fade 
     }
   }
   const units = [new Unit(30), new Unit(900), new Unit(1800, true)];
-  const hero = [new Unit(10), new Unit(30), new Unit(60)];
+  const hero = [".intro-line", ".cover h1", ".cover-tagline", ".cover-description", ".cover-links", ".cover-news"]
+    .map((selector, index) => Object.assign(new Unit(10 + index * 30), { selector }));
   const root = { getAttribute: () => fade };
   const document = Object.assign(new EventTarget(), {
     documentElement: root,
-    querySelectorAll: selector => selector.startsWith(".intro-line") ? hero : units,
+    querySelectorAll: selector => selector.startsWith(".intro-line")
+      ? hero.filter(unit => selector.split(", ").includes(unit.selector)) : units,
     getElementById: id => id === "deep" ? units[2] : null,
   });
   const window = new EventTarget(), media = Object.assign(new EventTarget(), { matches: reduced });
@@ -105,9 +107,14 @@ test("Hero staggers position only during the page fade and skips deep anchor ent
   const env = setup({ fade: "pending" });
   assert.ok(env.hero.every(unit => unit.animations.length === 0));
   env.fadeIn();
-  assert.deepEqual(env.hero.map(unit => unit.animations[0].options.delay), [0, 65, 130]);
+  assert.deepEqual(env.hero.map(unit => unit.animations[0].options.delay), [0, 65, 130, 195, 227.5, 325]);
   assert.equal(env.hero[0].animations[0].frames[0].opacity, undefined);
   assert.equal(env.hero[0].animations[0].options.duration, 600);
+  const news = env.hero.at(-1).animations[0];
+  assert.equal(news.frames[0].transform, "translateY(12px)");
+  assert.equal(news.frames[0].opacity, undefined);
+  const afterFade = setup();
+  assert.equal(afterFade.hero.at(-1).animations[0].frames[0].opacity, 0);
   const anchor = setup({ hash: "#deep" });
   assert.ok(anchor.hero.every(unit => unit.animations.length === 0));
 });
