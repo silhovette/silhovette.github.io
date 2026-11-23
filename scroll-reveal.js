@@ -104,7 +104,7 @@
       element.classList.add("is-reveal-pending");
     }
 
-    const hero = [...document.querySelectorAll(".intro-line, .cover h1, .cover-tagline, .cover-description, .cover-links, .cover-news, .cover-actions")];
+    const hero = [...document.querySelectorAll(".intro-line, .cover h1, .cover-tagline, .cover-description, .cover-links, .cover-actions")];
     const revealHero = () => {
       heroObserver?.disconnect();
       if (motion.matches || (location.hash && location.hash !== "#hero") || scrollY > 80) return;

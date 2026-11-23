@@ -23,7 +23,7 @@ function setup({ reduced = false, noObserver = false, failObserve = false, fade 
     }
   }
   const units = [new Unit(30), new Unit(900), new Unit(1800, true)];
-  const hero = [".intro-line", ".cover h1", ".cover-tagline", ".cover-description", ".cover-news", ".cover-links"]
+  const hero = [".intro-line", ".cover h1", ".cover-tagline", ".cover-description", ".cover-links"]
     .map((selector, index) => Object.assign(new Unit(10 + index * 30), { selector }));
   const root = { getAttribute: () => fade };
   const document = Object.assign(new EventTarget(), {
@@ -107,14 +107,11 @@ test("Hero staggers position only during the page fade and skips deep anchor ent
   const env = setup({ fade: "pending" });
   assert.ok(env.hero.every(unit => unit.animations.length === 0));
   env.fadeIn();
-  assert.deepEqual(env.hero.map(unit => unit.animations[0].options.delay), [0, 65, 130, 195, 260, 292.5]);
+  assert.deepEqual(env.hero.map(unit => unit.animations[0].options.delay), [0, 65, 130, 195, 227.5]);
   assert.equal(env.hero[0].animations[0].frames[0].opacity, undefined);
   assert.equal(env.hero[0].animations[0].options.duration, 600);
-  const news = env.hero.find(unit => unit.selector === ".cover-news").animations[0];
-  assert.equal(news.frames[0].transform, "translateY(12px)");
-  assert.equal(news.frames[0].opacity, undefined);
   const afterFade = setup();
-  assert.equal(afterFade.hero.find(unit => unit.selector === ".cover-news").animations[0].frames[0].opacity, 0);
+  assert.equal(afterFade.hero[0].animations[0].frames[0].opacity, 0);
   const anchor = setup({ hash: "#deep" });
   assert.ok(anchor.hero.every(unit => unit.animations.length === 0));
 });

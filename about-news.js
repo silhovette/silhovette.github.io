@@ -1,5 +1,5 @@
 (async () => {
-  const content = document.querySelector(".cover-news-content");
+  const content = document.querySelector(".about-news-content");
   if (!content) return;
 
   let entries;
