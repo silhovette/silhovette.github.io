@@ -598,7 +598,7 @@ a, button { transition: color 180ms ease-out, background-color 180ms ease-out, b
   max-width: 450px;
   margin: 11px var(--cover-copy-offset) 0 12px;
   color: var(--muted);
-  font-size: 13px;
+  font-size: 12px;
   white-space: nowrap;
 }
 .cover-news-dot {
@@ -616,14 +616,6 @@ a, button { transition: color 180ms ease-out, background-color 180ms ease-out, b
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-a.cover-news-content {
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-a.cover-news-content:hover,
-a.cover-news-content:focus-visible {
-  color: var(--ink);
 }
 @media (prefers-reduced-motion: reduce) {
   .cover-links a::after { transition: none; }

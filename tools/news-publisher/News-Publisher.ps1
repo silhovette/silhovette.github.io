@@ -10,57 +10,36 @@ $env:GIT_TERMINAL_PROMPT = '0'
 $form = [Windows.Forms.Form]::new()
 $form.Text = 'Homepage News Publisher'
 $form.StartPosition = 'CenterScreen'
-$form.ClientSize = [Drawing.Size]::new(470, 322)
+$form.ClientSize = [Drawing.Size]::new(470, 174)
 $form.FormBorderStyle = 'FixedDialog'
 $form.MaximizeBox = $false
 $form.AutoScaleMode = 'Dpi'
 $form.Font = [Drawing.Font]::new('Segoe UI', 9)
 
-function Add-FieldLabel ([string]$Text, [int]$Top) {
-    $label = [Windows.Forms.Label]::new()
-    $label.Text = $Text
-    $label.AutoSize = $true
-    $label.Location = [Drawing.Point]::new(18, $Top)
-    $form.Controls.Add($label)
-}
+$label = [Windows.Forms.Label]::new()
+$label.Text = 'News text'
+$label.AutoSize = $true
+$label.Location = [Drawing.Point]::new(18, 16)
+$form.Controls.Add($label)
 
-Add-FieldLabel 'Date' 16
-$dateField = [Windows.Forms.DateTimePicker]::new()
-$dateField.Format = 'Custom'
-$dateField.CustomFormat = 'yyyy-MM-dd'
-$dateField.Value = [datetime]::Today
-$dateField.SetBounds(18, 36, 150, 25)
-$form.Controls.Add($dateField)
-
-Add-FieldLabel 'News text' 70
 $contentField = [Windows.Forms.TextBox]::new()
 $contentField.Multiline = $true
 $contentField.ScrollBars = 'Vertical'
-$contentField.SetBounds(18, 90, 434, 66)
+$contentField.SetBounds(18, 36, 434, 80)
 $form.Controls.Add($contentField)
 
-Add-FieldLabel 'URL (optional)' 165
-$urlField = [Windows.Forms.TextBox]::new()
-$urlField.SetBounds(18, 185, 434, 25)
-$form.Controls.Add($urlField)
-
-Add-FieldLabel 'Git proxy (optional, e.g. http://127.0.0.1:7890)' 218
-$proxyField = [Windows.Forms.TextBox]::new()
-$proxyField.SetBounds(18, 238, 434, 25)
-$form.Controls.Add($proxyField)
-
 $status = [Windows.Forms.Label]::new()
-$status.SetBounds(18, 275, 324, 36)
+$status.SetBounds(18, 128, 324, 36)
 $form.Controls.Add($status)
 
 $publish = [Windows.Forms.Button]::new()
 $publish.Text = 'Publish'
-$publish.SetBounds(354, 276, 98, 29)
+$publish.SetBounds(354, 128, 98, 29)
 $form.Controls.Add($publish)
 $form.AcceptButton = $publish
 $form.ActiveControl = $contentField
 
-$fields = @($dateField, $contentField, $urlField, $proxyField, $publish)
+$fields = @($contentField, $publish)
 $timer = [Windows.Forms.Timer]::new()
 $timer.Interval = 150
 $script:job = $null
@@ -76,7 +55,6 @@ $timer.Add_Tick({
             $status.Text = 'Published to GitHub. Local main may need a pull.'
         }
         $contentField.Clear()
-        $urlField.Clear()
     } catch {
         $status.Text = 'Publish failed. You can retry.'
         $message = if ($script:worker.Streams.Error.Count) {
@@ -106,10 +84,7 @@ $publish.Add_Click({
     try {
         [void]$script:worker.AddCommand($workerScript).
             AddParameter('Repository', $repository).
-            AddParameter('Date', $dateField.Value).
-            AddParameter('Content', $contentField.Text).
-            AddParameter('Url', $urlField.Text).
-            AddParameter('Proxy', $proxyField.Text)
+            AddParameter('Content', $contentField.Text)
         $script:job = $script:worker.BeginInvoke()
         $timer.Start()
     } catch {

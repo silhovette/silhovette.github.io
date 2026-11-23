@@ -1,48 +1,26 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory)][string]$Repository,
-    [Parameter(Mandatory)][datetime]$Date,
-    [Parameter(Mandatory)][string]$Content,
-    [string]$Url,
-    [string]$Proxy
+    [Parameter(Mandatory)][string]$Content
 )
 
 $ErrorActionPreference = 'Stop'
 $git = (Get-Command git.exe -CommandType Application | Select-Object -First 1).Source
 $contentLine = ($Content -replace '\s+', ' ').Trim()
-$link = ([string]$Url).Trim()
-$proxyAddress = ([string]$Proxy).Trim()
-
 if (!$contentLine) { throw 'Enter the news text.' }
-if ($link) {
-    $parsedLink = $null
-    if (![Uri]::TryCreate($link, [UriKind]::Absolute, [ref]$parsedLink) -or
-        $parsedLink.Scheme -notin @('http', 'https') -or !$parsedLink.Host) {
-        throw 'Enter a full URL beginning with http:// or https://.'
-    }
-}
-
-$gitOptions = @()
-if ($proxyAddress) { $gitOptions += @('-c', "http.proxy=$proxyAddress") }
 
 function Invoke-NewsGit {
     param([string]$Directory, [string]$Step, [string[]]$Arguments)
 
     # Git writes progress to stderr even on success.
     $ErrorActionPreference = 'Continue'
-    $output = & $git -C $Directory @gitOptions @Arguments 2>&1
+    $output = & $git -C $Directory @Arguments 2>&1
     if ($LASTEXITCODE -ne 0) {
         $details = ($output | ForEach-Object { $_.ToString() }) -join [Environment]::NewLine
         throw "$Step failed.`r`n`r`n$details"
     }
     $output | ForEach-Object { $_.ToString() }
 }
-
-$entry = [ordered]@{
-    date = $Date.ToString('yyyy-MM-dd', [Globalization.CultureInfo]::InvariantCulture)
-    content = $contentLine
-}
-if ($link) { $entry.url = $link }
 
 $trackingRef = 'refs/remotes/origin/main'
 $branchRef = 'refs/heads/main'
@@ -62,16 +40,12 @@ try {
     # Windows PowerShell returns the parsed array as a single pipeline item.
     if ($history.Count -eq 1 -and $history[0] -is [array]) { $history = $history[0] }
 
-    $alreadyPublished = $history | Where-Object {
-        $_.date -ceq $entry.date -and $_.content -ceq $entry.content -and [string]$_.url -ceq $link
-    } | Select-Object -First 1
-
-    if (!$alreadyPublished) {
-        $updated = @($entry) + $history
+    if ($history.Count -eq 0 -or $history[0].content -cne $contentLine) {
+        $updated = @(@{ content = $contentLine }) + $history
         $json = ConvertTo-Json -InputObject $updated -Depth 10
         [IO.File]::WriteAllText($newsFile, $json + "`n", [Text.UTF8Encoding]::new($false))
         $null = Invoke-NewsGit $worktree 'Staging the news' @('add', '--', 'news.json')
-        $null = Invoke-NewsGit $worktree 'Committing the news' @('commit', '-m', ('Publish homepage news for ' + $entry.date))
+        $null = Invoke-NewsGit $worktree 'Committing the news' @('commit', '-m', 'Publish homepage news')
     }
 
     $publishedCommit = Invoke-NewsGit $worktree 'Reading the news commit' @('rev-parse', 'HEAD')
