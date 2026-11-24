@@ -28,7 +28,7 @@
           <time class="timeline-date" datetime="2024-06">Jun 2024</time>
           <div class="timeline-event">
             <h3 data-i18n="timeline_gaokao">Gaokao (National College Entrance Examination)</h3>
-            <p class="timeline-result"><span data-i18n="timeline_rank_prefix">617 / 660 · Shanghai Rank #</span><span class="timeline-rank"><span>6</span><span>7</span></span><span data-i18n="timeline_rank_suffix"></span></p>
+            <p class="timeline-result" data-i18n="timeline_gaokao_result">Top 0.15% in Shanghai</p>
           </div>
         </li>
         <li>
